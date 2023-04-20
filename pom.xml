@@ -11,7 +11,6 @@
 	<groupId>com.example</groupId>
 	<artifactId>capstone_be</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
 	<name>capstone_be</name>
 	<description>Project for Spring Boot</description>
 	<properties>
