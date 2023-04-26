@@ -8,6 +8,8 @@ import com.example.capstone_be.dto.tour.TourDto;
 import com.example.capstone_be.dto.tour.TourViewDto;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.TourRepository;
+import com.example.capstone_be.response.TourRespone;
+import com.example.capstone_be.response.TourResponseByCategoryName;
 import com.example.capstone_be.service.TourService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,15 +38,18 @@ public class TourController {
         return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
     }
     @GetMapping("/all")
-    public ResponseEntity<List<TourViewDto>> getAllTour() {
-        final List<TourViewDto> tourViewDtos = tourService.getAll();
-        return new ResponseEntity<>(tourViewDtos, HttpStatus.OK);
+    public TourRespone getAllTour(@RequestParam(defaultValue = "1") Integer pageNo,
+                                  @RequestParam(defaultValue = "5") Integer pageSize) {
+        final TourRespone tourViewDtos = tourService.getAll(pageNo,pageSize);
+        return tourViewDtos;
     }
 
     @GetMapping("/{categoryName}")
-    public ResponseEntity<List<TourByCategoryDto>> getTourByCategoryName(@PathVariable String categoryName) {
-        List<TourByCategoryDto> tourByCategoryDto = tourService.getTourByCategoryName(categoryName);
-        return new ResponseEntity(tourByCategoryDto, HttpStatus.OK);
+    public TourResponseByCategoryName getTourByCategoryName(@PathVariable String categoryName,
+                                                                         @RequestParam(defaultValue = "1") Integer pageNo,
+                                                                         @RequestParam(defaultValue = "5") Integer pageSize) {
+        TourResponseByCategoryName tourResponseByCategoryName = tourService.getTourByCategoryName(categoryName,pageNo,pageSize);
+        return tourResponseByCategoryName;
     }
 
     @GetMapping("/tour-detail/{tourId}")

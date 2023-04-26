@@ -4,6 +4,9 @@ import com.example.capstone_be.dto.tour.TourByCategoryDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
 import com.example.capstone_be.dto.tour.TourViewDto;
+import com.example.capstone_be.response.TourRespone;
+import com.example.capstone_be.response.TourResponseByCategoryName;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -11,9 +14,9 @@ public interface TourService {
 
     TourDto createTour(TourDto tourDto);
 
-    List<TourViewDto> getAll();
+    TourRespone getAll(Integer pageNo, Integer pageSize);
 
-    List<TourByCategoryDto> getTourByCategoryName(String categoryName);
+    TourResponseByCategoryName getTourByCategoryName(String categoryName, Integer pageNo, Integer pageSize);
 
     TourDetailDto getTourDetail(Long tourId);
 }

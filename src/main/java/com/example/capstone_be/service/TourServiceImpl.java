@@ -9,7 +9,13 @@ import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.Category;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.TourRepository;
+import com.example.capstone_be.response.TourRespone;
+import com.example.capstone_be.response.TourResponseByCategoryName;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,8 +46,11 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourViewDto> getAll() {
-        final List<Tour> tourList = tourRepository.findAll();
+    public TourRespone getAll(Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+//        Page<TourViewDto> pagedResult = tourRepository.findAll(paging);
+        Page<Tour> tourList = tourRepository.findAll(paging);
+        final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
         TourViewDto tourViewDto = null;
 
@@ -59,29 +68,46 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName().toString());
             tourViewDtos.add(tourViewDto);
         }
-        return tourViewDtos;
+        tourRespone.setContent(tourViewDtos);
+        tourRespone.setPageNo(tourList.getNumber() + 1);
+        tourRespone.setPageSize(tourList.getSize());
+        tourRespone.setTotalElements(tourList.getTotalElements());
+        tourRespone.setTotalPages(tourList.getTotalPages());
+        return tourRespone;
     }
 
     @Override
-    public List<TourByCategoryDto> getTourByCategoryName(String categoryName) {
-        final List<Tour> tourList = tourRepository.findAll();
-        List<TourByCategoryDto> result = new ArrayList<>();
+    public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo, Integer pageSize) {
+
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
+
+        Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,paging);
+
+        TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
+        List<TourByCategoryDto> tourByCategoryDtos = new ArrayList<>();
         TourByCategoryDto tourByCategoryDto = null;
-        for (Tour tour : tourList) {
+
+        System.out.println("Tour List Size: " + tourListByCategoryName.getSize());
+        for (Tour tour : tourListByCategoryName.getContent()) {
             tourByCategoryDto = new TourByCategoryDto();
-            if(tour.getCategories().iterator().next().getCategoryName().toLowerCase().toString().equals(categoryName.toLowerCase())){
-                tourByCategoryDto.setTourId(tour.getTourId());
-                tourByCategoryDto.setTitle(tour.getTitle());
-                tourByCategoryDto.setRating(tour.getRating());
-                tourByCategoryDto.setCity(tour.getCity());
-                tourByCategoryDto.setPriceOnePerson(tour.getPriceOnePerson());
-                tourByCategoryDto.setWorking(tour.getWorking());
-                tourByCategoryDto.setDestination(tour.getDestination());
-                tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
-                result.add(tourByCategoryDto);
-            }
+            tourByCategoryDto.setTourId(tour.getTourId());
+            tourByCategoryDto.setTitle(tour.getTitle());
+            tourByCategoryDto.setRating(tour.getRating());
+            tourByCategoryDto.setCity(tour.getCity());
+            tourByCategoryDto.setPriceOnePerson(tour.getPriceOnePerson());
+            tourByCategoryDto.setWorking(tour.getWorking());
+            tourByCategoryDto.setDestination(tour.getDestination());
+            tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
+            tourByCategoryDtos.add(tourByCategoryDto);
         }
-        return result;
+        System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());
+//        Page<TourByCategoryDto> tourByCategoryDtoPage = new PageImpl<>(tourByCategoryDtos);
+        tourResponseByCategoryName.setContent(tourByCategoryDtos);
+        tourResponseByCategoryName.setPageNo(tourListByCategoryName.getNumber() + 1);
+        tourResponseByCategoryName.setPageSize(tourListByCategoryName.getSize());
+        tourResponseByCategoryName.setTotalElements(tourListByCategoryName.getTotalElements());
+        tourResponseByCategoryName.setTotalPages(tourListByCategoryName.getTotalPages());
+        return tourResponseByCategoryName;
     }
 
     @Override

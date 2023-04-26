@@ -11,6 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TourByCategoryDto implements Serializable {
+
     private Long tourId;
 
     private String title;
