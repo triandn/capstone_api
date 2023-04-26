@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,9 +15,8 @@ import javax.persistence.*;
 @Entity(name="users")
 public class User extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private UUID userId = UUID.randomUUID();
 
     @Column(unique = true, length = 30, name = "user_name", nullable = false)
     private String userName;

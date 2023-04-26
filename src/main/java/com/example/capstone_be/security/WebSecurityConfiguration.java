@@ -59,6 +59,8 @@ public class WebSecurityConfiguration {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/tour","/tour/**").hasAuthority(USER)
+                .antMatchers("/categories","/categories/**").hasAnyAuthority(USER,ADMIN)
+                .antMatchers("/login").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/user","/user/**").permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()

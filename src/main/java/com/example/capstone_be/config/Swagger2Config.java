@@ -41,9 +41,9 @@ public class Swagger2Config {
         return List.of(new SecurityReference("JWT", authorizationScopes));
     }
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("Employee Management REST API")
-                .contact(new Contact("loda", "https://loda.me/", "loda.namnh@gmail.com"))
+        return new ApiInfoBuilder().title("CAPSTONE REST API")
+                .description("TRAVEL MANAGEMENT REST API")
+                .contact(new Contact("triandn", "", "triandn43@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")

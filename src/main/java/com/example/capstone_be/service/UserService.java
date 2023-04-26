@@ -8,4 +8,5 @@ public interface UserService {
 
     ResponseEntity<?> saveUser(UserRegistrationDto userRegistrationDto);
 
+    ResponseEntity<?> confirmEmail(String confirmationToken);
 }
