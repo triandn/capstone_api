@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
         mailMessage.setTo(userRegistrationDto.getUserEmail());
         mailMessage.setSubject("Complete Registration!");
         mailMessage.setText("To confirm your account, please click here : "
-                +"http://localhost:9000/api/user/confirm-account?token="+verificationToken.getConfirmationToken());
+                +"http://221.132.33.161:9000/api/user/confirm-account?token="+verificationToken.getConfirmationToken());
         emailService.sendEmail(mailMessage);
 
         System.out.println("Confirmation Token: " + verificationToken.getConfirmationToken());
