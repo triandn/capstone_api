@@ -1,5 +1,12 @@
 package com.example.capstone_be.dto.user;
 
+import lombok.*;
+
+@Getter
+@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TokenRefreshResponse {
     private String accessToken;
     private String refreshToken;

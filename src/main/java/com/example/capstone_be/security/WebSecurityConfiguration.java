@@ -64,6 +64,7 @@ public class WebSecurityConfiguration {
                 .antMatchers("/tour/create").hasAnyAuthority(USER,ADMIN)
                 .antMatchers("/categories","/categories/**").permitAll()
                 .antMatchers("/login").permitAll()
+                .antMatchers("/refreshtoken").permitAll()
                 .antMatchers("/user","/user/**").permitAll()
                 .antMatchers(HttpHeaders.ALLOW).permitAll()
                 .anyRequest().authenticated().and()

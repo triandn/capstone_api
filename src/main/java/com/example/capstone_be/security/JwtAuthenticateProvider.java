@@ -1,9 +1,12 @@
 package com.example.capstone_be.security;
 
 import com.example.capstone_be.model.CustomUserDetails;
+import com.example.capstone_be.model.RefreshToken;
+import com.example.capstone_be.service.RefreshTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 public class JwtAuthenticateProvider {
@@ -20,11 +24,17 @@ public class JwtAuthenticateProvider {
     @Value("${jwt.expirationDateInMs}")
     private int expiresIn;
 
+    @Value("${JWT_REFRESH_EXPIRATION_MS}")
+    private int jwtExpirationMs;
+
     @Value("${jwt.authorities.key}")
     private String AUTHORITIES_KEY;
 
     @Value("${jwt.username.key}")
     private String USERNAME_KEY;
+
+    @Autowired
+    private RefreshTokenService refreshTokenService;
 
     public JwtAuthenticateProvider() {
     }
@@ -53,6 +63,12 @@ public class JwtAuthenticateProvider {
         return username;
     }
 
+    public String generateTokenFromUsername(String username) {
+        return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, secretKey)
+                .compact();
+    }
+
     public String generateToken(CustomUserDetails userDetails) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String role = userDetails.getAuthorities().toString();
         return Jwts.builder()
@@ -64,7 +80,13 @@ public class JwtAuthenticateProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-
+    public String generateTokenByRefreshToken(String requestRefreshToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(requestRefreshToken);
+        refreshTokenService.verifyExpiration(refreshToken.get());
+        CustomUserDetails customUserDetails = new CustomUserDetails(refreshToken.get().getUser());
+        String token = generateToken(customUserDetails);
+        return token;
+    }
     private Date generateExpirationDate() {
         return new Date(new Date().getTime() + expiresIn * 1000);
     }
