@@ -1,13 +1,7 @@
 package com.example.capstone_be.model;
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -16,6 +10,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name="tours")
@@ -37,6 +32,9 @@ public class Tour extends BaseEntity{
     @Column(name = "price_one_person", nullable = false)
     private Float priceOnePerson;
 
+    @Column(name = "image_main", nullable = true)
+    private String imageMain;
+
     @Column(name = "working", nullable = false)
     private String working;
 
@@ -50,4 +48,7 @@ public class Tour extends BaseEntity{
     @JoinTable(name = "tour_category", joinColumns = @JoinColumn(name = "tour_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     @JsonIgnore
     private Set<Category> categories;
+
+    @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ImageDetail> imageDetails = new ArrayList<>();
 }

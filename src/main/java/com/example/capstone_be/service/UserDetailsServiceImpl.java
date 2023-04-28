@@ -3,6 +3,7 @@ package com.example.capstone_be.service;
 import com.example.capstone_be.dto.user.JwtRequest;
 import com.example.capstone_be.dto.user.JwtResponse;
 import com.example.capstone_be.model.CustomUserDetails;
+import com.example.capstone_be.model.RefreshToken;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.UserRepository;
 import com.example.capstone_be.security.JwtAuthenticateProvider;
@@ -25,7 +26,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    RefreshTokenService refreshTokenService;
     @Autowired
     private JwtAuthenticateProvider jwtAuthenticateProvider;
 
@@ -35,10 +37,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         authenticate(email, password);
 
         final CustomUserDetails customUserDetails = (CustomUserDetails) loadUserByUsername(email);
-
         String generateToken = jwtAuthenticateProvider.generateToken(customUserDetails);
 
-        return new JwtResponse(generateToken);
+        User user = userRepository.getUserByUserEmail(email);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
+        return new JwtResponse(generateToken,refreshToken.getToken());
     }
 
     private void authenticate(String email, String password) throws Exception {

@@ -95,13 +95,13 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setRating(tour.getRating());
             tourByCategoryDto.setCity(tour.getCity());
             tourByCategoryDto.setPriceOnePerson(tour.getPriceOnePerson());
+            tourByCategoryDto.setImageMain(tour.getImageMain());
             tourByCategoryDto.setWorking(tour.getWorking());
             tourByCategoryDto.setDestination(tour.getDestination());
             tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
             tourByCategoryDtos.add(tourByCategoryDto);
         }
         System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());
-//        Page<TourByCategoryDto> tourByCategoryDtoPage = new PageImpl<>(tourByCategoryDtos);
         tourResponseByCategoryName.setContent(tourByCategoryDtos);
         tourResponseByCategoryName.setPageNo(tourListByCategoryName.getNumber() + 1);
         tourResponseByCategoryName.setPageSize(tourListByCategoryName.getSize());
@@ -121,6 +121,7 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setRating(tour.getRating());
         tourDetailDto.setCity(tour.getCity());
         tourDetailDto.setPriceOnePerson(tour.getPriceOnePerson());
+        tourDetailDto.setImageMain(tour.getImageMain());
         tourDetailDto.setWorking(tour.getWorking());
         tourDetailDto.setDestination(tour.getDestination());
         tourDetailDto.setDestinationDescription(tour.getDestinationDescription());

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS tours (
      rating FLOAT NOT NULL,
      city VARCHAR(255) NOT NULL,
      price_one_person  FLOAT NOT NULL,
-     image_main TEXT NOT NULL,
+     image_main TEXT,
      working TEXT NOT NULL,
      destination TEXT NOT NULL,
      destination_description TEXT NOT NULL,

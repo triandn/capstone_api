@@ -25,9 +25,6 @@ public class VerificationToken extends BaseEntity {
     @Column(name="confirmation_token")
     private String confirmationToken;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
-
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER,cascade=CascadeType.ALL)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
