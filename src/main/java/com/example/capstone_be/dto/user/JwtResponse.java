@@ -10,8 +10,14 @@ public class JwtResponse {
 
     private String refreshToken;
 
-    public JwtResponse(String token, String refreshToken) {
+    private String username;
+
+    private String role;
+
+    public JwtResponse(String token, String refreshToken, String username, String role) {
         this.token = token;
         this.refreshToken = refreshToken;
+        this.username = username;
+        this.role = role;
     }
 }

@@ -41,7 +41,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User user = userRepository.getUserByUserEmail(email);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
-        return new JwtResponse(generateToken,refreshToken.getToken());
+        return new JwtResponse(generateToken,refreshToken.getToken(),user.getUserName(),user.getRole());
     }
 
     private void authenticate(String email, String password) throws Exception {
