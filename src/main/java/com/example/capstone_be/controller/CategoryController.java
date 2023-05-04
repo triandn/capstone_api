@@ -42,7 +42,7 @@ public class CategoryController {
     }
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteById(id);
+        categoryService.deleteByCategoryId(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @PatchMapping("/update/{id}")
@@ -51,7 +51,7 @@ public class CategoryController {
             String msg = getMessageBindingResult(bindingResult);
             return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
         }
-        CategoryDto updatedCategoryDto = categoryService.updateById(categoryDto, id);
+        CategoryDto updatedCategoryDto = categoryService.updateByCategoryId(categoryDto, id);
         return new ResponseEntity(updatedCategoryDto, HttpStatus.OK);
     }
 

@@ -61,7 +61,7 @@ public class TourController {
 
     @DeleteMapping("/tour-delete/{id}")
     public ResponseEntity<TourDto> deleteTour(@PathVariable Long id) {
-        tourService.deleteById(id);
+        tourService.deleteByTourId(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @PatchMapping("/tour-update/{id}")
@@ -70,7 +70,7 @@ public class TourController {
             String msg = getMessageBindingResult(bindingResult);
             return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
         }
-        TourDto updatedTourDto = tourService.updateById(tourDto, id);
+        TourDto updatedTourDto = tourService.updateByTourId(tourDto, id);
         return new ResponseEntity(updatedTourDto, HttpStatus.OK);
     }
 }

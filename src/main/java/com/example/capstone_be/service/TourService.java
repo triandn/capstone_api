@@ -22,7 +22,7 @@ public interface TourService {
 
     TourDetailDto getTourDetail(Long tourId);
 
-    void deleteById(Long id);
+    void deleteByTourId(Long id);
 
-    TourDto updateById(TourDto tourDto, Long id);
+    TourDto updateByTourId(TourDto tourDto, Long id);
 }

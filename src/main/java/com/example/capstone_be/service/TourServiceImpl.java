@@ -141,14 +141,14 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteByTourId(Long id) {
 
         Tour tour = tourRepository.findById(id).orElseThrow(() -> new NotFoundException("Tour not found"));
         tourRepository.deleteById(id);
     }
 
     @Override
-    public TourDto updateById(TourDto tourDto, Long id) {
+    public TourDto updateByTourId(TourDto tourDto, Long id) {
         final Tour updatedTour = tourRepository.findById(id)
                 .map(tour -> {
                     tour.setTourId(tourDto.getTourId());

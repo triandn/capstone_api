@@ -1,6 +1,5 @@
 package com.example.capstone_be.model;
 
-
 import com.example.capstone_be.util.enums.RoleEnum;
 import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;

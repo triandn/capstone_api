@@ -47,13 +47,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteById(Long id) {
+    public void deleteByCategoryId(Long id) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         categoryRepository.deleteById(id);
     }
 
     @Override
-    public CategoryDto updateById(CategoryDto categoryDto, Long id) {
+    public CategoryDto updateByCategoryId(CategoryDto categoryDto, Long id) {
         final Category updatedCategory = categoryRepository.findById(id)
                 .map(category -> {
                     category.setCategoryId(categoryDto.getCategoryId());
