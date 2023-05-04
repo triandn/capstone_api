@@ -1,17 +1,15 @@
 package com.example.capstone_be.dto.tour;
 
-import com.example.capstone_be.model.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TourDto implements Serializable {
+public class TourViewForUpdateDto implements Serializable {
 
     private Long tourId;
 
@@ -31,5 +29,4 @@ public class TourDto implements Serializable {
 
     private String destinationDescription;
 
-    private Set<Category> categories;
 }

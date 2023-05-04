@@ -45,4 +45,26 @@ public class CategoryServiceImpl implements CategoryService {
         final Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
         return mapper.map(category,CategoryDto.class);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException("Category not found"));
+        categoryRepository.deleteById(id);
+    }
+
+    @Override
+    public CategoryDto updateById(CategoryDto categoryDto, Long id) {
+        final Category updatedCategory = categoryRepository.findById(id)
+                .map(category -> {
+                    category.setCategoryId(categoryDto.getCategoryId());
+                    category.setCategoryName(categoryDto.getCategoryName());
+                    return categoryRepository.save(category);
+                })
+                .orElseGet(() -> {
+                    categoryDto.setCategoryId(id);
+                    return categoryRepository.save(mapper.map(categoryDto, Category.class));
+                });
+
+        return mapper.map(updatedCategory, CategoryDto.class);
+    }
 }

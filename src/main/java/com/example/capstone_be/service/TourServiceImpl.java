@@ -1,19 +1,22 @@
 package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.category.CategoryDto;
+import com.example.capstone_be.dto.image.ImageDto;
+import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.dto.tour.TourByCategoryDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
 import com.example.capstone_be.dto.tour.TourViewDto;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.Category;
+import com.example.capstone_be.model.ImageDetail;
 import com.example.capstone_be.model.Tour;
+import com.example.capstone_be.repository.ImageRepository;
 import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,21 +24,23 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class TourServiceImpl implements TourService {
 
     private final ModelMapper mapper;
     private final TourRepository tourRepository;
+
+    private final ImageRepository imageRepository;
+
     private Set<Category> categories;
     private Set<Category> cate;
 
-    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository) {
+    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository) {
         this.mapper = mapper;
         this.tourRepository = tourRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -48,7 +53,6 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourRespone getAll(Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo - 1, pageSize);
-//        Page<TourViewDto> pagedResult = tourRepository.findAll(paging);
         Page<Tour> tourList = tourRepository.findAll(paging);
         final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
@@ -112,8 +116,14 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourDetailDto getTourDetail(Long tourId) {
+
         final Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new NotFoundException("Tour not found !!"));
-        System.out.println("Tour Detai: " + tour.toString());
+        List<ImageViewDto> imageViewDtos = new ArrayList<>();
+        List<ImageDetail> imageDetails = imageRepository.getImageDetailByTourId(tourId);
+
+        for (ImageDetail image: imageDetails) {
+            imageViewDtos.add(mapper.map(image,ImageViewDto.class));
+        }
         TourDetailDto tourDetailDto = null;
         tourDetailDto = new TourDetailDto();
         tourDetailDto.setTourId(tour.getTourId());
@@ -125,6 +135,37 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setWorking(tour.getWorking());
         tourDetailDto.setDestination(tour.getDestination());
         tourDetailDto.setDestinationDescription(tour.getDestinationDescription());
+        tourDetailDto.setImages(imageViewDtos);
+
         return tourDetailDto;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
+        Tour tour = tourRepository.findById(id).orElseThrow(() -> new NotFoundException("Tour not found"));
+        tourRepository.deleteById(id);
+    }
+
+    @Override
+    public TourDto updateById(TourDto tourDto, Long id) {
+        final Tour updatedTour = tourRepository.findById(id)
+                .map(tour -> {
+                    tour.setTourId(tourDto.getTourId());
+                    tour.setTitle(tourDto.getTitle());
+                    tour.setCity(tourDto.getCity());
+                    tour.setPriceOnePerson(tourDto.getPriceOnePerson());
+                    tour.setImageMain(tourDto.getImageMain());
+                    tour.setWorking(tourDto.getWorking());
+                    tour.setDestination(tourDto.getDestination());
+                    tour.setDestinationDescription(tourDto.getDestinationDescription());
+                    return tourRepository.save(tour);
+                })
+                .orElseGet(() -> {
+                    tourDto.setTourId(id);
+                    return tourRepository.save(mapper.map(tourDto, Tour.class));
+                });
+
+        return mapper.map(updatedTour, TourDto.class);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
@@ -56,5 +57,20 @@ public class TourController {
     public ResponseEntity<TourDetailDto> getTourDetailById(@PathVariable Long tourId) {
         TourDetailDto tourDetailDto = tourService.getTourDetail(tourId);
         return new ResponseEntity(tourDetailDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/tour-delete/{id}")
+    public ResponseEntity<TourDto> deleteTour(@PathVariable Long id) {
+        tourService.deleteById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    @PatchMapping("/tour-update/{id}")
+    public ResponseEntity<?> updateTour(@RequestBody @Valid TourDto tourDto, @PathVariable Long id, final BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            String msg = getMessageBindingResult(bindingResult);
+            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+        }
+        TourDto updatedTourDto = tourService.updateById(tourDto, id);
+        return new ResponseEntity(updatedTourDto, HttpStatus.OK);
     }
 }

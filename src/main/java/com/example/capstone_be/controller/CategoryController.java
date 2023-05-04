@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
@@ -38,6 +39,20 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> createCategory(@RequestBody final CategoryDto categoryDto) {
         categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteById(id);
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    }
+    @PatchMapping("/update/{id}")
+    public ResponseEntity<?> updateCategory(@RequestBody @Valid CategoryDto categoryDto, @PathVariable Long id, final BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            String msg = getMessageBindingResult(bindingResult);
+            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+        }
+        CategoryDto updatedCategoryDto = categoryService.updateById(categoryDto, id);
+        return new ResponseEntity(updatedCategoryDto, HttpStatus.OK);
     }
 
 }

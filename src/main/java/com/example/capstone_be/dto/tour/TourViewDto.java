@@ -1,10 +1,12 @@
 package com.example.capstone_be.dto.tour;
 
+import com.example.capstone_be.dto.image.ImageDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Data

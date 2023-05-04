@@ -17,10 +17,13 @@ import java.util.UUID;
 public class ImageDetail extends BaseEntity{
     @Id
     @Column(name = "image_id", nullable = false)
-    private UUID userId = UUID.randomUUID();
+    private UUID imageId = UUID.randomUUID();
 
     @Column(name = "link", nullable = false)
     private String link;
+
+    @Column(name = "tour_id", nullable = false,insertable = false,updatable = false)
+    private Long tourId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)

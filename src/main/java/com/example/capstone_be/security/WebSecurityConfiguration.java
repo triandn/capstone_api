@@ -4,6 +4,7 @@ package com.example.capstone_be.security;
 import com.example.capstone_be.util.enums.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,12 +28,14 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true,securedEnabled = true,
+        jsr250Enabled = true)
 public class WebSecurityConfiguration {
 
     private  final String ADMIN = RoleEnum.ADMIN.toString();
 
     private final String USER = RoleEnum.USER.toString();
+
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -54,20 +58,27 @@ public class WebSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        System.out.println("Role 2:" + USER);
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/tour/all").permitAll()
-                .antMatchers("/tour/{categoryName}").permitAll()
-                .antMatchers("/tour/tour-detail/{tourId}").permitAll()
-                .antMatchers("/tour/create").hasAnyAuthority(USER,ADMIN)
-                .antMatchers("/categories","/categories/**").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/refreshtoken").permitAll()
-                .antMatchers("/user","/user/**").permitAll()
-                .antMatchers(HttpHeaders.ALLOW).permitAll()
-                .anyRequest().authenticated().and()
+                    .antMatchers("/login").permitAll()
+                    .antMatchers("/refreshtoken").permitAll()
+                    .antMatchers("/user","/user/**").permitAll()
+                    .antMatchers("/tour","/tour/**").hasAuthority(USER)
+//                    .antMatchers("/tour/all").permitAll()
+//                    .antMatchers("/tour/{categoryName}").permitAll()
+//                    .antMatchers("/tour/tour-detail/{tourId}").permitAll()
+//                    .antMatchers("/tour/create").hasAnyAuthority(USER,ADMIN)
+//                    .antMatchers("/image/create").hasAuthority(USER)
+//                    .antMatchers("/categories/").permitAll()
+//                    .antMatchers("/categories/{id}").permitAll()
+//                    .antMatchers("/categories/update/{id}").hasAnyAuthority(USER,ADMIN)
+//                    .antMatchers("/categories/delete/{id}").permitAll()
+//                    .antMatchers("/categories/create").hasAnyAuthority(USER,ADMIN)
+                    .antMatchers(HttpHeaders.ALLOW).permitAll()
+                    .anyRequest().authenticated().and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

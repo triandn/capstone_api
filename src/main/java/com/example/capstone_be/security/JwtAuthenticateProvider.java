@@ -71,10 +71,11 @@ public class JwtAuthenticateProvider {
 
     public String generateToken(CustomUserDetails userDetails) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String role = userDetails.getAuthorities().toString();
+        System.out.println("Role: " + role);
         return Jwts.builder()
                 .setSubject(userDetails.getUsername())
                 .claim(AUTHORITIES_KEY, role)
-                .claim(USERNAME_KEY, userDetails.getUsername())
+                .claim(USERNAME_KEY, userDetails.getName())
                 .setIssuedAt(new Date())
                 .setExpiration(generateExpirationDate())
                 .signWith(SignatureAlgorithm.HS256, secretKey)

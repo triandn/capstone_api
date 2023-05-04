@@ -6,7 +6,7 @@ import lombok.Data;
 public class JwtResponse {
     private String token;
 
-    private String type = "Bearer";
+    private String type = "Bearer ";
 
     private String refreshToken;
 
@@ -19,5 +19,8 @@ public class JwtResponse {
         this.refreshToken = refreshToken;
         this.username = username;
         this.role = role;
+    }
+    public JwtResponse(String token) {
+        this.token = token;
     }
 }
