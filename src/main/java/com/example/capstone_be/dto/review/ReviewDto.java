@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ReviewDto implements Serializable {
 
-    private UUID reviewId;
+    private UUID reviewId = UUID.randomUUID();
 
     private String comment;
 

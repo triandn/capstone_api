@@ -5,9 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 @Data
 @AllArgsConstructor
@@ -21,6 +21,8 @@ public class DayBookDto implements Serializable {
     private Long tourId;
 
     private String status = DayBookStatusEnum.AVAILABLE.toString();
+
+    List<TimeBookViewDto> timeBookViewDtoList;
 
 }
 

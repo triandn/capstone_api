@@ -36,4 +36,6 @@ public class TourViewDto implements Serializable {
 
     private String categoryName;
 
+    private Double avgRating;
+
 }

@@ -1,10 +1,11 @@
 package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.daybook.DayBookDto;
-import com.example.capstone_be.dto.image.ImageDto;
+import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
+import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.DayBook;
-import com.example.capstone_be.model.ImageDetail;
+import com.example.capstone_be.model.TimeBookDetail;
 import com.example.capstone_be.repository.DayBookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -19,17 +20,30 @@ public class DayBookServiceImpl implements DayBookService {
 
     private final ModelMapper mapper;
     private final DayBookRepository dayBookRepository;
+    private final TimeBookDetailService timeBookDetailService;
 
-    public DayBookServiceImpl(ModelMapper mapper, DayBookRepository dayBookRepository) {
+    public DayBookServiceImpl(ModelMapper mapper, DayBookRepository dayBookRepository, TimeBookDetailService timeBookDetailService) {
         this.mapper = mapper;
         this.dayBookRepository = dayBookRepository;
+        this.timeBookDetailService = timeBookDetailService;
     }
 
     @Override
     public List<DayBookDto> getAllDayBook() {
         List<DayBook> dayBookList = dayBookRepository.findAll();
         List<DayBookDto> dayBookDtoList = new ArrayList<>();
-
+//        List<TimeBookViewDto> timeBookDtoList = new ArrayList<>();
+//        DayBookDto dayBookDto = null;
+//        for (DayBook daybook: dayBookList) {
+//            dayBookDto = new DayBookDto();
+//            timeBookDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(daybook.getDayBookId());
+//            dayBookDto.setDayBookId(daybook.getDayBookId());
+//            dayBookDto.setDay_name(daybook.getDay_name());
+//            dayBookDto.setTourId(daybook.getTourId());
+//            dayBookDto.setStatus(daybook.getStatus());
+//            dayBookDto.setTimeBookViewDtoList(timeBookDtoList);
+//            dayBookDtoList.add(dayBookDto);
+//        }
         for (DayBook daybook: dayBookList) {
             dayBookDtoList.add(mapper.map(daybook,DayBookDto.class));
         }
@@ -70,6 +84,13 @@ public class DayBookServiceImpl implements DayBookService {
     @Override
     public DayBookDto getDayBookingById(UUID id) {
         DayBook dayBook = dayBookRepository.findById(id).orElseThrow(() -> new NotFoundException("DayBooking not found"));
-        return mapper.map(dayBook,DayBookDto.class);
+        DayBookDto dayBookDto = new DayBookDto();
+        List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(id);
+        dayBookDto.setTourId(dayBook.getTourId());
+        dayBookDto.setDayBookId(dayBook.getDayBookId());
+        dayBookDto.setDay_name(dayBook.getDay_name());
+        dayBookDto.setStatus(dayBook.getStatus());
+        dayBookDto.setTimeBookViewDtoList(timeBookViewDtoList);
+        return dayBookDto;
     }
 }

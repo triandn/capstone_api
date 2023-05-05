@@ -23,8 +23,8 @@ public class CategoryController {
     }
     @GetMapping("/")
     public ResponseEntity<List<CategoryDto>> getAllCategory() {
-        final List<CategoryDto> prizeDtoList = categoryService.getAll();
-        return new ResponseEntity<>(prizeDtoList, HttpStatus.OK);
+        final List<CategoryDto> categoryDtoList = categoryService.getAll();
+        return new ResponseEntity<>(categoryDtoList, HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id,final BindingResult bindingResult) {
@@ -35,7 +35,7 @@ public class CategoryController {
         CategoryDto categoryDto = categoryService.findCategoryById(id);
         return new ResponseEntity(categoryDto, HttpStatus.OK);
     }
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ResponseEntity<CategoryDto> createCategory(@RequestBody final CategoryDto categoryDto) {
         categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(categoryDto, HttpStatus.OK);

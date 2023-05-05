@@ -1,7 +1,5 @@
 package com.example.capstone_be.service;
 
-import com.example.capstone_be.dto.category.CategoryDto;
-import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.dto.tour.TourByCategoryDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
@@ -34,13 +32,15 @@ public class TourServiceImpl implements TourService {
 
     private final ImageRepository imageRepository;
 
+    private final ReviewService reviewService;
     private Set<Category> categories;
     private Set<Category> cate;
 
-    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository) {
+    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService) {
         this.mapper = mapper;
         this.tourRepository = tourRepository;
         this.imageRepository = imageRepository;
+        this.reviewService = reviewService;
     }
 
     @Override
@@ -57,9 +57,10 @@ public class TourServiceImpl implements TourService {
         final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
         TourViewDto tourViewDto = null;
-
+        Double avgRating = 0.0;
         for (Tour tour: tourList) {
             tourViewDto = new TourViewDto();
+            avgRating = reviewService.calAvgRatingReviewForTour(tour.getTourId());
             tourViewDto.setTourId(tour.getTourId());
             tourViewDto.setTitle(tour.getTitle());
             tourViewDto.setRating(tour.getRating());
@@ -70,6 +71,7 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setDestinationDescription(tour.getDestinationDescription());
             tourViewDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName().toString());
+            tourViewDto.setAvgRating(avgRating);
             tourViewDtos.add(tourViewDto);
         }
         tourRespone.setContent(tourViewDtos);
@@ -90,10 +92,11 @@ public class TourServiceImpl implements TourService {
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
         List<TourByCategoryDto> tourByCategoryDtos = new ArrayList<>();
         TourByCategoryDto tourByCategoryDto = null;
-
+        Double avgRating = 0.0;
         System.out.println("Tour List Size: " + tourListByCategoryName.getSize());
         for (Tour tour : tourListByCategoryName.getContent()) {
             tourByCategoryDto = new TourByCategoryDto();
+            avgRating = reviewService.calAvgRatingReviewForTour(tour.getTourId());
             tourByCategoryDto.setTourId(tour.getTourId());
             tourByCategoryDto.setTitle(tour.getTitle());
             tourByCategoryDto.setRating(tour.getRating());
@@ -103,6 +106,7 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setWorking(tour.getWorking());
             tourByCategoryDto.setDestination(tour.getDestination());
             tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
+            tourByCategoryDto.setAvgRating(avgRating);
             tourByCategoryDtos.add(tourByCategoryDto);
         }
         System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());
@@ -120,7 +124,7 @@ public class TourServiceImpl implements TourService {
         final Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new NotFoundException("Tour not found !!"));
         List<ImageViewDto> imageViewDtos = new ArrayList<>();
         List<ImageDetail> imageDetails = imageRepository.getImageDetailByTourId(tourId);
-
+        Double avgRatingTour = reviewService.calAvgRatingReviewForTour(tour.getTourId());
         for (ImageDetail image: imageDetails) {
             imageViewDtos.add(mapper.map(image,ImageViewDto.class));
         }
@@ -136,6 +140,7 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setDestination(tour.getDestination());
         tourDetailDto.setDestinationDescription(tour.getDestinationDescription());
         tourDetailDto.setImages(imageViewDtos);
+        tourDetailDto.setAvgRating(avgRatingTour);
 
         return tourDetailDto;
     }

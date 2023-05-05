@@ -3,6 +3,7 @@ package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
+import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.DayBook;
@@ -31,14 +32,14 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     }
 
     @Override
-    public List<TimeBookDetailDto> getAllTimeBookDetail() {
+    public List<TimeBookViewDto> getAllTimeBookDetail() {
         List<TimeBookDetail> timeBookDetailList = timeBookRepository.findAll();
-        List<TimeBookDetailDto> timeBookDetailDtoList = new ArrayList<>();
+        List<TimeBookViewDto> timeBookViewDtoList = new ArrayList<>();
 
         for (TimeBookDetail timeBookDetail : timeBookDetailList) {
-            timeBookDetailDtoList.add(mapper.map(timeBookDetail,TimeBookDetailDto.class));
+            timeBookViewDtoList.add(mapper.map(timeBookDetail,TimeBookViewDto.class));
         }
-        return timeBookDetailDtoList;
+        return timeBookViewDtoList;
     }
 
     @Override
@@ -72,9 +73,9 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     }
 
     @Override
-    public TimeBookDetailDto getTimeBookingById(UUID id) {
+    public TimeBookViewDto getTimeBookingById(UUID id) {
         TimeBookDetail timeBookDetail = timeBookRepository.findById(id).orElseThrow(() -> new NotFoundException("TimeBook not found"));
-        return mapper.map(timeBookDetail,TimeBookDetailDto.class);
+        return mapper.map(timeBookDetail,TimeBookViewDto.class);
     }
 
     @Override
@@ -86,5 +87,15 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
         }
         timeBookRepository.saveAll(timeBookDetails);
         return timeBookDetailDtoList;
+    }
+
+    @Override
+    public List<TimeBookViewDto> getAllTimeBookForDayByDayBookId(UUID dayBookId) {
+        List<TimeBookDetail> timeBookDetailList = timeBookRepository.getAllListTimeBookByDayBookId(dayBookId);
+        List<TimeBookViewDto> timeBookViewDtoList = new ArrayList<>();
+        for (TimeBookDetail timeBookDetail: timeBookDetailList) {
+            timeBookViewDtoList.add(mapper.map(timeBookDetail,TimeBookViewDto.class));
+        }
+        return timeBookViewDtoList;
     }
 }

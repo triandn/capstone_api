@@ -3,6 +3,7 @@ package com.example.capstone_be.controller;
 
 import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
+import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.service.TimeBookDetailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,13 +25,13 @@ public class TimeBookDetailController {
     public TimeBookDetailController(TimeBookDetailService timeBookDetailService) {
         this.timeBookDetailService = timeBookDetailService;
     }
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ResponseEntity<TimeBookDetailDto> createTimeBookForDay(@RequestBody TimeBookDetailDto timeBookDetailDto) {
         timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
         return new ResponseEntity<>(timeBookDetailDto, HttpStatus.CREATED);
     }
 
-    @PostMapping("/create-list")
+    @PostMapping("/create-list/")
     public ResponseEntity<List<TimeBookDetailDto>> createListTimeBookForDay(@RequestBody List<TimeBookDetailDto> timeBookDetailDtos) {
         timeBookDetailService.createListTimeBookDetail(timeBookDetailDtos);
         return new ResponseEntity<>(timeBookDetailDtos, HttpStatus.CREATED);
@@ -51,15 +52,15 @@ public class TimeBookDetailController {
         TimeBookDetailDto updatedTimeBookDto = timeBookDetailService.updateByTimeBookId(timeBookDetailDto, id);
         return new ResponseEntity(updatedTimeBookDto, HttpStatus.OK);
     }
-    @GetMapping("/all")
-    public ResponseEntity<List<TimeBookDetailDto>> getAllTimeBookingForDay() {
-        final List<TimeBookDetailDto> timeBookDtoList = timeBookDetailService.getAllTimeBookDetail();
+    @GetMapping("/all/")
+    public ResponseEntity<List<TimeBookViewDto>> getAllTimeBookingForDay() {
+        final List<TimeBookViewDto> timeBookDtoList = timeBookDetailService.getAllTimeBookDetail();
         return new ResponseEntity<>(timeBookDtoList,HttpStatus.OK);
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<TimeBookDetailDto> getTimeBookingForDayDetail(@PathVariable UUID id) {
-        final TimeBookDetailDto timeBookDetailDto = timeBookDetailService.getTimeBookingById(id);
+    public ResponseEntity<TimeBookViewDto> getTimeBookingForDayDetail(@PathVariable UUID id) {
+        final TimeBookViewDto timeBookDetailDto = timeBookDetailService.getTimeBookingById(id);
         return new ResponseEntity<>(timeBookDetailDto,HttpStatus.OK);
     }
 }

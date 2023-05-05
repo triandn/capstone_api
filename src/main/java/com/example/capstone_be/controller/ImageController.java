@@ -26,7 +26,7 @@ public class ImageController {
     public ImageController(ImageService imageService) {
         this.imageService = imageService;
     }
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ResponseEntity<List<ImageDto>> createImageDetailForTour(@RequestBody List<ImageDto> imageDtos) {
         imageService.createImageDetailForTour(imageDtos);
         return new ResponseEntity<>(imageDtos, HttpStatus.CREATED);
@@ -47,7 +47,7 @@ public class ImageController {
         return new ResponseEntity(updatedImageDto, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all/")
     public ResponseEntity<List<ImageViewDto>> getAllImage() {
         final List<ImageViewDto> imageViewDtoList = imageService.getAllImage();
         return new ResponseEntity<>(imageViewDtoList,HttpStatus.OK);

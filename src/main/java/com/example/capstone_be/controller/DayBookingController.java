@@ -26,7 +26,7 @@ public class DayBookingController {
         this.dayBookService = dayBookService;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ResponseEntity<DayBookDto> createDayBooking(@RequestBody DayBookDto dayBookDto) {
         dayBookService.createDayBooking(dayBookDto);
         return new ResponseEntity<>(dayBookDto, HttpStatus.CREATED);
@@ -48,7 +48,7 @@ public class DayBookingController {
         return new ResponseEntity(updatedDayBookDto, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all/")
     public ResponseEntity<List<DayBookDto>> getAllDayBooking() {
         final List<DayBookDto> dayBookDtoList = dayBookService.getAllDayBook();
         return new ResponseEntity<>(dayBookDtoList,HttpStatus.OK);

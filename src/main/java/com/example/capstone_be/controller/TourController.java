@@ -33,7 +33,7 @@ public class TourController {
         this.tourRepository = tourRepository;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/")
     public ResponseEntity<TourDto> createTour(@RequestBody TourDto tourDto) {
         tourService.createTour(tourDto);
         return new ResponseEntity<>(tourDto, HttpStatus.CREATED);

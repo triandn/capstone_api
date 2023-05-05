@@ -29,4 +29,6 @@ public class TourByCategoryDto implements Serializable {
     private String destination;
 
     private String destinationDescription;
+
+    private Double avgRating;
 }

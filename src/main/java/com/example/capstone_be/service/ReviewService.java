@@ -20,4 +20,7 @@ public interface ReviewService {
 
     ReviewDto getReviewById(UUID id);
 
+    Double calAvgRatingReviewForTour(Long tourId);
+
+    List<ReviewDto> getListReviewByTourId(Long tourId);
 }
