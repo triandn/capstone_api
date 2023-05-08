@@ -33,7 +33,7 @@ public class Tour extends BaseEntity{
     @Column(name = "price_one_person", nullable = false)
     private Float priceOnePerson;
 
-    @Column(name = "image_main", nullable = true)
+    @Column(name = "image_main", nullable = false)
     private String imageMain;
 
     @Column(name = "working", nullable = false)
@@ -54,13 +54,13 @@ public class Tour extends BaseEntity{
     @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
     private UUID userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "tour_category", joinColumns = @JoinColumn(name = "tour_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
-    @JsonIgnore
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

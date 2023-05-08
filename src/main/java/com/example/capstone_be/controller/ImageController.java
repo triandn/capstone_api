@@ -39,6 +39,7 @@ public class ImageController {
     }
     @PatchMapping("/image-update/{id}")
     public ResponseEntity<?> updateImage(@RequestBody @Valid ImageDto imageDto, @PathVariable UUID id, final BindingResult bindingResult) {
+
         if(bindingResult.hasErrors()) {
             String msg = getMessageBindingResult(bindingResult);
             return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);

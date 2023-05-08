@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -46,6 +47,9 @@ public class TourServiceImpl implements TourService {
     @Override
     @Transactional
     public TourDto createTour(TourDto tourDto) {
+        String userId = tourDto.getUserId().toString();
+        System.out.println("User ID: " + userId);
+//        tourDto.setUserId(UUID.fromString(userId));
         tourRepository.save(mapper.map(tourDto, Tour.class));
         return tourDto;
     }
@@ -75,6 +79,7 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName().toString());
             tourViewDto.setAvgRating(avgRating);
             tourViewDto.setUserId(tour.getUserId());
+            tourViewDto.setImageMain(tour.getImageMain());
             tourViewDtos.add(tourViewDto);
         }
         tourRespone.setContent(tourViewDtos);
@@ -174,7 +179,6 @@ public class TourServiceImpl implements TourService {
                     tour.setLongitude(tourDto.getLongitude());
                     tour.setDestination(tourDto.getDestination());
                     tour.setDestinationDescription(tourDto.getDestinationDescription());
-                    tour.setUserId(tourDto.getUserId());
                     return tourRepository.save(tour);
                 })
                 .orElseGet(() -> {

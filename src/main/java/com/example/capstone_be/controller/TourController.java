@@ -10,6 +10,7 @@ import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
+import com.example.capstone_be.response.UpdateResponse;
 import com.example.capstone_be.service.TourService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,12 +66,17 @@ public class TourController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @PatchMapping("/tour-update/{id}")
-    public ResponseEntity<?> updateTour(@RequestBody @Valid TourDto tourDto, @PathVariable Long id, final BindingResult bindingResult) {
+    public UpdateResponse updateTour(@RequestBody @Valid TourDto tourDto, @PathVariable Long id, final BindingResult bindingResult) {
+        UpdateResponse updateResponse = new UpdateResponse();
         if(bindingResult.hasErrors()) {
             String msg = getMessageBindingResult(bindingResult);
-            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+            updateResponse.setMessage(msg);
+            updateResponse.setStatus_code(HttpStatus.BAD_REQUEST.toString());
+            return updateResponse;
         }
-        TourDto updatedTourDto = tourService.updateByTourId(tourDto, id);
-        return new ResponseEntity(updatedTourDto, HttpStatus.OK);
+        tourService.updateByTourId(tourDto, id);
+        updateResponse.setMessage("Update Success");
+        updateResponse.setStatus_code(HttpStatus.OK.toString());
+        return updateResponse ;
     }
 }
