@@ -71,7 +71,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/tour/tour-detail/{tourId}").permitAll()
                     .antMatchers("/tour/tour-delete/{id}").hasAnyAuthority(USER,ADMIN)
                     .antMatchers("/tour/tour-update/{id}").hasAnyAuthority(USER,ADMIN)
-                    .antMatchers("/categories").permitAll()
+                    .antMatchers("/categories/").permitAll()
                     .antMatchers("/categories/{id}").permitAll()
                     .antMatchers("/categories/create/").hasAuthority(USER)
                     .antMatchers("/categories/delete/{id}").hasAuthority(USER)
