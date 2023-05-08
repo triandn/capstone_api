@@ -26,6 +26,10 @@ public class TourByCategoryDto implements Serializable {
 
     private String working;
 
+    private String latitude;
+
+    private String longitude;
+
     private String destination;
 
     private String destinationDescription;

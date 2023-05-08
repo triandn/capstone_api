@@ -38,6 +38,13 @@ public class Tour extends BaseEntity{
     @Column(name = "working", nullable = false)
     private String working;
 
+    @Column(name = "latitude", nullable = false)
+    private String latitude;
+
+    @Column(name = "longitude", nullable = false)
+    private String longitude;
+
+
     @Column(name = "destination", nullable = false)
     private String destination;
 

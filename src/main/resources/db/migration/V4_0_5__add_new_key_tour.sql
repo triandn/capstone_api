@@ -1,0 +1,2 @@
+ALTER TABLE tours ADD COLUMN latitude TEXT;
+ALTER TABLE tours ADD COLUMN longitude TEXT;

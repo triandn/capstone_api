@@ -67,6 +67,8 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setCity(tour.getCity());
             tourViewDto.setPriceOnePerson(tour.getPriceOnePerson());
             tourViewDto.setWorking(tour.getWorking());
+            tourViewDto.setLatitude(tour.getLatitude());
+            tourViewDto.setLongitude(tour.getLongitude());
             tourViewDto.setDestination(tour.getDestination());
             tourViewDto.setDestinationDescription(tour.getDestinationDescription());
             tourViewDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
@@ -104,6 +106,8 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setPriceOnePerson(tour.getPriceOnePerson());
             tourByCategoryDto.setImageMain(tour.getImageMain());
             tourByCategoryDto.setWorking(tour.getWorking());
+            tourByCategoryDto.setLatitude(tour.getLatitude());
+            tourByCategoryDto.setLongitude(tour.getLongitude());
             tourByCategoryDto.setDestination(tour.getDestination());
             tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
             tourByCategoryDto.setAvgRating(avgRating);
@@ -137,6 +141,8 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setPriceOnePerson(tour.getPriceOnePerson());
         tourDetailDto.setImageMain(tour.getImageMain());
         tourDetailDto.setWorking(tour.getWorking());
+        tourDetailDto.setLatitude(tour.getLatitude());
+        tourDetailDto.setLongitude(tour.getLongitude());
         tourDetailDto.setDestination(tour.getDestination());
         tourDetailDto.setDestinationDescription(tour.getDestinationDescription());
         tourDetailDto.setImages(imageViewDtos);
@@ -162,6 +168,8 @@ public class TourServiceImpl implements TourService {
                     tour.setPriceOnePerson(tourDto.getPriceOnePerson());
                     tour.setImageMain(tourDto.getImageMain());
                     tour.setWorking(tourDto.getWorking());
+                    tour.setLatitude(tourDto.getLatitude());
+                    tour.setLongitude(tourDto.getLongitude());
                     tour.setDestination(tourDto.getDestination());
                     tour.setDestinationDescription(tourDto.getDestinationDescription());
                     return tourRepository.save(tour);
