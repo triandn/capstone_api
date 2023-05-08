@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -36,4 +37,6 @@ public class TourDto implements Serializable {
     private String destinationDescription;
 
     private Set<Category> categories;
+
+    private UUID userId;
 }

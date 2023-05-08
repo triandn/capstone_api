@@ -1,0 +1,2 @@
+ALTER TABLE tours ADD COLUMN user_id UUID;
+ALTER TABLE tours ADD CONSTRAINT FK_user FOREIGN KEY (user_id) REFERENCES users (user_id);

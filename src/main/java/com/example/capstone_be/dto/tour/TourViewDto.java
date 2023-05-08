@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 
 @Data
@@ -41,5 +42,7 @@ public class TourViewDto implements Serializable {
     private String categoryName;
 
     private Double avgRating;
+
+    private UUID userId;
 
 }

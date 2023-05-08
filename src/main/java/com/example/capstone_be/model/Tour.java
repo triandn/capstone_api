@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -44,12 +45,18 @@ public class Tour extends BaseEntity{
     @Column(name = "longitude", nullable = false)
     private String longitude;
 
-
     @Column(name = "destination", nullable = false)
     private String destination;
 
     @Column(name = "destination_description", nullable = false)
     private String destinationDescription;
+
+    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
+    private UUID userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "tour_category", joinColumns = @JoinColumn(name = "tour_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))

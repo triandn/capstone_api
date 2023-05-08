@@ -74,6 +74,7 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName().toString());
             tourViewDto.setAvgRating(avgRating);
+            tourViewDto.setUserId(tour.getUserId());
             tourViewDtos.add(tourViewDto);
         }
         tourRespone.setContent(tourViewDtos);
@@ -111,6 +112,7 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setDestination(tour.getDestination());
             tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
             tourByCategoryDto.setAvgRating(avgRating);
+            tourByCategoryDto.setUserId(tour.getUserId());
             tourByCategoryDtos.add(tourByCategoryDto);
         }
         System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());
@@ -147,7 +149,7 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setDestinationDescription(tour.getDestinationDescription());
         tourDetailDto.setImages(imageViewDtos);
         tourDetailDto.setAvgRating(avgRatingTour);
-
+        tourDetailDto.setUserId(tour.getUserId());
         return tourDetailDto;
     }
 
@@ -172,6 +174,7 @@ public class TourServiceImpl implements TourService {
                     tour.setLongitude(tourDto.getLongitude());
                     tour.setDestination(tourDto.getDestination());
                     tour.setDestinationDescription(tourDto.getDestinationDescription());
+                    tour.setUserId(tourDto.getUserId());
                     return tourRepository.save(tour);
                 })
                 .orElseGet(() -> {
