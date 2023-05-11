@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ImageDto implements Serializable {
 
-    private UUID imageId;
+    private UUID imageId = UUID.randomUUID();
 
     private String link;
 
