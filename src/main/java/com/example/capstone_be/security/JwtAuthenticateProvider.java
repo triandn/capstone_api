@@ -83,13 +83,13 @@ public class JwtAuthenticateProvider {
     }
     public String generateTokenByRefreshToken(String requestRefreshToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
         Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(requestRefreshToken);
-        refreshTokenService.verifyExpiration(refreshToken.get());
+        refreshTokenService.verifyExpiration(refreshToken.get()); //
         CustomUserDetails customUserDetails = new CustomUserDetails(refreshToken.get().getUser());
         String token = generateToken(customUserDetails);
         return token;
     }
     private Date generateExpirationDate() {
-        return new Date(new Date().getTime() + expiresIn * 1000);
+        return new Date(new Date().getTime() + expiresIn);
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
