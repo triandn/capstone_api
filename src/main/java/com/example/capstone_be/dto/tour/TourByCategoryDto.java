@@ -35,6 +35,8 @@ public class TourByCategoryDto implements Serializable {
 
     private String destinationDescription;
 
+    private int timeSlotLength;
+
     private Double avgRating;
 
     private UUID userId;

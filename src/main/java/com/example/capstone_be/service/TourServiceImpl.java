@@ -80,6 +80,7 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setAvgRating(avgRating);
             tourViewDto.setUserId(tour.getUserId());
             tourViewDto.setImageMain(tour.getImageMain());
+            tourViewDto.setTimeSlotLength(tour.getTimeSlotLength());
             tourViewDtos.add(tourViewDto);
         }
         tourRespone.setContent(tourViewDtos);
@@ -118,6 +119,7 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setDestinationDescription(tour.getDestinationDescription());
             tourByCategoryDto.setAvgRating(avgRating);
             tourByCategoryDto.setUserId(tour.getUserId());
+            tourByCategoryDto.setTimeSlotLength(tour.getTimeSlotLength());
             tourByCategoryDtos.add(tourByCategoryDto);
         }
         System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());
@@ -131,7 +133,6 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourDetailDto getTourDetail(Long tourId) {
-
         final Tour tour = tourRepository.findById(tourId).orElseThrow(() -> new NotFoundException("Tour not found !!"));
         List<ImageViewDto> imageViewDtos = new ArrayList<>();
         List<ImageDetail> imageDetails = imageRepository.getImageDetailByTourId(tourId);
@@ -155,6 +156,7 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setImages(imageViewDtos);
         tourDetailDto.setAvgRating(avgRatingTour);
         tourDetailDto.setUserId(tour.getUserId());
+        tourDetailDto.setTimeSlotLength(tour.getTimeSlotLength());
         return tourDetailDto;
     }
 
@@ -179,6 +181,7 @@ public class TourServiceImpl implements TourService {
                     tour.setLongitude(tourDto.getLongitude());
                     tour.setDestination(tourDto.getDestination());
                     tour.setDestinationDescription(tourDto.getDestinationDescription());
+                    tour.setTimeSlotLength(tourDto.getTimeSlotLength());
                     return tourRepository.save(tour);
                 })
                 .orElseGet(() -> {

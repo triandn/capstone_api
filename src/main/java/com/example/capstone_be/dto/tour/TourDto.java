@@ -36,6 +36,8 @@ public class TourDto implements Serializable {
 
     private String destinationDescription;
 
+    private int timeSlotLength;
+
     private Set<Category> categories;
 
     private UUID userId;

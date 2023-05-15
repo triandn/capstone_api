@@ -37,6 +37,8 @@ public class TourDetailDto implements Serializable {
 
     private String destinationDescription;
 
+    private int timeSlotLength;
+
     private Double avgRating;
 
     private List<ImageViewDto> images;

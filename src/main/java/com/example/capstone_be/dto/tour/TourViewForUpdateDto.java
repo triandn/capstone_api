@@ -33,4 +33,6 @@ public class TourViewForUpdateDto implements Serializable {
 
     private String destinationDescription;
 
+    private int timeSlotLength;
+
 }

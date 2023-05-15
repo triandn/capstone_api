@@ -18,7 +18,7 @@ public class Tour extends BaseEntity{
     @Column(name = "tour_id", nullable = false)
     private Long tourId;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title")
     private String title;
 
     @Column(name = "rating", nullable = false)
