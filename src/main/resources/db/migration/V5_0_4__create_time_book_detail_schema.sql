@@ -2,8 +2,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE IF NOT EXISTS time_book_details (
      time_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-     start_time TIME NOT NULL,
-     end_time TIME NOT NULL,
+     start_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+     end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
      tour_id SERIAL,
      day_book_id UUID,
      is_payment BOOLEAN,

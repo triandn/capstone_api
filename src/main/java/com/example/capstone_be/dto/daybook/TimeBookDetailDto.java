@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
@@ -17,9 +18,9 @@ public class TimeBookDetailDto implements Serializable {
 
     private UUID timeId ;
 
-    private Time start_time;
+    private Timestamp start_time;
 
-    private Time end_time;
+    private Timestamp end_time;
 
     private Long tourId;
 

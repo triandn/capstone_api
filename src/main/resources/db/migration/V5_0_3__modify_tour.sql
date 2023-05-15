@@ -1,0 +1,1 @@
+ALTER TABLE tours ADD COLUMN time_slot_length INT;

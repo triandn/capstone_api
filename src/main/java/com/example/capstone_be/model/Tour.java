@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -44,6 +41,9 @@ public class Tour extends BaseEntity{
 
     @Column(name = "longitude", nullable = false)
     private String longitude;
+
+    @Column(name = "time_slot_length")
+    private int timeSlotLength;
 
     @Column(name = "destination", nullable = false)
     private String destination;
