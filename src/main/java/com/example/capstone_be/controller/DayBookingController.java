@@ -1,6 +1,7 @@
 package com.example.capstone_be.controller;
 
 
+import com.example.capstone_be.dto.daybook.DateBookCreateDto;
 import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
@@ -27,7 +28,7 @@ public class DayBookingController {
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<DayBookDto> createDayBooking(@RequestBody DayBookDto dayBookDto) {
+    public ResponseEntity<DateBookCreateDto> createDayBooking(@RequestBody DateBookCreateDto dayBookDto) {
         dayBookService.createDayBooking(dayBookDto);
         return new ResponseEntity<>(dayBookDto, HttpStatus.CREATED);
     }

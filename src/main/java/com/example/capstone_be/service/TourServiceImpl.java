@@ -11,8 +11,10 @@ import com.example.capstone_be.model.ImageDetail;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.ImageRepository;
 import com.example.capstone_be.repository.TourRepository;
+import com.example.capstone_be.repository.UserRepository;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
+import com.example.capstone_be.util.enums.RoleEnum;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,14 +36,17 @@ public class TourServiceImpl implements TourService {
     private final ImageRepository imageRepository;
 
     private final ReviewService reviewService;
+
+    private final UserRepository userRepository;
     private Set<Category> categories;
     private Set<Category> cate;
 
-    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService) {
+    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService, UserRepository userRepository) {
         this.mapper = mapper;
         this.tourRepository = tourRepository;
         this.imageRepository = imageRepository;
         this.reviewService = reviewService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -49,7 +54,10 @@ public class TourServiceImpl implements TourService {
     public TourDto createTour(TourDto tourDto) {
         String userId = tourDto.getUserId().toString();
         System.out.println("User ID: " + userId);
-//        tourDto.setUserId(UUID.fromString(userId));
+        List<Tour> tourList = tourRepository.getAllTourByUserId(UUID.fromString(userId));
+        if(tourList.isEmpty()){
+            userRepository.updateRole(UUID.fromString(userId), RoleEnum.OWNER.toString());
+        }
         tourRepository.save(mapper.map(tourDto, Tour.class));
         return tourDto;
     }

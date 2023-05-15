@@ -36,6 +36,8 @@ public class WebSecurityConfiguration {
 
     private final String USER = RoleEnum.USER.toString();
 
+    private final String OWNER = RoleEnum.OWNER.toString();
+
 
     @Autowired
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -75,7 +77,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/categories/create/").hasAuthority(USER)
                     .antMatchers("/categories/delete/{id}").hasAuthority(USER)
                     .antMatchers("/categories/update/{id}").hasAuthority(USER)
-                    .antMatchers("/day-booking/create/").hasAuthority(USER)
+                    .antMatchers("/day-booking/create/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/day-booking//delete/{id}").hasAuthority(USER)
                     .antMatchers("/day-booking/update/{id}").hasAuthority(USER)
                     .antMatchers("/day-booking/all/").permitAll()
@@ -91,8 +93,8 @@ public class WebSecurityConfiguration {
                     .antMatchers("/review/update/{id}").hasAuthority(USER)
                     .antMatchers("/time-book/all/").permitAll()
                     .antMatchers("/time-book/detail/{id}").permitAll()
-                    .antMatchers("/time-book/create/").hasAuthority(USER)
-                    .antMatchers("/time-book/create-list/").hasAuthority(USER)
+                    .antMatchers("/time-book/create/").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/time-book/create-list/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/time-book/delete/{id}").hasAuthority(USER)
                     .antMatchers("/time-book/update/{id}").hasAuthority(USER)
                     .antMatchers(HttpHeaders.ALLOW).permitAll()

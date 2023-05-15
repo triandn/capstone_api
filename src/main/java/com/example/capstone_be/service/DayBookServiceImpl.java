@@ -1,5 +1,6 @@
 package com.example.capstone_be.service;
 
+import com.example.capstone_be.dto.daybook.DateBookCreateDto;
 import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
@@ -52,7 +53,7 @@ public class DayBookServiceImpl implements DayBookService {
 
     @Override
     @Transactional
-    public DayBookDto createDayBooking(DayBookDto dayBookDto) {
+    public DateBookCreateDto createDayBooking(DateBookCreateDto dayBookDto) {
         dayBookRepository.save(mapper.map(dayBookDto,DayBook.class));
         return dayBookDto;
     }
@@ -67,7 +68,7 @@ public class DayBookServiceImpl implements DayBookService {
     public DayBookDto updateByDayBookId(DayBookDto dayBookDto, UUID id) {
         final DayBook updatedDayBook = dayBookRepository.findById(id)
                 .map(dayBook -> {
-                    dayBook.setDay_name(dayBookDto.getDay_name());
+                    dayBook.setDate_name(dayBookDto.getDate_name());
                     dayBook.setDayBookId(dayBookDto.getDayBookId());
                     dayBook.setStatus(dayBookDto.getStatus());
 
@@ -88,7 +89,7 @@ public class DayBookServiceImpl implements DayBookService {
         List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(id);
         dayBookDto.setTourId(dayBook.getTourId());
         dayBookDto.setDayBookId(dayBook.getDayBookId());
-        dayBookDto.setDay_name(dayBook.getDay_name());
+        dayBookDto.setDate_name(dayBook.getDate_name());
         dayBookDto.setStatus(dayBook.getStatus());
         dayBookDto.setTimeBookViewDtoList(timeBookViewDtoList);
         return dayBookDto;

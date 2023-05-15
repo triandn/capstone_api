@@ -19,8 +19,8 @@ public class DayBook extends BaseEntity{
     @Column(name = "day_book_id", nullable = false)
     private UUID dayBookId = UUID.randomUUID();
 
-    @Column(name = "day_name", nullable = false)
-    private Date day_name;
+    @Column(name = "date_name", nullable = false)
+    private Date date_name;
 
     @Column(name = "tour_id", nullable = false,insertable = false,updatable = false)
     private Long tourId;

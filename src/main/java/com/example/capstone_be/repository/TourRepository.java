@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.UUID;
+
 @Repository
 public interface TourRepository extends JpaRepository<Tour, Long> {
     String FIND_TOUR_BY_CATEGORY_NAME = "SELECT * FROM tours AS t \n" +
@@ -16,4 +19,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "WHERE c.category_name=:category_name";
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
     Page<Tour> findTourByCategoryName(@Param("category_name") String category_name, Pageable pageable);
+
+    @Query(value = "SELECT * FROM tours WHERE tours.user_id=:user_id",nativeQuery = true)
+    List<Tour> getAllTourByUserId(UUID user_id);
 }

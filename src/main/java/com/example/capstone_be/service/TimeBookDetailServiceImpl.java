@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +46,13 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     @Override
     @Transactional
     public TimeBookDetailDto createTimeBookDetail(TimeBookDetailDto timeBookDetailDto) {
-        timeBookRepository.save(mapper.map(timeBookDetailDto,TimeBookDetail.class));
+        TimeBookDetailDto timeBookDetailForSave = new TimeBookDetailDto();
+        timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
+        timeBookDetailForSave.setTourId(timeBookDetailDto.getTourId());
+        timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
+        timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
+        timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
+        timeBookRepository.save(mapper.map(timeBookDetailForSave,TimeBookDetail.class));
         return timeBookDetailDto;
     }
 
@@ -82,8 +89,16 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     @Transactional
     public List<TimeBookDetailDto> createListTimeBookDetail(List<TimeBookDetailDto> timeBookDetailDtoList) {
         List<TimeBookDetail> timeBookDetails = new ArrayList<>();
+        TimeBookDetailDto timeBookDetailForSave = null;
         for (TimeBookDetailDto timeBookDetailDto: timeBookDetailDtoList) {
-            timeBookDetails.add(mapper.map(timeBookDetailDto,TimeBookDetail.class));
+//            timeBookDetails.add(mapper.map(timeBookDetailDto,TimeBookDetail.class));
+            timeBookDetailForSave = new TimeBookDetailDto();
+            timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
+            timeBookDetailForSave.setTourId(timeBookDetailDto.getTourId());
+            timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
+            timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
+            timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
+            timeBookDetails.add(mapper.map(timeBookDetailForSave,TimeBookDetail.class));
         }
         timeBookRepository.saveAll(timeBookDetails);
         return timeBookDetailDtoList;

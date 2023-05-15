@@ -9,20 +9,17 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DayBookDto implements Serializable {
+public class DateBookCreateDto implements Serializable {
 
-    private UUID dayBookId;
+    private UUID dayBookId = UUID.randomUUID();
 
     private Date date_name;
 
+    private  String status = DayBookStatusEnum.AVAILABLE.toString();
+
     private Long tourId;
-
-    private String status = DayBookStatusEnum.AVAILABLE.toString();
-
-    List<TimeBookViewDto> timeBookViewDtoList;
-
 }
-
