@@ -1,17 +1,38 @@
 package com.example.capstone_be.service;
 
+import com.example.capstone_be.controller.AuthController;
+import com.example.capstone_be.dto.user.UserForUpdateDto;
+import com.example.capstone_be.dto.user.UserPasswordDto;
+import com.example.capstone_be.dto.user.UserProfileDto;
 import com.example.capstone_be.dto.user.UserRegistrationDto;
+import com.example.capstone_be.exception.BadRequestException;
+import com.example.capstone_be.exception.ComparisonException;
+import com.example.capstone_be.exception.InvalidOldPasswordException;
+import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.Category;
+import com.example.capstone_be.model.RefreshToken;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.model.VerificationToken;
 import com.example.capstone_be.repository.ConfirmationTokenRepository;
 import com.example.capstone_be.repository.UserRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.logging.Logger;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +47,9 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
 
     private final ModelMapper mapper;
+
+    @Value("${jwt.secret}")
+    private String secretKey;
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
@@ -78,4 +102,87 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.badRequest().body("Error: Couldn't verify email");
     }
 
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.getUserByUserEmail(email);
+    }
+
+    @Override
+    public User getUserByUserId(String bearerToken) {
+        try {
+            Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(bearerToken).getBody();
+            String email = claims.getSubject();
+            User user_refresh_token = userRepository.getUserByUserEmail(email);
+
+            UUID user_id = user_refresh_token.getUserId();
+            return userRepository.getUserByUserId(user_id);
+        } catch (ExpiredJwtException e) {
+            System.out.println("Token expired: "+e);
+        } catch (SignatureException e) {
+            Logger.getLogger(AuthController.class.getName());
+        } catch(Exception e){
+            System.out.println(" Some other exception in JWT parsing ");
+        }
+        return null;
+    }
+
+    @Override
+    public UserProfileDto getUserProfile(String bearerToken) {
+        UserProfileDto userProfileDto = new UserProfileDto();
+        User user = getUserByUserId(bearerToken);
+        userProfileDto.setAddress(user.getAddress());
+        userProfileDto.setLanguage(user.getLanguage());
+        userProfileDto.setDescription(user.getDescription());
+        userProfileDto.setPhoneNumber(user.getPhoneNumber());
+        userProfileDto.setUrlImage(user.getUrlImage());
+        return userProfileDto;
+    }
+
+    @Override
+    @Transactional
+    public UserForUpdateDto updateUserProfile(String bearerToken, UserForUpdateDto userForUpdateDto) {
+        User user = getUserByUserId(bearerToken);
+        userRepository.updateProfile(
+                userForUpdateDto.getDescription(),
+                userForUpdateDto.getAddress(),
+                userForUpdateDto.getPhoneNumber(),
+                userForUpdateDto.getLanguage(),
+                userForUpdateDto.getUrlImage(),
+                userForUpdateDto.getUserName(),
+                user.getUserId()
+        );
+        return userForUpdateDto;
+    }
+
+    @Override
+    public void changePassword(UserPasswordDto userPasswordDto) {
+        String oldPassword = userPasswordDto.getOldPassword();
+        User currentUser = userRepository.getUserByUserEmail(userPasswordDto.getEmail());
+        try{
+            if (bCryptPasswordEncoder.matches(oldPassword, currentUser.getUserPassword())) {
+                userRepository.findById(currentUser.getUserId())
+                        .map(user -> {
+                            if (userPasswordDto.getNewPassword().equals(userPasswordDto.getConfirmPassword())) {
+                                user.setUserPassword(bCryptPasswordEncoder.encode(userPasswordDto.getNewPassword()));
+                                //send password to mail
+                                SimpleMailMessage mailMessage = new SimpleMailMessage();
+                                mailMessage.setTo(currentUser.getUserEmail());
+                                mailMessage.setSubject("CHANGE PASSWORD SUCCESS!");
+                                mailMessage.setText("New Password here : "
+                                        +userPasswordDto.getNewPassword());
+                                emailService.sendEmail(mailMessage);
+                                return userRepository.save(user);
+                            } else {
+                                throw new ComparisonException("Confirm password doesn't match new password!");
+                            }
+                        })
+                        .orElseThrow(() -> new NotFoundException("User not found!"));
+            } else {
+                throw new InvalidOldPasswordException("Wrong old password!");
+            }
+        }
+        catch (Exception e){
+            System.out.println("Error: "+ e);
+        }
+    }
 }

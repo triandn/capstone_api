@@ -23,6 +23,21 @@ public class User extends BaseEntity {
     @Column(name = "user_email", nullable = false)
     private String userEmail;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "language")
+    private String language;
+
+    @Column(name = "url_image")
+    private String urlImage;
+
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
 
@@ -31,5 +46,4 @@ public class User extends BaseEntity {
 
     @Column(name = "is_enabled")
     private boolean isEnabled = true;
-
 }

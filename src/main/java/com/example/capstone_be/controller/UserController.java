@@ -1,8 +1,9 @@
 package com.example.capstone_be.controller;
 
 
+import com.example.capstone_be.dto.user.UserPasswordDto;
 import com.example.capstone_be.dto.user.UserRegistrationDto;
-import com.example.capstone_be.model.User;
+import com.example.capstone_be.response.ChangePasswordResponse;
 import com.example.capstone_be.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import java.security.Principal;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
 
@@ -33,5 +36,19 @@ public class UserController {
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
         return userService.confirmEmail(confirmationToken);
+    }
+
+    @PutMapping("/change-password/")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody final UserPasswordDto userPasswordDto,
+                                            final BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            String msg = getMessageBindingResult(bindingResult);
+            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+        }
+        userService.changePassword(userPasswordDto);
+        ChangePasswordResponse changePasswordResponse = new ChangePasswordResponse();
+        changePasswordResponse.setMessage("Change Password Success");
+        changePasswordResponse.setStatus_code(HttpStatus.OK.toString());
+        return new ResponseEntity<>(changePasswordResponse, HttpStatus.OK);
     }
 }

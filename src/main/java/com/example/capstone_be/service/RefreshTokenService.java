@@ -84,7 +84,6 @@ public class RefreshTokenService {
             String email = claims.getSubject();
             User user_refresh_token = userRepository.getUserByUserEmail(email);
             //
-
             UUID user_id = user_refresh_token.getUserId();
             List<RefreshToken> refreshTokenList = refreshTokenRepository.getRefreshTokenByUserId(user_id);
             List<String> refreshTokenDelete = new ArrayList<>();
