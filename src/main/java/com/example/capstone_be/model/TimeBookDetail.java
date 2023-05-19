@@ -26,28 +26,13 @@ public class TimeBookDetail extends BaseEntity{
     @Column(name = "end_time", nullable = false,columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Timestamp end_time;
 
-    @Column(name = "tour_id", nullable = false,insertable = false,updatable = false)
-    private Long tourId;
-
     @Column(name = "day_book_id", nullable = false,insertable = false,updatable = false)
     private UUID day_book_id;
-
-    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
-    private UUID user_id;
 
     @Column(name = "is_payment")
     private Boolean isPayment = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     @JoinColumn(name = "day_book_id", nullable = false)
     private DayBook dayBook;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
 }

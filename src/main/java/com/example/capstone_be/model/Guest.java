@@ -26,17 +26,17 @@ public class Guest extends  BaseEntity{
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "tour_id", nullable = false,insertable = false,updatable = false)
-    private Long tourId;
-
-    @Column(name = "time_id", nullable = false,insertable = false,updatable = false)
+    @Column(name = "time_id",nullable = false,insertable = false,updatable = false)
     private UUID timeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id", nullable = false)
-    private Tour tour;
+    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
+    private UUID userId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "time_id")
     private TimeBookDetail timeBookDetail;
 }

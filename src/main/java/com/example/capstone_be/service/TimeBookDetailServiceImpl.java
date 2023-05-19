@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -46,13 +47,18 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     @Override
     @Transactional
     public TimeBookDetailDto createTimeBookDetail(TimeBookDetailDto timeBookDetailDto) {
-        TimeBookDetailDto timeBookDetailForSave = new TimeBookDetailDto();
-        timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
-        timeBookDetailForSave.setTourId(timeBookDetailDto.getTourId());
-        timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
-        timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
-        timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
-        timeBookRepository.save(mapper.map(timeBookDetailForSave,TimeBookDetail.class));
+//        TimeBookDetailDto timeBookDetailForSave = new TimeBookDetailDto();
+////        timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
+//        timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
+//        timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
+//        timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
+//        timeBookDetailForSave.setIsPayment(timeBookDetailDto.getIsPayment());
+//        timeBookRepository.save(mapper.map(timeBookDetailDto,TimeBookDetail.class));
+//        LocalDateTime createdAt = LocalDateTime.now();
+//        LocalDateTime updatedAt = LocalDateTime.now();
+        timeBookRepository.saveTimeBookDetail(timeBookDetailDto.getStart_time(),timeBookDetailDto.getEnd_time(),
+                timeBookDetailDto.getDay_book_id(),timeBookDetailDto.getIsPayment()
+        );
         return timeBookDetailDto;
     }
 
@@ -66,9 +72,9 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     public TimeBookDetailDto updateByTimeBookId(TimeBookDetailDto timeBookDetailDto, UUID id) {
         final TimeBookDetail updatedTimeBook = timeBookRepository.findById(id)
                 .map(timeBookDetail -> {
-                    timeBookDetail.setTimeId(timeBookDetailDto.getTimeId());
                     timeBookDetail.setStart_time(timeBookDetailDto.getStart_time());
                     timeBookDetail.setEnd_time(timeBookDetailDto.getEnd_time());
+                    timeBookDetail.setIsPayment(timeBookDetailDto.getIsPayment());
                     return timeBookRepository.save(timeBookDetail);
                 })
                 .orElseGet(() -> {
@@ -94,7 +100,6 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
 //            timeBookDetails.add(mapper.map(timeBookDetailDto,TimeBookDetail.class));
             timeBookDetailForSave = new TimeBookDetailDto();
             timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
-            timeBookDetailForSave.setTourId(timeBookDetailDto.getTourId());
             timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
             timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
             timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
@@ -112,5 +117,10 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
             timeBookViewDtoList.add(mapper.map(timeBookDetail,TimeBookViewDto.class));
         }
         return timeBookViewDtoList;
+    }
+
+    @Override
+    public TimeBookDetail findTimeBookById(UUID id) {
+        return timeBookRepository.findById(id).orElseThrow(() -> new NotFoundException("TimeBook not found"));
     }
 }

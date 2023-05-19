@@ -33,18 +33,6 @@ public class DayBookServiceImpl implements DayBookService {
     public List<DayBookDto> getAllDayBook() {
         List<DayBook> dayBookList = dayBookRepository.findAll();
         List<DayBookDto> dayBookDtoList = new ArrayList<>();
-//        List<TimeBookViewDto> timeBookDtoList = new ArrayList<>();
-//        DayBookDto dayBookDto = null;
-//        for (DayBook daybook: dayBookList) {
-//            dayBookDto = new DayBookDto();
-//            timeBookDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(daybook.getDayBookId());
-//            dayBookDto.setDayBookId(daybook.getDayBookId());
-//            dayBookDto.setDay_name(daybook.getDay_name());
-//            dayBookDto.setTourId(daybook.getTourId());
-//            dayBookDto.setStatus(daybook.getStatus());
-//            dayBookDto.setTimeBookViewDtoList(timeBookDtoList);
-//            dayBookDtoList.add(dayBookDto);
-//        }
         for (DayBook daybook: dayBookList) {
             dayBookDtoList.add(mapper.map(daybook,DayBookDto.class));
         }
