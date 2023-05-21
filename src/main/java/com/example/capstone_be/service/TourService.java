@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public interface TourService {
 
-    TourDto createTour(TourDto tourDto);
+    TourDto createTour(TourDto tourDto,UUID userId);
 
     TourRespone getAll(Integer pageNo, Integer pageSize);
 

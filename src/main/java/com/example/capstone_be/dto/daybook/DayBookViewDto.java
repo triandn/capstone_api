@@ -9,10 +9,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DayBookDto implements Serializable {
+public class DayBookViewDto implements Serializable {
 
     private UUID dayBookId;
 
@@ -22,6 +23,8 @@ public class DayBookDto implements Serializable {
 
     private String status = DayBookStatusEnum.AVAILABLE.toString();
 
-    private Boolean isDeleted;
-}
+    private Boolean is_deleted;
 
+    List<TimeBookViewDto> timeBookViewDtoList;
+
+}

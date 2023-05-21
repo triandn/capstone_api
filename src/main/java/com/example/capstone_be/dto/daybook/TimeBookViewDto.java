@@ -18,4 +18,7 @@ public class TimeBookViewDto {
     private Time start_time;
 
     private Time end_time;
+
+    private Boolean is_deleted;
+
 }

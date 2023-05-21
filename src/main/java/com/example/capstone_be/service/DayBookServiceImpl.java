@@ -1,14 +1,15 @@
 package com.example.capstone_be.service;
 
-import com.example.capstone_be.dto.daybook.DateBookCreateDto;
-import com.example.capstone_be.dto.daybook.DayBookDto;
-import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
-import com.example.capstone_be.dto.daybook.TimeBookViewDto;
+import com.example.capstone_be.dto.daybook.*;
+import com.example.capstone_be.exception.ComparisonException;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.model.TimeBookDetail;
 import com.example.capstone_be.repository.DayBookRepository;
+import com.example.capstone_be.util.common.DeleteResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -47,9 +48,15 @@ public class DayBookServiceImpl implements DayBookService {
     }
 
     @Override
-    public void deleteByDayBookId(UUID id) {
-        DayBook dayBook = dayBookRepository.findById(id).orElseThrow(() -> new NotFoundException("DayBooking not found"));
-        dayBookRepository.deleteById(id);
+    public ResponseEntity<?> deleteByDayBookId(UUID id) {
+
+            DayBook dayBook = dayBookRepository.findById(id).orElseThrow(() -> new NotFoundException("DayBooking not found"));
+            if(dayBook.getIsDeleted().equals(true)){
+                return new ResponseEntity<>(new DeleteResponse("THIS DAYBOOK IS DELETED"), HttpStatus.NOT_FOUND);
+            }
+            dayBook.setIsDeleted(true);
+            dayBookRepository.save(dayBook);
+            return new ResponseEntity<>(new DeleteResponse("Delete Success"), HttpStatus.OK);
     }
 
     @Override
@@ -59,7 +66,6 @@ public class DayBookServiceImpl implements DayBookService {
                     dayBook.setDate_name(dayBookDto.getDate_name());
                     dayBook.setDayBookId(dayBookDto.getDayBookId());
                     dayBook.setStatus(dayBookDto.getStatus());
-
                     return dayBookRepository.save(dayBook);
                 })
                 .orElseGet(() -> {
@@ -71,15 +77,17 @@ public class DayBookServiceImpl implements DayBookService {
     }
 
     @Override
-    public DayBookDto getDayBookingById(UUID id) {
+    public DayBookViewDto getDayBookingById(UUID id) {
         DayBook dayBook = dayBookRepository.findById(id).orElseThrow(() -> new NotFoundException("DayBooking not found"));
-        DayBookDto dayBookDto = new DayBookDto();
+        DayBookViewDto dayBookDto = new DayBookViewDto();
         List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(id);
         dayBookDto.setTourId(dayBook.getTourId());
         dayBookDto.setDayBookId(dayBook.getDayBookId());
         dayBookDto.setDate_name(dayBook.getDate_name());
         dayBookDto.setStatus(dayBook.getStatus());
         dayBookDto.setTimeBookViewDtoList(timeBookViewDtoList);
+        dayBookDto.setIs_deleted(dayBook.getIsDeleted());
+
         return dayBookDto;
     }
 }

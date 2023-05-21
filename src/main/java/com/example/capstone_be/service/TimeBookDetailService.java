@@ -4,6 +4,7 @@ import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.model.TimeBookDetail;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ public interface TimeBookDetailService {
 
     TimeBookDetailDto createTimeBookDetail(TimeBookDetailDto timeBookDetailDto);
 
-    void deleteByTimeBookId(UUID id);
+    ResponseEntity<?> deleteByTimeBookId(UUID id);
 
     TimeBookDetailDto updateByTimeBookId(TimeBookDetailDto timeBookDetailDto, UUID id);
 

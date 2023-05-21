@@ -30,6 +30,9 @@ public class DayBook extends BaseEntity{
     @Column(name = "status", nullable = true)
     private String status;
 
+    @Column(name="is_deleted")
+    private Boolean isDeleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tour_id", nullable = false)
     private Tour tour;

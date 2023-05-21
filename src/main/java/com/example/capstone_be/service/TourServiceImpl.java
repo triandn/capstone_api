@@ -51,14 +51,26 @@ public class TourServiceImpl implements TourService {
 
     @Override
     @Transactional
-    public TourDto createTour(TourDto tourDto) {
-        String userId = tourDto.getUserId().toString();
-        System.out.println("User ID: " + userId);
-        List<Tour> tourList = tourRepository.getAllTourByUserId(UUID.fromString(userId));
+    public TourDto createTour(TourDto tourDto,UUID user_id) {
+//        System.out.println("User ID: " + userId);
+        List<Tour> tourList = tourRepository.getAllTourByUserId(user_id);
         if(tourList.isEmpty()){
-            userRepository.updateRole(UUID.fromString(userId), RoleEnum.OWNER.toString());
+            userRepository.updateRole(user_id, RoleEnum.OWNER.toString());
         }
-        tourRepository.save(mapper.map(tourDto, Tour.class));
+        TourDto tourDtoCreate = new TourDto();
+        tourDtoCreate.setUserId(user_id);
+        tourDtoCreate.setCity(tourDto.getCity());
+        tourDtoCreate.setDestination(tourDto.getDestination());
+        tourDtoCreate.setDestinationDescription(tourDto.getDestinationDescription());
+        tourDtoCreate.setRating(tourDto.getRating());
+        tourDtoCreate.setLatitude(tourDto.getLatitude());
+        tourDtoCreate.setLongitude(tourDto.getLongitude());
+        tourDtoCreate.setTitle(tourDto.getTitle());
+        tourDtoCreate.setWorking(tourDto.getWorking());
+        tourDtoCreate.setCategories(tourDto.getCategories());
+        tourDtoCreate.setImageMain(tourDto.getImageMain());
+
+        tourRepository.save(mapper.map(tourDtoCreate, Tour.class));
         return tourDto;
     }
 

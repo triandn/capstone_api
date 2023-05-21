@@ -32,6 +32,9 @@ public class TimeBookDetail extends BaseEntity{
     @Column(name = "is_payment")
     private Boolean isPayment = false;
 
+    @Column(name="is_deleted")
+    private Boolean isDeleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY ,cascade = CascadeType.ALL)
     @JoinColumn(name = "day_book_id", nullable = false)
     private DayBook dayBook;

@@ -10,7 +10,10 @@ import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.model.ImageDetail;
 import com.example.capstone_be.model.TimeBookDetail;
 import com.example.capstone_be.repository.TimeBookRepository;
+import com.example.capstone_be.util.common.DeleteResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -47,15 +50,6 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     @Override
     @Transactional
     public TimeBookDetailDto createTimeBookDetail(TimeBookDetailDto timeBookDetailDto) {
-//        TimeBookDetailDto timeBookDetailForSave = new TimeBookDetailDto();
-////        timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
-//        timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
-//        timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
-//        timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
-//        timeBookDetailForSave.setIsPayment(timeBookDetailDto.getIsPayment());
-//        timeBookRepository.save(mapper.map(timeBookDetailDto,TimeBookDetail.class));
-//        LocalDateTime createdAt = LocalDateTime.now();
-//        LocalDateTime updatedAt = LocalDateTime.now();
         timeBookRepository.saveTimeBookDetail(timeBookDetailDto.getStart_time(),timeBookDetailDto.getEnd_time(),
                 timeBookDetailDto.getDay_book_id(),timeBookDetailDto.getIsPayment()
         );
@@ -63,10 +57,18 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     }
 
     @Override
-    public void deleteByTimeBookId(UUID id) {
+    public ResponseEntity<?> deleteByTimeBookId(UUID id) {
         TimeBookDetail timeBookDetail = timeBookRepository.findById(id).orElseThrow(() -> new NotFoundException("TimeBooking not found"));
-        timeBookRepository.deleteById(id);
+//        timeBookRepository.deleteById(id);
+        if(timeBookDetail.getIsDeleted().equals(true)){
+            return new ResponseEntity<>(new DeleteResponse("THIS TIME BOOK IS DELETED"), HttpStatus.NOT_FOUND);
+
+        }
+        timeBookDetail.setIsDeleted(true);
+        timeBookRepository.save(timeBookDetail);
+        return new ResponseEntity<>(new DeleteResponse("DELETE SUCCESS"),HttpStatus.OK);
     }
+
 
     @Override
     public TimeBookDetailDto updateByTimeBookId(TimeBookDetailDto timeBookDetailDto, UUID id) {

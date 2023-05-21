@@ -3,6 +3,7 @@ package com.example.capstone_be.controller;
 
 import com.example.capstone_be.dto.daybook.DateBookCreateDto;
 import com.example.capstone_be.dto.daybook.DayBookDto;
+import com.example.capstone_be.dto.daybook.DayBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.service.DayBookService;
@@ -34,9 +35,9 @@ public class DayBookingController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<DayBookDto> deleteDayBooking(@PathVariable UUID id) {
-        dayBookService.deleteByDayBookId(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteDayBooking(@PathVariable UUID id) {
+        return dayBookService.deleteByDayBookId(id);
+//        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @PatchMapping("/update/{id}")
@@ -56,8 +57,8 @@ public class DayBookingController {
     }
 
     @GetMapping("/detail/{id}")
-    public ResponseEntity<DayBookDto> getDayBookingDetail(@PathVariable UUID id) {
-        final DayBookDto dayBookDto = dayBookService.getDayBookingById(id);
+    public ResponseEntity<?> getDayBookingDetail(@PathVariable UUID id) {
+        final DayBookViewDto dayBookDto = dayBookService.getDayBookingById(id);
         return new ResponseEntity<>(dayBookDto,HttpStatus.OK);
     }
 }

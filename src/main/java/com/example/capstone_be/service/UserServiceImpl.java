@@ -108,6 +108,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUserId(UUID id) {
+        return userRepository.getUserByUserId(id);
+    }
+
+    @Override
     public User getUserByUserId(String bearerToken) {
         try {
             Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(bearerToken).getBody();

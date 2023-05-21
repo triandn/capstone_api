@@ -7,6 +7,8 @@ import com.example.capstone_be.dto.user.UserRegistrationDto;
 import com.example.capstone_be.model.User;
 import org.springframework.http.ResponseEntity;
 
+import java.util.UUID;
+
 public interface UserService {
 
     ResponseEntity<?> saveUser(UserRegistrationDto userRegistrationDto);
@@ -14,6 +16,8 @@ public interface UserService {
     ResponseEntity<?> confirmEmail(String confirmationToken);
 
     User getUserByEmail(String email);
+
+    User getUserByUserId(UUID id);
 
     User getUserByUserId(String bearerToken);
 

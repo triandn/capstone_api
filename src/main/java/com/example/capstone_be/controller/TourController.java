@@ -1,24 +1,24 @@
 package com.example.capstone_be.controller;
 
 
-import com.example.capstone_be.dto.category.CategoryDto;
-import com.example.capstone_be.dto.tour.TourByCategoryDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
-import com.example.capstone_be.dto.tour.TourViewDto;
-import com.example.capstone_be.model.Tour;
+import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.TourRepository;
+import com.example.capstone_be.repository.UserRepository;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
 import com.example.capstone_be.response.UpdateResponse;
 import com.example.capstone_be.service.TourService;
+import com.example.capstone_be.util.common.CommonFunction;
+import io.jsonwebtoken.Claims;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
 
@@ -29,14 +29,21 @@ public class TourController {
 
     private final TourRepository tourRepository;
 
-    public TourController(TourService tourService, TourRepository tourRepository) {
+    private  final UserRepository userRepository;
+
+    public TourController(TourService tourService, TourRepository tourRepository, UserRepository userRepository) {
         this.tourService = tourService;
         this.tourRepository = tourRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<TourDto> createTour(@RequestBody TourDto tourDto) {
-        tourService.createTour(tourDto);
+    public ResponseEntity<TourDto> createTour(@RequestBody TourDto tourDto, HttpServletRequest request) {
+        String bearerToken = CommonFunction.getBearToken(request);
+        Claims claims = CommonFunction.getClaims(bearerToken);
+        String email = claims.getSubject();
+        User user = userRepository.getUserByUserEmail(email);
+        tourService.createTour(tourDto,user.getUserId());
         return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
     }
     @GetMapping("/all")

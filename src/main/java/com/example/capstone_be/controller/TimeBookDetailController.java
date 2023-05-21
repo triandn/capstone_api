@@ -38,9 +38,9 @@ public class TimeBookDetailController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<TimeBookDetailDto> deleteTimeBook(@PathVariable UUID id) {
-        timeBookDetailService.deleteByTimeBookId(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+    public ResponseEntity<?> deleteTimeBook(@PathVariable UUID id) {
+        return timeBookDetailService.deleteByTimeBookId(id);
+
     }
 
     @PatchMapping("/update/{id}")
