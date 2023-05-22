@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.*;
 
 @Getter
@@ -14,7 +15,7 @@ import java.util.*;
 @Entity(name="tours")
 public class Tour extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tour_id", nullable = false)
     private Long tourId;
 
@@ -45,11 +46,20 @@ public class Tour extends BaseEntity{
     @Column(name = "time_slot_length")
     private int timeSlotLength;
 
+    @Column(name = "check_in")
+    private Timestamp checkIn;
+
+    @Column(name = "check_out")
+    private Timestamp checkOut;
+
     @Column(name = "destination", nullable = false)
     private String destination;
 
     @Column(name = "destination_description", nullable = false)
     private String destinationDescription;
+
+    @Column(name="is_deleted")
+    private Boolean isDeleted = false;
 
     @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
     private UUID userId;

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,9 +24,8 @@ public interface TimeBookRepository extends JpaRepository<TimeBookDetail, UUID> 
 
     @Modifying
     @Query(value = INSERT_VALUE,nativeQuery = true)
-    void saveTimeBookDetail(@Param("startTime") Timestamp startTime, @Param("endTime")Timestamp endTime,
-                            @Param("dayBookId") UUID dayBookId,@Param("isPayment") Boolean isPayment);
-
+    void saveTimeBookDetail(@Param("startTime") LocalTime startTime, @Param("endTime")LocalTime endTime,
+                            @Param("dayBookId") UUID dayBookId, @Param("isPayment") Boolean isPayment);
 
 //    void updateTimeBookDetail()
 }

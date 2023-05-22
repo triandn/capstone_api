@@ -25,4 +25,5 @@ public interface TimeBookDetailService {
     List<TimeBookViewDto> getAllTimeBookForDayByDayBookId(UUID dayBookId);
 
     TimeBookDetail findTimeBookById(UUID id);
+
 }

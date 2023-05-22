@@ -63,4 +63,9 @@ public class TimeBookDetailController {
         final TimeBookViewDto timeBookDetailDto = timeBookDetailService.getTimeBookingById(id);
         return new ResponseEntity<>(timeBookDetailDto,HttpStatus.OK);
     }
+    @GetMapping("/list-time/{day_id}")
+    public ResponseEntity<List<TimeBookViewDto>> getAllByDayId(@PathVariable UUID day_id) {
+        final List<TimeBookViewDto> timeBookDetailDtos = timeBookDetailService.getAllTimeBookForDayByDayBookId(day_id);
+        return new ResponseEntity<>(timeBookDetailDtos,HttpStatus.OK);
+    }
 }

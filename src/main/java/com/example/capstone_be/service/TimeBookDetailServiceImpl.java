@@ -20,6 +20,7 @@ import javax.transaction.Transactional;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -103,8 +104,8 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
             timeBookDetailForSave = new TimeBookDetailDto();
             timeBookDetailForSave.setTimeId(timeBookDetailDto.getTimeId());
             timeBookDetailForSave.setDay_book_id(timeBookDetailDto.getDay_book_id());
-            timeBookDetailForSave.setStart_time(Timestamp.valueOf(timeBookDetailDto.getStart_time().toString()));
-            timeBookDetailForSave.setEnd_time(Timestamp.valueOf(timeBookDetailDto.getEnd_time().toString()));
+            timeBookDetailForSave.setStart_time(timeBookDetailDto.getStart_time());
+            timeBookDetailForSave.setEnd_time(timeBookDetailDto.getEnd_time());
             timeBookDetails.add(mapper.map(timeBookDetailForSave,TimeBookDetail.class));
         }
         timeBookRepository.saveAll(timeBookDetails);
@@ -115,8 +116,15 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     public List<TimeBookViewDto> getAllTimeBookForDayByDayBookId(UUID dayBookId) {
         List<TimeBookDetail> timeBookDetailList = timeBookRepository.getAllListTimeBookByDayBookId(dayBookId);
         List<TimeBookViewDto> timeBookViewDtoList = new ArrayList<>();
+        TimeBookViewDto timeBookViewDto = null;
         for (TimeBookDetail timeBookDetail: timeBookDetailList) {
-            timeBookViewDtoList.add(mapper.map(timeBookDetail,TimeBookViewDto.class));
+            timeBookViewDto = new TimeBookViewDto();
+//            timeBookViewDtoList.add(mapper.map(timeBookDetail,TimeBookViewDto.class));
+            timeBookViewDto.setTimeId(timeBookDetail.getTimeId());
+            timeBookViewDto.setStart_time(timeBookDetail.getStart_time());
+            timeBookViewDto.setEnd_time(timeBookDetail.getEnd_time());
+            timeBookViewDto.setIs_deleted(timeBookDetail.getIsDeleted());
+            timeBookViewDtoList.add(timeBookViewDto);
         }
         return timeBookViewDtoList;
     }

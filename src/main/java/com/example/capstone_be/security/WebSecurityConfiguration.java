@@ -96,6 +96,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/review/update/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/time-book/all/").permitAll()
                     .antMatchers("/time-book/detail/{id}").permitAll()
+                    .antMatchers("/time-book/list-time/{day_id}").permitAll()
                     .antMatchers("/time-book/create/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/time-book/create-list/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/time-book/delete/{id}").hasAnyAuthority(USER,OWNER)

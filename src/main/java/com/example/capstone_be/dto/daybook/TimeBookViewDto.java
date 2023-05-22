@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -15,9 +16,9 @@ public class TimeBookViewDto {
 
     private UUID timeId ;
 
-    private Time start_time;
+    private LocalTime start_time;
 
-    private Time end_time;
+    private LocalTime end_time;
 
     private Boolean is_deleted;
 

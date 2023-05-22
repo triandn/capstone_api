@@ -1,26 +1,25 @@
 package com.example.capstone_be.dto.tour;
 
+import com.example.capstone_be.dto.daybook.TimeBookEnd;
+import com.example.capstone_be.dto.daybook.TimeBookStart;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.model.Category;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Generated;
 import lombok.NoArgsConstructor;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TourDto implements Serializable {
-
+public class TourCreateDto implements Serializable {
     private Long tourId;
 
     private String title;
@@ -51,9 +50,17 @@ public class TourDto implements Serializable {
 
     private int timeSlotLength;
 
-    private Boolean isDeleted;
-
     private Set<Category> categories;
+
+    private List<ImageDto> imageDtoList;
+
+    private DateTime startDay;
+
+    private DateTime endDay;
+
+    private TimeBookStart timeBookStart;
+
+    private TimeBookEnd timeBookEnd;
 
     private UUID userId;
 }

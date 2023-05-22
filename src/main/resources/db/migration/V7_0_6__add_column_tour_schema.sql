@@ -1,0 +1,1 @@
+ALTER TABLE tours ADD COLUMN is_deleted BOOLEAN DEFAULT false;

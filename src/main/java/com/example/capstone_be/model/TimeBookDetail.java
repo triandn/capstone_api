@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
@@ -20,11 +21,11 @@ public class TimeBookDetail extends BaseEntity{
     @Column(name = "time_id", nullable = false)
     private UUID timeId = UUID.randomUUID();
 
-    @Column(name = "start_time", nullable = false,columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Timestamp start_time;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime start_time;
 
-    @Column(name = "end_time", nullable = false,columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-    private Timestamp end_time;
+    @Column(name = "end_time", nullable = false)
+    private LocalTime end_time;
 
     @Column(name = "day_book_id", nullable = false,insertable = false,updatable = false)
     private UUID day_book_id;

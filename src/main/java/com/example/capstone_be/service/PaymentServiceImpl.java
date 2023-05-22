@@ -78,8 +78,6 @@ public class PaymentServiceImpl implements PaymentService {
         GuestDto guestDto = null;
         for (GuestDto item : guestDtos) {
             guestDto = new GuestDto();
-//            guestDtoList = new ArrayList<>();
-//            guestRepository.saveGuest(String.valueOf(item.getGuestType()),item.getQuantity(),timeId,userId);
             guestDto.setGuestId(UUID.randomUUID());
             guestDto.setGuestType(item.getGuestType());
             guestDto.setQuantity(item.getQuantity());

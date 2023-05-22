@@ -1,20 +1,19 @@
 package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.category.CategoryDto;
-import com.example.capstone_be.dto.tour.TourByCategoryDto;
-import com.example.capstone_be.dto.tour.TourDetailDto;
-import com.example.capstone_be.dto.tour.TourDto;
-import com.example.capstone_be.dto.tour.TourViewDto;
+import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 public interface TourService {
 
-    TourDto createTour(TourDto tourDto,UUID userId);
+    TourCreateDto createTour(TourCreateDto tourDto, UUID userId);
 
     TourRespone getAll(Integer pageNo, Integer pageSize);
 
@@ -22,7 +21,7 @@ public interface TourService {
 
     TourDetailDto getTourDetail(Long tourId);
 
-    void deleteByTourId(Long id);
+    ResponseEntity<?> deleteByTourId(Long id);
 
     TourDto updateByTourId(TourDto tourDto, Long id);
 }

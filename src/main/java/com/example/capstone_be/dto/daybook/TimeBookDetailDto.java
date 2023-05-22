@@ -12,6 +12,7 @@ import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -21,11 +22,11 @@ public class TimeBookDetailDto implements Serializable {
 
     private UUID timeId = UUID.randomUUID();
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp start_time;
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime start_time;
 
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Timestamp end_time;
+//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
+    private LocalTime end_time;
 
     private Boolean isPayment = false;
 

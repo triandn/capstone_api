@@ -1,6 +1,7 @@
 package com.example.capstone_be.controller;
 
 
+import com.example.capstone_be.dto.tour.TourCreateDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
 import com.example.capstone_be.model.User;
@@ -38,7 +39,7 @@ public class TourController {
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<TourDto> createTour(@RequestBody TourDto tourDto, HttpServletRequest request) {
+    public ResponseEntity<TourCreateDto> createTour(@RequestBody TourCreateDto tourDto, HttpServletRequest request) {
         String bearerToken = CommonFunction.getBearToken(request);
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();

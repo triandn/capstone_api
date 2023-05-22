@@ -41,6 +41,8 @@ public class TourDetailDto implements Serializable {
 
     private Double avgRating;
 
+    private Boolean isDeleted;
+
     private List<ImageViewDto> images;
 
     private UUID userId;

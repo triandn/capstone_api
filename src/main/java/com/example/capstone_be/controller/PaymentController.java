@@ -50,7 +50,7 @@ public class PaymentController {
     }
     @GetMapping("/")
     public ResponseEntity<ResponseDataAPI> paymentResult(
-            @RequestParam(value = "vnp_ResponseCode", defaultValue = "") String responseCode,
+            @RequestParam(value = "vnp_ResponseCode", defaultValue = "00") String responseCode,
             @RequestParam(value = "vnp_TxnRef", defaultValue = "") String txnRef) {
         return ResponseEntity.ok(paymentService.paymentResult(responseCode, txnRef));
     }
