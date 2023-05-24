@@ -12,14 +12,22 @@ import com.example.capstone_be.response.TourResponseByCategoryName;
 import com.example.capstone_be.response.UpdateResponse;
 import com.example.capstone_be.service.TourService;
 import com.example.capstone_be.util.common.CommonFunction;
+import com.example.capstone_be.util.common.ErrorResponse;
 import io.jsonwebtoken.Claims;
+import jdk.dynalink.linker.LinkerServices;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
 
@@ -38,8 +46,8 @@ public class TourController {
         this.userRepository = userRepository;
     }
 
-    @PostMapping("/create/")
-    public ResponseEntity<TourCreateDto> createTour(@RequestBody TourCreateDto tourDto, HttpServletRequest request) {
+    @PostMapping(path = "/create/")
+    public ResponseEntity<?> createTour(@Valid @RequestBody TourCreateDto tourDto, HttpServletRequest request) {
         String bearerToken = CommonFunction.getBearToken(request);
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();

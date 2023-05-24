@@ -23,7 +23,7 @@ public class ProfileController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/user-profile/")
+    @GetMapping("/user-profile/")
     public ResponseEntity<UserProfileDto> getUserProfile(HttpServletRequest request) throws Exception {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -47,4 +47,5 @@ public class ProfileController {
         UserForUpdateDto userForUpdateDto = userService.updateUserProfile(bearerToken,user);
         return new ResponseEntity(userForUpdateDto, HttpStatus.OK);
     }
+
 }
