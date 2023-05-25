@@ -39,7 +39,7 @@ public class TourViewByUserDto {
     private int timeSlotLength;
     private Long categoryId;
     private String categoryName;
-    private List<ImageViewDto> imageDtoList;
-    private List<DayBookViewDto> dayBookList;
+//    private List<ImageViewDto> imageDtoList;
+//    private List<DayBookViewDto> dayBookList;
 //    private List<TimeBookDetail> timeBookDetailList;
 }

@@ -310,26 +310,26 @@ public class TourServiceImpl implements TourService {
             tourViewByUserDto.setTimeSlotLength(tour.getTimeSlotLength());
             tourViewByUserDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewByUserDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
-            List<ImageDetail> imageDetailList = imageRepository.getImageDetailByTourId(tour.getTourId());
-            tourViewByUserDto.setImageDtoList(imageDetailList.stream().map(prize -> mapper.map(prize, ImageViewDto.class)).collect(Collectors.toList()));
-
-            //DAYBOOK PROCESS
-            List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tour.getTourId());
-            List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
-
-            for (DayBook dayBook: dayBookList) {
-                DayBookViewDto dayBookViewDto = new DayBookViewDto();
-                dayBookViewDto.setDate_name(dayBook.getDate_name());
-                dayBookViewDto.setDayBookId(dayBook.getDayBookId());
-                dayBookViewDto.setStatus(dayBook.getStatus());
-                dayBookViewDto.setTourId(dayBook.getTourId());
-                dayBookViewDto.setStatus(dayBook.getStatus());
-                dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
-                List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
-                dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
-                dayBookViewDtoList.add(dayBookViewDto);
-            }
-            tourViewByUserDto.setDayBookList(dayBookViewDtoList);
+//            List<ImageDetail> imageDetailList = imageRepository.getImageDetailByTourId(tour.getTourId());
+//            tourViewByUserDto.setImageDtoList(imageDetailList.stream().map(prize -> mapper.map(prize, ImageViewDto.class)).collect(Collectors.toList()));
+//
+//            //DAYBOOK PROCESS
+//            List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tour.getTourId());
+//            List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
+//
+//            for (DayBook dayBook: dayBookList) {
+//                DayBookViewDto dayBookViewDto = new DayBookViewDto();
+//                dayBookViewDto.setDate_name(dayBook.getDate_name());
+//                dayBookViewDto.setDayBookId(dayBook.getDayBookId());
+//                dayBookViewDto.setStatus(dayBook.getStatus());
+//                dayBookViewDto.setTourId(dayBook.getTourId());
+//                dayBookViewDto.setStatus(dayBook.getStatus());
+//                dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
+//                List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
+//                dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
+//                dayBookViewDtoList.add(dayBookViewDto);
+//            }
+//            tourViewByUserDto.setDayBookList(dayBookViewDtoList);
             tourViewByUserDtoList.add(tourViewByUserDto);
         }
         tourResponseByOwner.setContent(tourViewByUserDtoList);
