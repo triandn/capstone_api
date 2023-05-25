@@ -24,4 +24,6 @@ public interface TourService {
     ResponseEntity<?> deleteByTourId(Long id);
 
     TourDto updateByTourId(TourDto tourDto, Long id);
+
+    List<TourViewByUserDto> getTourByUserId(UUID userId);
 }

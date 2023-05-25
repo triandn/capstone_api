@@ -90,4 +90,24 @@ public class DayBookServiceImpl implements DayBookService {
 
         return dayBookDto;
     }
+
+    @Override
+    public List<DayBookViewDto> getDayAndTimeByTourId(Long tourId) {
+        List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tourId);
+        List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
+
+        for (DayBook dayBook: dayBookList) {
+            DayBookViewDto dayBookViewDto = new DayBookViewDto();
+            dayBookViewDto.setDate_name(dayBook.getDate_name());
+            dayBookViewDto.setDayBookId(dayBook.getDayBookId());
+            dayBookViewDto.setStatus(dayBook.getStatus());
+            dayBookViewDto.setTourId(dayBook.getTourId());
+            dayBookViewDto.setStatus(dayBook.getStatus());
+            dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
+            List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
+            dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
+            dayBookViewDtoList.add(dayBookViewDto);
+        }
+        return dayBookViewDtoList;
+    }
 }

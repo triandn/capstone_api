@@ -1,20 +1,12 @@
 package com.example.capstone_be.service;
 
-import com.example.capstone_be.dto.daybook.DateBookCreateDto;
-import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
-import com.example.capstone_be.dto.daybook.TimeBookEnd;
-import com.example.capstone_be.dto.daybook.TimeBookStart;
+import com.example.capstone_be.dto.daybook.*;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.exception.NotFoundException;
-import com.example.capstone_be.model.Category;
-import com.example.capstone_be.model.ImageDetail;
-import com.example.capstone_be.model.TimeBookDetail;
-import com.example.capstone_be.model.Tour;
-import com.example.capstone_be.repository.ImageRepository;
-import com.example.capstone_be.repository.TourRepository;
-import com.example.capstone_be.repository.UserRepository;
+import com.example.capstone_be.model.*;
+import com.example.capstone_be.repository.*;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
 import com.example.capstone_be.util.common.DeleteResponse;
@@ -32,25 +24,26 @@ import javax.transaction.Transactional;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TourServiceImpl implements TourService {
 
     private final ModelMapper mapper;
     private final TourRepository tourRepository;
-
     private final ImageRepository imageRepository;
-
     private final ReviewService reviewService;
-
     private final ImageService imageService;
     private final DayBookService dayBookService;
     private final TimeBookDetailService timeBookDetailService;
     private final UserRepository userRepository;
+    private final DayBookRepository dayBookRepository;
+    private final TimeBookRepository timeBookRepository;
+
     private Set<Category> categories;
     private Set<Category> cate;
 
-    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService, ImageService imageService, DayBookService dayBookService, TimeBookDetailService timeBookDetailService, UserRepository userRepository) {
+    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService, ImageService imageService, DayBookService dayBookService, TimeBookDetailService timeBookDetailService, UserRepository userRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository) {
         this.mapper = mapper;
         this.tourRepository = tourRepository;
         this.imageRepository = imageRepository;
@@ -59,6 +52,8 @@ public class TourServiceImpl implements TourService {
         this.dayBookService = dayBookService;
         this.timeBookDetailService = timeBookDetailService;
         this.userRepository = userRepository;
+        this.dayBookRepository = dayBookRepository;
+        this.timeBookRepository = timeBookRepository;
     }
 
     @Override
@@ -117,15 +112,24 @@ public class TourServiceImpl implements TourService {
         List<LocalTime> localTimes = DivideFrameTime(tourDto.getTimeBookStart(),tourDto.getTimeBookEnd(),tourDto.getTimeSlotLength());
         System.out.println("THOI GIAN CHIA: " + localTimes.size());
         List<TimeBookDetailDto> timeBookDetailDtoList = null;
+        List<TimeBookDetail> timeBookDetailList=null;
         TimeBookDetailDto timeBookDetailDto = null;
+        TimeBookDetail timeBookDetail = null;
         for (DateBookCreateDto item: dateBookCreateDtos) {
             dayBookService.createDayBooking(item);
             timeBookDetailDtoList = new ArrayList<>();
+            timeBookDetailList = new ArrayList<>();
             System.out.println("DayBook Id:"+item.getDayBookId());
             for (int index = 0; index <= localTimes.size(); index++){
                 if(index + 1 >= localTimes.size()){
                     break;
                 }
+//                timeBookDetail = new TimeBookDetail();
+//                timeBookDetail.setDay_book_id(item.getDayBookId());
+//                timeBookDetail.setStart_time(localTimes.get(index));
+//                timeBookDetail.setEnd_time(localTimes.get(index + 1));
+//                timeBookDetailList.add(timeBookDetail);
+
                 timeBookDetailDto = new TimeBookDetailDto();
                 timeBookDetailDto.setDay_book_id(item.getDayBookId());
                 timeBookDetailDto.setStart_time(localTimes.get(index));
@@ -134,10 +138,8 @@ public class TourServiceImpl implements TourService {
                 timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
             }
         }
-        System.out.println("TIME BOOK DETAIL DTO: " + timeBookDetailDtoList.size());
-        for (TimeBookDetailDto item: timeBookDetailDtoList) {
-            System.out.println("TIME BOOK DETAIL DTO: " + item.getDay_book_id());
-        }
+//        timeBookRepository.saveAll(timeBookDetailList);
+
         return tourDto;
     }
 
@@ -285,6 +287,50 @@ public class TourServiceImpl implements TourService {
         return mapper.map(updatedTour, TourDto.class);
     }
 
+    @Override
+    public List<TourViewByUserDto> getTourByUserId(UUID userId) {
+        List<Tour> tourListByUserId = tourRepository.getTourByUserId(userId);
+        TourViewByUserDto tourViewByUserDto = null;
+        List<TourViewByUserDto> tourViewByUserDtoList = new ArrayList<>();
+        for (Tour tour: tourListByUserId) {
+            tourViewByUserDto = new TourViewByUserDto();
+            tourViewByUserDto.setTourId(tour.getTourId());
+            tourViewByUserDto.setTitle(tour.getTitle());
+            tourViewByUserDto.setCity(tour.getCity());
+            tourViewByUserDto.setPriceOnePerson(tour.getPriceOnePerson());
+            tourViewByUserDto.setImageMain(tour.getImageMain());
+            tourViewByUserDto.setWorking(tour.getWorking());
+            tourViewByUserDto.setLatitude(tour.getLatitude());
+            tourViewByUserDto.setLongitude(tour.getLongitude());
+            tourViewByUserDto.setDestination(tour.getDestination());
+            tourViewByUserDto.setDestinationDescription(tour.getDestinationDescription());
+            tourViewByUserDto.setTimeSlotLength(tour.getTimeSlotLength());
+            tourViewByUserDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
+            tourViewByUserDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
+            List<ImageDetail> imageDetailList = imageRepository.getImageDetailByTourId(tour.getTourId());
+            tourViewByUserDto.setImageDtoList(imageDetailList.stream().map(prize -> mapper.map(prize, ImageViewDto.class)).collect(Collectors.toList()));
+
+            //DAYBOOK PROCESS
+            List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tour.getTourId());
+            List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
+
+            for (DayBook dayBook: dayBookList) {
+                DayBookViewDto dayBookViewDto = new DayBookViewDto();
+                dayBookViewDto.setDate_name(dayBook.getDate_name());
+                dayBookViewDto.setDayBookId(dayBook.getDayBookId());
+                dayBookViewDto.setStatus(dayBook.getStatus());
+                dayBookViewDto.setTourId(dayBook.getTourId());
+                dayBookViewDto.setStatus(dayBook.getStatus());
+                dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
+                List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
+                dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
+                dayBookViewDtoList.add(dayBookViewDto);
+            }
+            tourViewByUserDto.setDayBookList(dayBookViewDtoList);
+            tourViewByUserDtoList.add(tourViewByUserDto);
+        }
+        return tourViewByUserDtoList;
+    }
 
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {
         List<DateTime> ret = new ArrayList<DateTime>();

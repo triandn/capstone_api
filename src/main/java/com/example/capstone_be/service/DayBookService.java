@@ -20,4 +20,5 @@ public interface DayBookService {
     DayBookDto updateByDayBookId(DayBookDto dayBookDto, UUID id);
 
     DayBookViewDto getDayBookingById(UUID id);
+    List<DayBookViewDto>getDayAndTimeByTourId(Long tourId);
 }

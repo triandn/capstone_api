@@ -4,6 +4,7 @@ package com.example.capstone_be.controller;
 import com.example.capstone_be.dto.tour.TourCreateDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
+import com.example.capstone_be.dto.tour.TourViewByUserDto;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.repository.UserRepository;
@@ -94,5 +95,14 @@ public class TourController {
         updateResponse.setMessage("Update Success");
         updateResponse.setStatus_code(HttpStatus.OK.toString());
         return updateResponse ;
+    }
+    @GetMapping("/tour-owner/")
+    public ResponseEntity<?> getTourByOwner(HttpServletRequest request) {
+        String bearerToken = CommonFunction.getBearToken(request);
+        Claims claims = CommonFunction.getClaims(bearerToken);
+        String email = claims.getSubject();
+        User user = userRepository.getUserByUserEmail(email);
+        List<TourViewByUserDto> tourViewByUserDtoList = tourService.getTourByUserId(user.getUserId());
+        return new ResponseEntity(tourViewByUserDtoList, HttpStatus.OK);
     }
 }

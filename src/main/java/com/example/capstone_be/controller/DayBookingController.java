@@ -61,4 +61,9 @@ public class DayBookingController {
         final DayBookViewDto dayBookDto = dayBookService.getDayBookingById(id);
         return new ResponseEntity<>(dayBookDto,HttpStatus.OK);
     }
+    @GetMapping("/day-time/{tour_id}")
+    public ResponseEntity<?> getDayBookingDetail(@PathVariable Long tour_id) {
+        List<DayBookViewDto> dayBookViewDtoList = dayBookService.getDayAndTimeByTourId(tour_id);
+        return new ResponseEntity<>(dayBookViewDtoList,HttpStatus.OK);
+    }
 }
