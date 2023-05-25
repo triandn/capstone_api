@@ -4,6 +4,7 @@ import com.example.capstone_be.dto.category.CategoryDto;
 import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
+import com.example.capstone_be.response.TourResponseByOwner;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
@@ -25,5 +26,5 @@ public interface TourService {
 
     TourDto updateByTourId(TourDto tourDto, Long id);
 
-    List<TourViewByUserDto> getTourByUserId(UUID userId);
+    TourResponseByOwner getTourByUserId(UUID userId, Integer pageNo, Integer pageSize);
 }

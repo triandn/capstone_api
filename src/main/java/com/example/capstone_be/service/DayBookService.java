@@ -5,6 +5,7 @@ import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.DayBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.model.DayBook;
+import com.example.capstone_be.response.DayBookPagingResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -20,5 +21,5 @@ public interface DayBookService {
     DayBookDto updateByDayBookId(DayBookDto dayBookDto, UUID id);
 
     DayBookViewDto getDayBookingById(UUID id);
-    List<DayBookViewDto>getDayAndTimeByTourId(Long tourId);
+    DayBookPagingResponse getDayAndTimeByTourId(Long tourId,Integer pageNo, Integer pageSize);
 }

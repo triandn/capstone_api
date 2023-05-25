@@ -6,8 +6,12 @@ import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.model.TimeBookDetail;
 import com.example.capstone_be.repository.DayBookRepository;
+import com.example.capstone_be.response.DayBookPagingResponse;
 import com.example.capstone_be.util.common.DeleteResponse;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -92,9 +96,12 @@ public class DayBookServiceImpl implements DayBookService {
     }
 
     @Override
-    public List<DayBookViewDto> getDayAndTimeByTourId(Long tourId) {
-        List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tourId);
+    public DayBookPagingResponse getDayAndTimeByTourId(Long tourId,Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
+
+        Page<DayBook> dayBookList = dayBookRepository.getDayBookByTourIdPaging(tourId,paging);
         List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
+        DayBookPagingResponse dayBookPagingResponse = new DayBookPagingResponse();
 
         for (DayBook dayBook: dayBookList) {
             DayBookViewDto dayBookViewDto = new DayBookViewDto();
@@ -108,6 +115,11 @@ public class DayBookServiceImpl implements DayBookService {
             dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
             dayBookViewDtoList.add(dayBookViewDto);
         }
-        return dayBookViewDtoList;
+        dayBookPagingResponse.setContent(dayBookViewDtoList);
+        dayBookPagingResponse.setPageNo(dayBookList.getNumber() + 1);
+        dayBookPagingResponse.setPageSize(dayBookList.getSize());
+        dayBookPagingResponse.setTotalElements(dayBookList.getTotalElements());
+        dayBookPagingResponse.setTotalPages(dayBookList.getTotalPages());
+        return dayBookPagingResponse;
     }
 }

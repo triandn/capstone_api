@@ -6,6 +6,7 @@ import com.example.capstone_be.dto.daybook.DayBookDto;
 import com.example.capstone_be.dto.daybook.DayBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
+import com.example.capstone_be.response.DayBookPagingResponse;
 import com.example.capstone_be.service.DayBookService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +63,10 @@ public class DayBookingController {
         return new ResponseEntity<>(dayBookDto,HttpStatus.OK);
     }
     @GetMapping("/day-time/{tour_id}")
-    public ResponseEntity<?> getDayBookingDetail(@PathVariable Long tour_id) {
-        List<DayBookViewDto> dayBookViewDtoList = dayBookService.getDayAndTimeByTourId(tour_id);
+    public ResponseEntity<?> getDayBookingDetail(@PathVariable Long tour_id,
+                                                 @RequestParam(defaultValue = "1") Integer pageNo,
+                                                 @RequestParam(defaultValue = "5") Integer pageSize) {
+        DayBookPagingResponse dayBookViewDtoList = dayBookService.getDayAndTimeByTourId(tour_id,pageNo,pageSize);
         return new ResponseEntity<>(dayBookViewDtoList,HttpStatus.OK);
     }
 }

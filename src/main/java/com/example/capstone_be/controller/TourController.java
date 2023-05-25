@@ -10,6 +10,7 @@ import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.repository.UserRepository;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
+import com.example.capstone_be.response.TourResponseByOwner;
 import com.example.capstone_be.response.UpdateResponse;
 import com.example.capstone_be.service.TourService;
 import com.example.capstone_be.util.common.CommonFunction;
@@ -97,12 +98,14 @@ public class TourController {
         return updateResponse ;
     }
     @GetMapping("/tour-owner/")
-    public ResponseEntity<?> getTourByOwner(HttpServletRequest request) {
+    public ResponseEntity<?> getTourByOwner(HttpServletRequest request,
+                                            @RequestParam(defaultValue = "1") Integer pageNo,
+                                            @RequestParam(defaultValue = "5") Integer pageSize) {
         String bearerToken = CommonFunction.getBearToken(request);
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();
         User user = userRepository.getUserByUserEmail(email);
-        List<TourViewByUserDto> tourViewByUserDtoList = tourService.getTourByUserId(user.getUserId());
-        return new ResponseEntity(tourViewByUserDtoList, HttpStatus.OK);
+        TourResponseByOwner tourResponseByOwner = tourService.getTourByUserId(user.getUserId(),pageNo,pageSize);
+        return new ResponseEntity(tourResponseByOwner, HttpStatus.OK);
     }
 }

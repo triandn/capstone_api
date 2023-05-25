@@ -9,6 +9,7 @@ import com.example.capstone_be.model.*;
 import com.example.capstone_be.repository.*;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
+import com.example.capstone_be.response.TourResponseByOwner;
 import com.example.capstone_be.util.common.DeleteResponse;
 import com.example.capstone_be.util.enums.RoleEnum;
 import org.joda.time.DateTime;
@@ -288,10 +289,12 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public List<TourViewByUserDto> getTourByUserId(UUID userId) {
-        List<Tour> tourListByUserId = tourRepository.getTourByUserId(userId);
+    public TourResponseByOwner getTourByUserId(UUID userId,Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
+        Page<Tour> tourListByUserId = tourRepository.getTourByUserId(userId,paging);
         TourViewByUserDto tourViewByUserDto = null;
         List<TourViewByUserDto> tourViewByUserDtoList = new ArrayList<>();
+        TourResponseByOwner tourResponseByOwner = new TourResponseByOwner();
         for (Tour tour: tourListByUserId) {
             tourViewByUserDto = new TourViewByUserDto();
             tourViewByUserDto.setTourId(tour.getTourId());
@@ -329,7 +332,12 @@ public class TourServiceImpl implements TourService {
             tourViewByUserDto.setDayBookList(dayBookViewDtoList);
             tourViewByUserDtoList.add(tourViewByUserDto);
         }
-        return tourViewByUserDtoList;
+        tourResponseByOwner.setContent(tourViewByUserDtoList);
+        tourResponseByOwner.setPageNo(tourListByUserId.getNumber() + 1);
+        tourResponseByOwner.setPageSize(tourListByUserId.getSize());
+        tourResponseByOwner.setTotalElements(tourListByUserId.getTotalElements());
+        tourResponseByOwner.setTotalPages(tourListByUserId.getTotalPages());
+        return tourResponseByOwner;
     }
 
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {

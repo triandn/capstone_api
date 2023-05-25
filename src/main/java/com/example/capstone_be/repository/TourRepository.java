@@ -26,6 +26,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query(value = "SELECT price_one_person FROM tours WHERE tours.tour_id=:tourId",nativeQuery = true)
     Float getPriceOnePersonByTourId(Long tourId);
 
-    @Query(value = "SELECT * FROM tours WHERE user_id=:userId",nativeQuery = true)
-    List<Tour> getTourByUserId(UUID userId);
+    @Query(value = "SELECT * FROM tours WHERE user_id=:user_id",nativeQuery = true)
+    Page<Tour> getTourByUserId(@Param("user_id") UUID user_id,Pageable paging);
 }
