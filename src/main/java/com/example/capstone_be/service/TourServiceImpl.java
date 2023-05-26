@@ -310,6 +310,7 @@ public class TourServiceImpl implements TourService {
             tourViewByUserDto.setTimeSlotLength(tour.getTimeSlotLength());
             tourViewByUserDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewByUserDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
+            tourViewByUserDto.setIsDeleted(tour.getIsDeleted());
 //            List<ImageDetail> imageDetailList = imageRepository.getImageDetailByTourId(tour.getTourId());
 //            tourViewByUserDto.setImageDtoList(imageDetailList.stream().map(prize -> mapper.map(prize, ImageViewDto.class)).collect(Collectors.toList()));
 //
