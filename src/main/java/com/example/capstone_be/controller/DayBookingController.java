@@ -8,8 +8,10 @@ import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.response.DayBookPagingResponse;
 import com.example.capstone_be.response.DayPagingResponse;
+import com.example.capstone_be.response.UpdateResponse;
 import com.example.capstone_be.service.DayBookService;
 import lombok.Data;
+import org.hibernate.sql.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
@@ -50,7 +52,10 @@ public class DayBookingController {
     @PatchMapping("/update-day-time/")
     public ResponseEntity<?> updateDayBooking(@RequestBody List<Map<String,Object>> fields) {
         dayBookService.updateDayByField(fields);
-        return new ResponseEntity("SUCCESS", HttpStatus.OK);
+        UpdateResponse updateResponse = new UpdateResponse();
+        updateResponse.setMessage("UPDATED SUCCESS");
+        updateResponse.setStatus_code(HttpStatus.OK.toString());
+        return new ResponseEntity(updateResponse, HttpStatus.OK);
     }
 
     @GetMapping("/all/")
