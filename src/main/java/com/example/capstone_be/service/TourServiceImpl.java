@@ -20,8 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
@@ -125,12 +127,6 @@ public class TourServiceImpl implements TourService {
                 if(index + 1 >= localTimes.size()){
                     break;
                 }
-//                timeBookDetail = new TimeBookDetail();
-//                timeBookDetail.setDay_book_id(item.getDayBookId());
-//                timeBookDetail.setStart_time(localTimes.get(index));
-//                timeBookDetail.setEnd_time(localTimes.get(index + 1));
-//                timeBookDetailList.add(timeBookDetail);
-
                 timeBookDetailDto = new TimeBookDetailDto();
                 timeBookDetailDto.setDay_book_id(item.getDayBookId());
                 timeBookDetailDto.setStart_time(localTimes.get(index));
@@ -139,8 +135,6 @@ public class TourServiceImpl implements TourService {
                 timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
             }
         }
-//        timeBookRepository.saveAll(timeBookDetailList);
-
         return tourDto;
     }
 
@@ -264,28 +258,17 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourDto updateByTourId(TourDto tourDto, Long id) {
-        final Tour updatedTour = tourRepository.findById(id)
-                .map(tour -> {
-                    tour.setTourId(tourDto.getTourId());
-                    tour.setTitle(tourDto.getTitle());
-                    tour.setCity(tourDto.getCity());
-                    tour.setPriceOnePerson(tourDto.getPriceOnePerson());
-                    tour.setImageMain(tourDto.getImageMain());
-                    tour.setWorking(tourDto.getWorking());
-                    tour.setLatitude(tourDto.getLatitude());
-                    tour.setLongitude(tourDto.getLongitude());
-                    tour.setDestination(tourDto.getDestination());
-                    tour.setDestinationDescription(tourDto.getDestinationDescription());
-                    tour.setTimeSlotLength(tourDto.getTimeSlotLength());
-                    return tourRepository.save(tour);
-                })
-                .orElseGet(() -> {
-                    tourDto.setTourId(id);
-                    return tourRepository.save(mapper.map(tourDto, Tour.class));
-                });
-
-        return mapper.map(updatedTour, TourDto.class);
+    public Tour updateTourByField(Long id,Map<String, Object> fields) {
+        Optional<Tour> existingTour = tourRepository.findById(id);
+        if(existingTour.isPresent()){
+            fields.forEach((key,value)->{
+                Field field = ReflectionUtils.findField(Tour.class,key);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field,existingTour.get(),value);
+            });
+            return tourRepository.save(existingTour.get());
+        }
+        return null;
     }
 
     @Override

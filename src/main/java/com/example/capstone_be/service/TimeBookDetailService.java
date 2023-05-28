@@ -7,6 +7,7 @@ import com.example.capstone_be.model.TimeBookDetail;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface TimeBookDetailService {
@@ -25,5 +26,7 @@ public interface TimeBookDetailService {
     List<TimeBookViewDto> getAllTimeBookForDayByDayBookId(UUID dayBookId);
 
     TimeBookDetail findTimeBookById(UUID id);
+
+    void updateTimeBookByField(List<Map<String,Object>> fields);
 
 }

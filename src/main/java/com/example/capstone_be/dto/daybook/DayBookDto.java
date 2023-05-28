@@ -16,7 +16,7 @@ public class DayBookDto implements Serializable {
 
     private UUID dayBookId;
 
-    private Date date_name;
+    private String date_name;
 
     private Long tourId;
 

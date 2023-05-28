@@ -29,7 +29,7 @@ public class TourViewByUserDto {
     private Long tourId;
     private String title;
     private String city;
-    private Float priceOnePerson;
+    private Double priceOnePerson;
     private String imageMain;
     private String working;
     private String latitude;

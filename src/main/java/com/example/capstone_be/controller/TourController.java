@@ -5,6 +5,7 @@ import com.example.capstone_be.dto.tour.TourCreateDto;
 import com.example.capstone_be.dto.tour.TourDetailDto;
 import com.example.capstone_be.dto.tour.TourDto;
 import com.example.capstone_be.dto.tour.TourViewByUserDto;
+import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.repository.UserRepository;
@@ -84,18 +85,8 @@ public class TourController {
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
     @PatchMapping("/tour-update/{id}")
-    public UpdateResponse updateTour(@RequestBody @Valid TourDto tourDto, @PathVariable Long id, final BindingResult bindingResult) {
-        UpdateResponse updateResponse = new UpdateResponse();
-        if(bindingResult.hasErrors()) {
-            String msg = getMessageBindingResult(bindingResult);
-            updateResponse.setMessage(msg);
-            updateResponse.setStatus_code(HttpStatus.BAD_REQUEST.toString());
-            return updateResponse;
-        }
-        tourService.updateByTourId(tourDto, id);
-        updateResponse.setMessage("Update Success");
-        updateResponse.setStatus_code(HttpStatus.OK.toString());
-        return updateResponse ;
+    public Tour updateTour(@PathVariable Long id,@RequestBody Map<String,Object> fields) {
+        return tourService.updateTourByField(id,fields);
     }
     @GetMapping("/tour-owner/")
     public ResponseEntity<?> getTourByOwner(HttpServletRequest request,

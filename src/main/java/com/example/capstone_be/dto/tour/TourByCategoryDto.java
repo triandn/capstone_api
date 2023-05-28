@@ -21,7 +21,7 @@ public class TourByCategoryDto implements Serializable {
 
     private String city;
 
-    private Float priceOnePerson;
+    private Double priceOnePerson;
 
     private String imageMain;
 

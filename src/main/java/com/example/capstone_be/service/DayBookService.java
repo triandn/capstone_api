@@ -6,20 +6,20 @@ import com.example.capstone_be.dto.daybook.DayBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.response.DayBookPagingResponse;
+import com.example.capstone_be.response.DayPagingResponse;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-import java.util.UUID;
+import java.text.ParseException;
+import java.util.*;
 
 public interface DayBookService {
     List<DayBookDto> getAllDayBook();
-
     DateBookCreateDto createDayBooking(DateBookCreateDto dayBookDto);
-
     ResponseEntity<?> deleteByDayBookId(UUID id);
-
-    DayBookDto updateByDayBookId(DayBookDto dayBookDto, UUID id);
-
     DayBookViewDto getDayBookingById(UUID id);
-    DayBookPagingResponse getDayAndTimeByTourId(Long tourId,Integer pageNo, Integer pageSize);
+    DayBookPagingResponse getDayAndTimeByTourId(Long tourId, String start, String end, Integer pageNo, Integer pageSize)throws ParseException;;
+    List<DayBookDto> getDayBookByTourId(Long tourId);
+    DayPagingResponse getDayBookByTourIdPaging(Long tourId,String start,String end,Integer pageNo, Integer pageSize) throws ParseException;
+
+    void updateDayByField(List<Map<String, Object>> fields);
 }

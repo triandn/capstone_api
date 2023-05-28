@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @Entity(name="daybooks")
 public class DayBook extends BaseEntity{
     @Id
-    @Column(name = "day_book_id", nullable = false)
+    @Column(name = "day_book_id", nullable = false, updatable = false)
     private UUID dayBookId = UUID.randomUUID();
 
     @Column(name = "date_name", nullable = false)

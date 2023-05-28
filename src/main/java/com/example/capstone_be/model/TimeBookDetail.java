@@ -18,7 +18,7 @@ import java.util.UUID;
 @Entity(name="time_book_details")
 public class TimeBookDetail extends BaseEntity{
     @Id
-    @Column(name = "time_id", nullable = false)
+    @Column(name = "time_id", nullable = false,updatable = false)
     private UUID timeId = UUID.randomUUID();
 
     @Column(name = "start_time", nullable = false)

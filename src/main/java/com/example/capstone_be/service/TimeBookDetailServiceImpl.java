@@ -2,6 +2,7 @@ package com.example.capstone_be.service;
 
 
 import com.example.capstone_be.dto.daybook.DayBookDto;
+import com.example.capstone_be.dto.daybook.DayBookUpdate;
 import com.example.capstone_be.dto.daybook.TimeBookDetailDto;
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
@@ -15,14 +16,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Field;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -132,5 +136,41 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
     @Override
     public TimeBookDetail findTimeBookById(UUID id) {
         return timeBookRepository.findById(id).orElseThrow(() -> new NotFoundException("TimeBook not found"));
+    }
+
+    @Override
+    public void updateTimeBookByField(List<Map<String,Object>> fields) {
+        for (Map<String,Object> item : fields) {
+            UUID timeBookId = UUID.fromString(item.get("timeId").toString());
+            TimeBookDetail existingTime = timeBookRepository.findById(timeBookId).get();
+            item.forEach((key,value)->{
+                Field field = ReflectionUtils.findField(TimeBookDetail.class,key);
+                field.setAccessible(true);
+                System.out.println("fields: " + field);
+                assert field != null;
+                if(field.getName().equals("timeId")){
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingTime,timeBookId);
+                } else if (field.getName().equals("start_time")) {
+                    LocalTime start_time = LocalTime.parse(item.get("start_time").toString());
+//                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingTime,start_time);
+                } else if (field.getName().equals("end_time")) {
+                    LocalTime end_time = LocalTime.parse(item.get("end_time").toString());
+//                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingTime,end_time);
+                } else if (field.getName().equals("isDeleted")) {
+//                    field.setAccessible(true);
+                    Boolean isDeleted = Boolean.valueOf(item.get("isDeleted").toString());
+                    ReflectionUtils.setField(field,existingTime,isDeleted);
+                } else {
+//                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingTime,value);
+                }
+                System.out.println("key time: " + key + " value time: " + value);
+            });
+            timeBookRepository.save(existingTime);
+        }
+        System.out.println("OK");
     }
 }

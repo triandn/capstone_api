@@ -2,6 +2,7 @@ package com.example.capstone_be.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -13,6 +14,7 @@ import java.util.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name="tours")
+@DynamicUpdate
 public class Tour extends BaseEntity{
     @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
@@ -29,7 +31,7 @@ public class Tour extends BaseEntity{
     private String city;
 
     @Column(name = "price_one_person", nullable = false)
-    private Float priceOnePerson;
+    private Double priceOnePerson;
 
     @Column(name = "image_main", nullable = false)
     private String imageMain;
@@ -70,9 +72,11 @@ public class Tour extends BaseEntity{
     private User user;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinTable(name = "tour_category", joinColumns = @JoinColumn(name = "tour_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
 
     @OneToMany(mappedBy = "tour", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<ImageDetail> imageDetails = new ArrayList<>();
 }

@@ -7,15 +7,21 @@ import com.example.capstone_be.dto.daybook.DayBookViewDto;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.response.DayBookPagingResponse;
+import com.example.capstone_be.response.DayPagingResponse;
 import com.example.capstone_be.service.DayBookService;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
@@ -41,14 +47,10 @@ public class DayBookingController {
 //        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/update/{id}")
-    public ResponseEntity<?> updateDayBooking(@RequestBody @Valid DayBookDto dayBookDto, @PathVariable UUID id, final BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            String msg = getMessageBindingResult(bindingResult);
-            return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
-        }
-        DayBookDto updatedDayBookDto = dayBookService.updateByDayBookId(dayBookDto, id);
-        return new ResponseEntity(updatedDayBookDto, HttpStatus.OK);
+    @PatchMapping("/update-day-time/")
+    public ResponseEntity<?> updateDayBooking(@RequestBody List<Map<String,Object>> fields) {
+        dayBookService.updateDayByField(fields);
+        return new ResponseEntity("SUCCESS", HttpStatus.OK);
     }
 
     @GetMapping("/all/")
@@ -62,11 +64,27 @@ public class DayBookingController {
         final DayBookViewDto dayBookDto = dayBookService.getDayBookingById(id);
         return new ResponseEntity<>(dayBookDto,HttpStatus.OK);
     }
-    @GetMapping("/day-time/{tour_id}")
-    public ResponseEntity<?> getDayBookingDetail(@PathVariable Long tour_id,
+    @GetMapping("/day-time/{tour_id}/{start_time}/{end_time}")
+    public ResponseEntity<?> getDayTimePagingByTourId(@PathVariable Long tour_id,
+                                                 @PathVariable String start_time,
+                                                 @PathVariable String end_time,
                                                  @RequestParam(defaultValue = "1") Integer pageNo,
-                                                 @RequestParam(defaultValue = "5") Integer pageSize) {
-        DayBookPagingResponse dayBookViewDtoList = dayBookService.getDayAndTimeByTourId(tour_id,pageNo,pageSize);
+                                                 @RequestParam(defaultValue = "5") Integer pageSize) throws ParseException {
+        DayBookPagingResponse dayBookViewDtoList = dayBookService.getDayAndTimeByTourId(tour_id,start_time,end_time,pageNo,pageSize);
+        return new ResponseEntity<>(dayBookViewDtoList,HttpStatus.OK);
+    }
+    @GetMapping("/day-paging/all/{tour_id}/{start_time}/{end_time}")
+    public ResponseEntity<?> getDayBookingPagingByTourId(@PathVariable Long tour_id,
+                                                 @PathVariable String start_time,
+                                                 @PathVariable String end_time,
+                                                 @RequestParam(defaultValue = "1") Integer pageNo,
+                                                 @RequestParam(defaultValue = "5") Integer pageSize) throws ParseException {
+        DayPagingResponse dayBookViewDtoList = dayBookService.getDayBookByTourIdPaging(tour_id,start_time,end_time,pageNo,pageSize);
+        return new ResponseEntity<>(dayBookViewDtoList,HttpStatus.OK);
+    }
+    @GetMapping("/day/all/{tour_id}")
+    public ResponseEntity<?> getDayBookingNotPagingByTourId(@PathVariable Long tour_id) {
+        List<DayBookDto> dayBookViewDtoList = dayBookService.getDayBookByTourId(tour_id);
         return new ResponseEntity<>(dayBookViewDtoList,HttpStatus.OK);
     }
 }
