@@ -127,7 +127,7 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
             timeBookViewDto.setTimeId(timeBookDetail.getTimeId());
             timeBookViewDto.setStart_time(timeBookDetail.getStart_time());
             timeBookViewDto.setEnd_time(timeBookDetail.getEnd_time());
-            timeBookViewDto.setIs_deleted(timeBookDetail.getIsDeleted());
+            timeBookViewDto.setIsDeleted(timeBookDetail.getIsDeleted());
             timeBookViewDtoList.add(timeBookViewDto);
         }
         return timeBookViewDtoList;

@@ -81,7 +81,7 @@ public class DayBookServiceImpl implements DayBookService {
         dayBookDto.setDate_name(formatter.format(dayBook.getDate_name()).toString());
         dayBookDto.setStatus(dayBook.getStatus());
         dayBookDto.setTimeBookDetailList(timeBookViewDtoList);
-        dayBookDto.setIs_deleted(dayBook.getIsDeleted());
+        dayBookDto.setIsDeleted(dayBook.getIsDeleted());
 
         return dayBookDto;
     }
@@ -105,7 +105,7 @@ public class DayBookServiceImpl implements DayBookService {
             dayBookViewDto.setStatus(dayBook.getStatus());
             dayBookViewDto.setTourId(dayBook.getTourId());
             dayBookViewDto.setStatus(dayBook.getStatus());
-            dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
+            dayBookViewDto.setIsDeleted(dayBook.getIsDeleted());
             List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
             dayBookViewDto.setTimeBookDetailList(timeBookViewDtoList);
             dayBookViewDtoList.add(dayBookViewDto);

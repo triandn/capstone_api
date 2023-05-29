@@ -23,7 +23,7 @@ public class DayBookViewDto implements Serializable {
 
     private String status = DayBookStatusEnum.AVAILABLE.toString();
 
-    private Boolean is_deleted;
+    private Boolean isDeleted;
 
     List<TimeBookViewDto> timeBookDetailList;
 

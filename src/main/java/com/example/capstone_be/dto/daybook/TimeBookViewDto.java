@@ -20,6 +20,6 @@ public class TimeBookViewDto {
 
     private LocalTime end_time;
 
-    private Boolean is_deleted;
+    private Boolean isDeleted;
 
 }
