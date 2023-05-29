@@ -25,6 +25,6 @@ public class DayBookViewDto implements Serializable {
 
     private Boolean is_deleted;
 
-    List<TimeBookViewDto> timeBookViewDtoList;
+    List<TimeBookViewDto> timeBookDetailList;
 
 }
