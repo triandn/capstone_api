@@ -153,18 +153,14 @@ public class TimeBookDetailServiceImpl implements TimeBookDetailService {
                     ReflectionUtils.setField(field,existingTime,timeBookId);
                 } else if (field.getName().equals("start_time")) {
                     LocalTime start_time = LocalTime.parse(item.get("start_time").toString());
-//                    field.setAccessible(true);
                     ReflectionUtils.setField(field,existingTime,start_time);
                 } else if (field.getName().equals("end_time")) {
                     LocalTime end_time = LocalTime.parse(item.get("end_time").toString());
-//                    field.setAccessible(true);
                     ReflectionUtils.setField(field,existingTime,end_time);
                 } else if (field.getName().equals("isDeleted")) {
-//                    field.setAccessible(true);
                     Boolean isDeleted = Boolean.valueOf(item.get("isDeleted").toString());
                     ReflectionUtils.setField(field,existingTime,isDeleted);
                 } else {
-//                    field.setAccessible(true);
                     ReflectionUtils.setField(field,existingTime,value);
                 }
                 System.out.println("key time: " + key + " value time: " + value);

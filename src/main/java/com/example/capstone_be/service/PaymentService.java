@@ -11,7 +11,8 @@ import java.util.UUID;
 
 public interface PaymentService {
     ResponseDataAPI makePayment(UUID userId, String language, UUID timeId,
-                                List<GuestDto> guestDtos, Long tourId)
+                                List<GuestDto> guestDtos, Long tourId,
+                                Double priceTotal)
             throws UnsupportedEncodingException;
 
     Payment findByTxnRef(String txnRef);

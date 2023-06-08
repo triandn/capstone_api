@@ -37,7 +37,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final TourRepository tourRepository;
     private final GuestService guestService;
     @Override
-    public ResponseDataAPI makePayment(UUID userId, String language, UUID timeId, List<GuestDto> guestDtos, Long tourId) throws UnsupportedEncodingException {
+    public ResponseDataAPI makePayment(UUID userId, String language, UUID timeId, List<GuestDto> guestDtos, Long tourId,Double priceTotal) throws UnsupportedEncodingException {
         TimeBookDetail timeBook = timeBookDetailService.findTimeBookById(timeId);
         if (timeBook.getIsPayment()) {
             throw new NotFoundException("PAYMENT NOT FOUND");
@@ -54,26 +54,12 @@ public class PaymentServiceImpl implements PaymentService {
         String orderType = "other";
         String locate = language;
 
-        BigDecimal amount = new BigDecimal(2000000);
+        BigDecimal amount = BigDecimal.valueOf(priceTotal);
         Map<String,Integer> map = new HashMap<>();
         for (GuestDto item: guestDtos) {
             map.put(String.valueOf(item.getGuestType()),item.getQuantity());
         }
-        float priceOnePerson = tourRepository.getPriceOnePersonByTourId(tourId);
-
-//        for (GuestDto item: guestDtos) {
-//            amount = new BigDecimal(0);
-//            if(item.getGuestType().equals(GuestType.ADULTS.toString())){
-//                amount.add()
-//            }
-//            if(item.getGuestType().equals(GuestType.CHILDREN.toString())){
-//                amount.add(BigDecimal.valueOf(map.get(GuestType.CHILDREN.toString())));
-//            }
-//            if(item.getGuestType().equals(GuestType.INFANTS.toString())){
-//                amount.add(BigDecimal.valueOf(map.get(GuestType.INFANTS.toString())));
-//            }
-//        }
-//        System.out.println("Amount: " + amount.toString());
+        // ADD GUEST LIST
         List<GuestDto> guestDtoList = new ArrayList<>();
         GuestDto guestDto = null;
         for (GuestDto item : guestDtos) {
@@ -87,7 +73,9 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         System.out.println("Guest List: " + guestDtoList.size());
-        guestService.createGuests(guestDtoList);
+        guestService.createGuests(guestDtoList); // save
+
+        // VNPAY PROPERTIES
 
         Map vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
@@ -101,7 +89,6 @@ public class PaymentServiceImpl implements PaymentService {
         vnp_Params.put("vnp_Locale", locate);
         vnp_Params.put("vnp_ReturnUrl", returnUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
-
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

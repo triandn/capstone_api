@@ -65,6 +65,7 @@ public class WebSecurityConfiguration {
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                    .antMatchers("/ws/**").permitAll()
                     .antMatchers("/auth/**").permitAll()
                     .antMatchers("/user/**").permitAll()
                     .antMatchers("/profile/**").hasAnyAuthority(USER,ADMIN,OWNER)
@@ -118,6 +119,7 @@ public class WebSecurityConfiguration {
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "content-type", "x-auth-token"));
         configuration.setExposedHeaders(List.of("x-auth-token"));
+//        configuration.setAllowCredentials(true);
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

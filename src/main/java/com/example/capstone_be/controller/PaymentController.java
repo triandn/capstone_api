@@ -32,12 +32,12 @@ public class PaymentController {
         this.userService = userService;
     }
 
-    @PostMapping("/{tour_id}/{time_book_id}")
+    @PostMapping("/{tour_id}/{time_book_id}/{price_total}")
     public ResponseEntity<ResponseDataAPI> payment(
             HttpServletRequest request,
             @RequestParam(value = "language", defaultValue = "vn") String language,
             @PathVariable UUID time_book_id,@RequestBody List<GuestDto> guestDtos,
-            @PathVariable Long tour_id)
+            @PathVariable Long tour_id, @PathVariable String price_total)
             throws UnsupportedEncodingException {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
@@ -46,7 +46,8 @@ public class PaymentController {
         Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(bearerToken).getBody();
         String email = claims.getSubject();
         User user = userService.getUserByEmail(email);
-        return ResponseEntity.ok(paymentService.makePayment(user.getUserId(), language,time_book_id,guestDtos,tour_id));
+        Double priceTotal = Double.valueOf(price_total);
+        return ResponseEntity.ok(paymentService.makePayment(user.getUserId(), language,time_book_id,guestDtos,tour_id,priceTotal));
     }
     @GetMapping("/")
     public ResponseEntity<ResponseDataAPI> paymentResult(
