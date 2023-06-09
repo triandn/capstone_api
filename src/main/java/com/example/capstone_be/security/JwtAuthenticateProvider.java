@@ -1,5 +1,6 @@
 package com.example.capstone_be.security;
 
+import com.example.capstone_be.dto.rftoken.RefreshTokenNew;
 import com.example.capstone_be.model.CustomUserDetails;
 import com.example.capstone_be.model.RefreshToken;
 import com.example.capstone_be.service.RefreshTokenService;
@@ -81,17 +82,35 @@ public class JwtAuthenticateProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
-    public String generateTokenByRefreshToken(String requestRefreshToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    public String generateRefreshToken(CustomUserDetails userDetails) throws InvalidKeySpecException, NoSuchAlgorithmException {
+        String role = userDetails.getAuthorities().toString();
+        System.out.println("Role: " + role);
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .claim(AUTHORITIES_KEY, role)
+                .claim(USERNAME_KEY, userDetails.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(generateExpirationDateForRFToken())
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+    public RefreshTokenNew generateTokenByRefreshToken(String requestRefreshToken) throws InvalidKeySpecException, NoSuchAlgorithmException {
         Optional<RefreshToken> refreshToken = refreshTokenService.findByToken(requestRefreshToken);
         refreshTokenService.verifyExpiration(refreshToken.get()); //
         CustomUserDetails customUserDetails = new CustomUserDetails(refreshToken.get().getUser());
         String token = generateToken(customUserDetails);
-        return token;
+        RefreshToken refreshTokenNew = refreshTokenService.createRefreshToken(refreshToken.get().getUserId());
+        RefreshTokenNew refreshTokenNewObject = new RefreshTokenNew();
+        refreshTokenNewObject.setAccessToken(token);
+        refreshTokenNewObject.setRfTokenNew(refreshTokenNew.getToken());
+        return refreshTokenNewObject;
     }
     private Date generateExpirationDate() {
         return new Date(new Date().getTime() + expiresIn);
     }
-
+    private Date generateExpirationDateForRFToken() {
+        return new Date(new Date().getTime() + jwtExpirationMs);
+    }
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (

@@ -1,5 +1,6 @@
 package com.example.capstone_be.controller;
 
+import com.example.capstone_be.dto.rftoken.RefreshTokenNew;
 import com.example.capstone_be.dto.user.JwtRequest;
 import com.example.capstone_be.dto.user.TokenRefreshRequest;
 import com.example.capstone_be.dto.user.TokenRefreshResponse;
@@ -54,11 +55,11 @@ public class AuthController {
     @PostMapping("/refresh_token/")
     public TokenRefreshResponse refreshToken(@Valid @RequestBody TokenRefreshRequest request) throws InvalidKeySpecException, NoSuchAlgorithmException {
         String requestRefreshToken = request.getRefreshToken();
-        String token = jwtAuthenticateProvider.generateTokenByRefreshToken(requestRefreshToken);
+        RefreshTokenNew refreshTokenNewObject = jwtAuthenticateProvider.generateTokenByRefreshToken(requestRefreshToken);
         TokenRefreshResponse tokenRefreshResponse = new TokenRefreshResponse();
-        tokenRefreshResponse.setAccessToken(token);
+        tokenRefreshResponse.setAccessToken(refreshTokenNewObject.getAccessToken());
         tokenRefreshResponse.setTokenType("Bearer ");
-        tokenRefreshResponse.setRefreshToken(requestRefreshToken);
+        tokenRefreshResponse.setRefreshToken(refreshTokenNewObject.getRfTokenNew());
         return tokenRefreshResponse;
     }
 }
