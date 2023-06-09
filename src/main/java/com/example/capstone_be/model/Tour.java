@@ -6,6 +6,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalTime;
 import java.util.*;
 
 @Getter
@@ -53,6 +54,12 @@ public class Tour extends BaseEntity{
 
     @Column(name = "check_out")
     private Timestamp checkOut;
+
+    @Column(name = "time_book_start")
+    private LocalTime timeBookStart;
+
+    @Column(name = "time_book_end")
+    private LocalTime timeBookEnd;
 
     @Column(name = "destination", nullable = false)
     private String destination;

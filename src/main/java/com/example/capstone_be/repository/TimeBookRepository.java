@@ -18,7 +18,9 @@ public interface TimeBookRepository extends JpaRepository<TimeBookDetail, UUID> 
 
     String INSERT_VALUE = "INSERT INTO public.time_book_details(start_time, end_time, day_book_id, is_payment)\n" +
             "\tVALUES (:startTime, :endTime, :dayBookId, :isPayment)";
-
+    String DELETE_VALUE = "DELETE FROM time_book_details WHERE time_book_details.time_id IN(SELECT time_id FROM time_book_details INNER JOIN daybooks \n" +
+            "ON daybooks.day_book_id = time_book_details.day_book_id INNER JOIN tours \n" +
+            "ON tours.tour_id = daybooks.tour_id WHERE tours.tour_id=:tour_id)";
     @Query(value = "SELECT * FROM time_book_details AS tbdt WHERE tbdt.day_book_id=:day_book_id",nativeQuery = true)
     List<TimeBookDetail> getAllListTimeBookByDayBookId(UUID day_book_id);
 
@@ -27,5 +29,10 @@ public interface TimeBookRepository extends JpaRepository<TimeBookDetail, UUID> 
     void saveTimeBookDetail(@Param("startTime") LocalTime startTime, @Param("endTime")LocalTime endTime,
                             @Param("dayBookId") UUID dayBookId, @Param("isPayment") Boolean isPayment);
 
-//    void updateTimeBookDetail()
+
+    @Modifying
+    @Query(value = DELETE_VALUE, nativeQuery = true)
+    void deleteListTimeByTourId(@Param("tour_id") Long tour_id);
+
+
 }

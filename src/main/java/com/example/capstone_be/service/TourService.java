@@ -1,6 +1,8 @@
 package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.category.CategoryDto;
+import com.example.capstone_be.dto.daybook.TimeBookEnd;
+import com.example.capstone_be.dto.daybook.TimeBookStart;
 import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.response.TourRespone;
@@ -31,4 +33,6 @@ public interface TourService {
     Tour updateTourByField(Long id, Map<String, Object> fields);
 
     TourResponseByOwner getTourByUserId(UUID userId, Integer pageNo, Integer pageSize);
+
+    void updateTimeTour(UpdateTimeTourDto updateTimeTourDto, Long tourId);
 }

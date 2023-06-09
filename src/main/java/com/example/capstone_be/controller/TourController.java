@@ -1,10 +1,7 @@
 package com.example.capstone_be.controller;
 
 
-import com.example.capstone_be.dto.tour.TourCreateDto;
-import com.example.capstone_be.dto.tour.TourDetailDto;
-import com.example.capstone_be.dto.tour.TourDto;
-import com.example.capstone_be.dto.tour.TourViewByUserDto;
+import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.TourRepository;
@@ -87,6 +84,11 @@ public class TourController {
     @PatchMapping("/tour-update/{id}")
     public Tour updateTour(@PathVariable Long id,@RequestBody Map<String,Object> fields) {
         return tourService.updateTourByField(id,fields);
+    }
+    @PatchMapping("/tour-update-time/{id}")
+    public ResponseEntity<?> updateStartTimeAndEndTimeTour(@PathVariable Long id, @RequestBody UpdateTimeTourDto updateTimeTourDto) {
+        tourService.updateTimeTour(updateTimeTourDto,id);
+        return new ResponseEntity<>("Update Success",HttpStatus.OK);
     }
     @GetMapping("/tour-owner/")
     public ResponseEntity<?> getTourByOwner(HttpServletRequest request,

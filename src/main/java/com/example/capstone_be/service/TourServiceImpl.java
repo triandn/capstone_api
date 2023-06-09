@@ -69,6 +69,9 @@ public class TourServiceImpl implements TourService {
         Random random = new Random();
         int randomInt = random.nextInt();
         int nonNegativeInt = Math.abs(randomInt);
+        // START TIME AND END TIME
+        LocalTime startTime = LocalTime.of(tourDto.getTimeBookStart().getHour(),tourDto.getTimeBookStart().getMinutes()); // Thời gian bắt đầu
+        LocalTime endTime = LocalTime.of(tourDto.getTimeBookEnd().getHour(), tourDto.getTimeBookEnd().getMinutes()); // Thời gian kết thúc
 
         Long tourId = (long) nonNegativeInt;
         TourCreateDto tourDtoCreate = new TourCreateDto();
@@ -89,6 +92,27 @@ public class TourServiceImpl implements TourService {
         tourDtoCreate.setTimeSlotLength(tourDto.getTimeSlotLength());
         tourDtoCreate.setPriceOnePerson(tourDto.getPriceOnePerson());
 
+        Tour tourSave = new Tour();
+        tourSave.setTourId(tourId);
+        tourSave.setUserId(user_id);
+        tourSave.setCategories(tourDto.getCategories());
+        tourSave.setCity(tourDto.getCity());
+        tourSave.setDestination(tourDto.getDestination());
+        tourSave.setDestinationDescription(tourDto.getDestinationDescription());
+        tourSave.setRating(tourDto.getRating());
+        tourSave.setLatitude(tourDto.getLatitude());
+        tourSave.setLongitude(tourDto.getLongitude());
+        tourSave.setTitle(tourDto.getTitle());
+        tourSave.setWorking(tourDto.getWorking());
+        tourSave.setImageMain(tourDto.getImageMain());
+        tourSave.setCheckIn(tourDto.getCheckIn());
+        tourSave.setCheckOut(tourDto.getCheckOut());
+        tourSave.setTimeSlotLength(tourDto.getTimeSlotLength());
+        tourSave.setPriceOnePerson(Double.valueOf(tourDto.getPriceOnePerson()));
+        tourSave.setTimeBookStart(startTime);
+        tourSave.setTimeBookEnd(endTime);
+
+
 // IMAGE PROCESS
         List<ImageDto> imageDtos = new ArrayList<>();
         List<ImageDto> imageDtoListFromRequest = tourDto.getImageDtoList();
@@ -99,7 +123,8 @@ public class TourServiceImpl implements TourService {
             imageDto.setLink(item.getLink());
             imageDtos.add(imageDto);
         }
-        tourRepository.save(mapper.map(tourDtoCreate, Tour.class));
+//        tourRepository.save(mapper.map(tourDtoCreate, Tour.class));
+        tourRepository.save(tourSave);
         imageService.createImageDetailForTour(imageDtos);
 // DATE PROCESS
         List<DateTime> dateTimes = getDateRange(tourDto.getStartDay(),tourDto.getEndDay());
@@ -222,6 +247,9 @@ public class TourServiceImpl implements TourService {
         List<ImageViewDto> imageViewDtos = new ArrayList<>();
         List<ImageDetail> imageDetails = imageRepository.getImageDetailByTourId(tourId);
         Double avgRatingTour = reviewService.calAvgRatingReviewForTour(tour.getTourId());
+        TimeBookStart timeBookStart = new TimeBookStart();
+        TimeBookEnd timeBookEnd = new TimeBookEnd();
+
         for (ImageDetail image: imageDetails) {
             imageViewDtos.add(mapper.map(image,ImageViewDto.class));
         }
@@ -243,6 +271,16 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setUserId(tour.getUserId());
         tourDetailDto.setTimeSlotLength(tour.getTimeSlotLength());
         tourDetailDto.setIsDeleted(tour.getIsDeleted());
+
+        timeBookStart.setHour(tour.getTimeBookStart().getHour());
+        timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());
+
+        timeBookEnd.setHour(tour.getTimeBookEnd().getHour());
+        timeBookEnd.setMinutes(tour.getTimeBookEnd().getMinute());
+
+        tourDetailDto.setTimeBookStart(timeBookStart);
+        tourDetailDto.setTimeBookEnd(timeBookEnd);
+
         return tourDetailDto;
     }
 
@@ -322,6 +360,40 @@ public class TourServiceImpl implements TourService {
         tourResponseByOwner.setTotalElements(tourListByUserId.getTotalElements());
         tourResponseByOwner.setTotalPages(tourListByUserId.getTotalPages());
         return tourResponseByOwner;
+    }
+
+    @Override
+    @Transactional
+    public void updateTimeTour(UpdateTimeTourDto updateTimeTourDto, Long tourId) {
+
+        timeBookRepository.deleteListTimeByTourId(tourId);
+
+        LocalTime startTime = LocalTime.of(updateTimeTourDto.getTimeBookStart().getHour(),updateTimeTourDto.getTimeBookStart().getMinutes()); // Thời gian bắt đầu
+        LocalTime endTime = LocalTime.of(updateTimeTourDto.getTimeBookEnd().getHour(), updateTimeTourDto.getTimeBookEnd().getMinutes()); // Thời gian kết thúc
+        tourRepository.updateStartTimeAndEndTime(startTime,endTime,tourId);
+
+        Tour tour = tourRepository.getTourById(tourId);
+        List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tourId);
+        List<LocalTime> localTimes = DivideFrameTime(updateTimeTourDto.getTimeBookStart(),updateTimeTourDto.getTimeBookEnd(),tour.getTimeSlotLength());
+        System.out.println("THOI GIAN CHIA: " + localTimes.size());
+
+        List<TimeBookDetailDto> timeBookDetailDtoList = null;
+        TimeBookDetailDto timeBookDetailDto = null;
+        for (DayBook item: dayBookList) {
+            timeBookDetailDtoList = new ArrayList<>();
+            System.out.println("DayBook Id:"+item.getDayBookId());
+            for (int index = 0; index <= localTimes.size(); index++){
+                if(index + 1 >= localTimes.size()){
+                    break;
+                }
+                timeBookDetailDto = new TimeBookDetailDto();
+                timeBookDetailDto.setDay_book_id(item.getDayBookId());
+                timeBookDetailDto.setStart_time(localTimes.get(index));
+                timeBookDetailDto.setEnd_time(localTimes.get(index + 1));
+                timeBookDetailDtoList.add(timeBookDetailDto);
+                timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
+            }
+        }
     }
 
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {

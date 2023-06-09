@@ -4,10 +4,13 @@ import com.example.capstone_be.model.Tour;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,4 +31,11 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Query(value = "SELECT * FROM tours WHERE user_id=:user_id",nativeQuery = true)
     Page<Tour> getTourByUserId(@Param("user_id") UUID user_id,Pageable paging);
+
+    @Modifying
+    @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end WHERE tour_id=:tour_id",nativeQuery = true)
+    void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,Long tour_id);
+
+    @Query(value = "SELECT * FROM tours WHERE tours.tour_id=:tour_id",nativeQuery = true)
+    Tour getTourById(Long tour_id);
 }
