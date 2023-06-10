@@ -271,15 +271,25 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setUserId(tour.getUserId());
         tourDetailDto.setTimeSlotLength(tour.getTimeSlotLength());
         tourDetailDto.setIsDeleted(tour.getIsDeleted());
+        try{
+            timeBookStart.setHour(tour.getTimeBookStart().getHour());
+            timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());
 
-        timeBookStart.setHour(tour.getTimeBookStart().getHour());
-        timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());
+            timeBookEnd.setHour(tour.getTimeBookEnd().getHour());
+            timeBookEnd.setMinutes(tour.getTimeBookEnd().getMinute());
 
-        timeBookEnd.setHour(tour.getTimeBookEnd().getHour());
-        timeBookEnd.setMinutes(tour.getTimeBookEnd().getMinute());
+            tourDetailDto.setTimeBookStart(timeBookStart);
+            tourDetailDto.setTimeBookEnd(timeBookEnd);
+        }
+        catch (Exception e){
+            System.out.println("Error" + e);
+        }
+//        timeBookStart.setHour(tour.getTimeBookStart().getHour());
+//        timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());
+//
+//        timeBookEnd.setHour(tour.getTimeBookEnd().getHour());
+//        timeBookEnd.setMinutes(tour.getTimeBookEnd().getMinute());
 
-        tourDetailDto.setTimeBookStart(timeBookStart);
-        tourDetailDto.setTimeBookEnd(timeBookEnd);
 
         return tourDetailDto;
     }

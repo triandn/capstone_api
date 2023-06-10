@@ -9,10 +9,7 @@ import com.example.capstone_be.exception.BadRequestException;
 import com.example.capstone_be.exception.ComparisonException;
 import com.example.capstone_be.exception.InvalidOldPasswordException;
 import com.example.capstone_be.exception.NotFoundException;
-import com.example.capstone_be.model.Category;
-import com.example.capstone_be.model.RefreshToken;
-import com.example.capstone_be.model.User;
-import com.example.capstone_be.model.VerificationToken;
+import com.example.capstone_be.model.*;
 import com.example.capstone_be.repository.ConfirmationTokenRepository;
 import com.example.capstone_be.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -27,11 +24,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.logging.Logger;
 
 @Service
@@ -148,15 +145,29 @@ public class UserServiceImpl implements UserService {
     public UserForUpdateDto updateUserProfile(String bearerToken, UserForUpdateDto userForUpdateDto) {
         User user = getUserByUserId(bearerToken);
         userRepository.updateProfile(
+                userForUpdateDto.getUserName(),
                 userForUpdateDto.getDescription(),
                 userForUpdateDto.getAddress(),
                 userForUpdateDto.getPhoneNumber(),
                 userForUpdateDto.getLanguage(),
                 userForUpdateDto.getUrlImage(),
-                userForUpdateDto.getUserName(),
                 user.getUserId()
         );
         return userForUpdateDto;
+    }
+
+    @Override
+    public User updateUserByField(UUID userId, Map<String, Object> fields) {
+        Optional<User> existingUser = userRepository.findById(userId);
+        if(existingUser.isPresent()){
+            fields.forEach((key,value)->{
+                Field field = ReflectionUtils.findField(User.class,key);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field,existingUser.get(),value);
+            });
+            return userRepository.save(existingUser.get());
+        }
+        return null;
     }
 
     @Override

@@ -32,7 +32,7 @@ public class SocketModule {
     private DataListener<Message> onChatReceived() {
         return (senderClient, data, ackSender) -> {
             log.info(data.toString());
-            socketService.sendSocketMessage(senderClient,data.getMessage(),data.getRoom(),"get_message");
+//            socketService.sendSocketMessage(senderClient,data.getMessage(),data.getRoom(),"get_message");
 //            socketService.saveMessage(senderClient, data);
         };
     }
@@ -62,7 +62,7 @@ public class SocketModule {
 //            String room = params.get("room").stream().collect(Collectors.joining());
 //            String username = params.get("username").stream().collect(Collectors.joining());
 //            socketService.saveInfoMessage(client, String.format(Constants.DISCONNECT_MESSAGE, username), room);
-//            log.info("Socket ID[{}] - room[{}] - username [{}]  discnnected to chat module through", client.getSessionId().toString(), room, username);
+//            log.info("Socket ID[{}] - room[{}] - username [{}]  disconnected to chat module through", client.getSessionId().toString(), room, username);
 //        };
         return client -> {
             log.info("Client[{}] - Disconnected from socket", client.getSessionId().toString());

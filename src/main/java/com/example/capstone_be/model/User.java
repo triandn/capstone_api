@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -46,4 +47,7 @@ public class User extends BaseEntity {
 
     @Column(name = "is_enabled")
     private boolean isEnabled = true;
+
+    @OneToMany(mappedBy = "user")
+    Set<Participant> participants;
 }

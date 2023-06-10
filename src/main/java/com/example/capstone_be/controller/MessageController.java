@@ -3,6 +3,7 @@ package com.example.capstone_be.controller;
 import com.example.capstone_be.model.Message;
 import com.example.capstone_be.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,4 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    @CrossOrigin
-    @GetMapping("/{room}")
-    public ResponseEntity<List<Message>> getMessages(@PathVariable String room) {
-        return ResponseEntity.ok(messageService.getMessages(room));
-    }
 }

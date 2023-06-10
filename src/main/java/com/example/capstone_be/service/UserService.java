@@ -4,9 +4,11 @@ import com.example.capstone_be.dto.user.UserForUpdateDto;
 import com.example.capstone_be.dto.user.UserPasswordDto;
 import com.example.capstone_be.dto.user.UserProfileDto;
 import com.example.capstone_be.dto.user.UserRegistrationDto;
+import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.model.User;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Map;
 import java.util.UUID;
 
 public interface UserService {
@@ -24,6 +26,8 @@ public interface UserService {
     UserProfileDto getUserProfile(String bearerToken);
 
     UserForUpdateDto updateUserProfile(String bearerToken, UserForUpdateDto userForUpdateDto);
+
+    User updateUserByField(UUID userId, Map<String, Object> fields);
 
     void changePassword(UserPasswordDto userPasswordDto);
 }
