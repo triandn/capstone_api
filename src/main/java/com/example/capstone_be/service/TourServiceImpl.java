@@ -380,11 +380,11 @@ public class TourServiceImpl implements TourService {
 
         LocalTime startTime = LocalTime.of(updateTimeTourDto.getTimeBookStart().getHour(),updateTimeTourDto.getTimeBookStart().getMinutes()); // Thời gian bắt đầu
         LocalTime endTime = LocalTime.of(updateTimeTourDto.getTimeBookEnd().getHour(), updateTimeTourDto.getTimeBookEnd().getMinutes()); // Thời gian kết thúc
-        tourRepository.updateStartTimeAndEndTime(startTime,endTime,tourId);
+        tourRepository.updateStartTimeAndEndTime(startTime,endTime,updateTimeTourDto.getTimeSlotLength(),tourId);
 
         Tour tour = tourRepository.getTourById(tourId);
         List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tourId);
-        List<LocalTime> localTimes = DivideFrameTime(updateTimeTourDto.getTimeBookStart(),updateTimeTourDto.getTimeBookEnd(),tour.getTimeSlotLength());
+        List<LocalTime> localTimes = DivideFrameTime(updateTimeTourDto.getTimeBookStart(),updateTimeTourDto.getTimeBookEnd(),updateTimeTourDto.getTimeSlotLength());
         System.out.println("THOI GIAN CHIA: " + localTimes.size());
 
         List<TimeBookDetailDto> timeBookDetailDtoList = null;

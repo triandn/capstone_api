@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class UpdateTimeTourDto {
     private TimeBookStart timeBookStart;
     private TimeBookEnd timeBookEnd;
-
+    private int timeSlotLength;
 }

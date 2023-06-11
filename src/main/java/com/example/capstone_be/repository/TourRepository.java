@@ -33,8 +33,8 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     Page<Tour> getTourByUserId(@Param("user_id") UUID user_id,Pageable paging);
 
     @Modifying
-    @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end WHERE tour_id=:tour_id",nativeQuery = true)
-    void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,Long tour_id);
+    @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end,time_slot_length=:time_slot_length WHERE tour_id=:tour_id",nativeQuery = true)
+    void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,int time_slot_length,Long tour_id);
 
     @Query(value = "SELECT * FROM tours WHERE tours.tour_id=:tour_id",nativeQuery = true)
     Tour getTourById(Long tour_id);
