@@ -70,12 +70,12 @@ public class Tour extends BaseEntity{
     @Column(name="is_deleted")
     private Boolean isDeleted = false;
 
-    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
+    @Column(name = "user_id")
     private UUID userId;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false,insertable = false,updatable = false)
     private User user;
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

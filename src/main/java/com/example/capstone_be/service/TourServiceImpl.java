@@ -91,6 +91,7 @@ public class TourServiceImpl implements TourService {
         tourDtoCreate.setCheckOut(tourDto.getCheckOut());
         tourDtoCreate.setTimeSlotLength(tourDto.getTimeSlotLength());
         tourDtoCreate.setPriceOnePerson(tourDto.getPriceOnePerson());
+        tourDtoCreate.setUserId(user_id);
 
         Tour tourSave = new Tour();
         tourSave.setTourId(tourId);
@@ -111,7 +112,7 @@ public class TourServiceImpl implements TourService {
         tourSave.setPriceOnePerson(Double.valueOf(tourDto.getPriceOnePerson()));
         tourSave.setTimeBookStart(startTime);
         tourSave.setTimeBookEnd(endTime);
-
+        tourSave.setUserId(user_id);
 
 // IMAGE PROCESS
         List<ImageDto> imageDtos = new ArrayList<>();

@@ -52,6 +52,7 @@ public class TourController {
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();
         User user = userRepository.getUserByUserEmail(email);
+        System.out.println("User Id: " + user.getUserId());
         tourService.createTour(tourDto,user.getUserId());
         return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
     }
