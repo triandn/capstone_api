@@ -28,6 +28,9 @@ public class Category extends BaseEntity{
     @Column(name = "category_name", nullable = false)
     private String categoryName;
 
+    @Column(name = "image_link", nullable = false)
+    private String imageLink;
+
     @ManyToMany(mappedBy = "categories",fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<Tour> tours;
 }

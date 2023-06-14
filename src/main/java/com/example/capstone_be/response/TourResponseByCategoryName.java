@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TourResponseByCategoryName {
-    private List<TourByCategoryDto> content;
+    private List<TourViewDto> content;
     private int pageNo;
     private int pageSize;
     private long totalElements;

@@ -102,4 +102,9 @@ public class TourController {
         TourResponseByOwner tourResponseByOwner = tourService.getTourByUserId(user.getUserId(),pageNo,pageSize);
         return new ResponseEntity(tourResponseByOwner, HttpStatus.OK);
     }
+    @GetMapping("/tour-chat-gpt/")
+    public ResponseEntity<?> getTourByOwner() {
+        List<TourViewForChatGPT> tourViewForChatGPTList = tourService.getAllForChatGPT();
+        return new ResponseEntity(tourViewForChatGPTList, HttpStatus.OK);
+    }
 }

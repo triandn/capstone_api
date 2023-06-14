@@ -167,7 +167,7 @@ public class TourServiceImpl implements TourService {
     @Override
     public TourRespone getAll(Integer pageNo, Integer pageSize) {
         Pageable paging = PageRequest.of(pageNo - 1, pageSize);
-        Page<Tour> tourList = tourRepository.findAll(paging);
+        Page<Tour> tourList = tourRepository.getAllTour(paging);
         final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
         TourViewDto tourViewDto = null;
@@ -203,6 +203,30 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
+    public List<TourViewForChatGPT> getAllForChatGPT() {
+        List<Tour> tours = tourRepository.findAll();
+        TourViewForChatGPT tourViewForChatGPT = null;
+        List<TourViewForChatGPT> tourViewForChatGPTList = new ArrayList<>();
+        Double avgRating =0.0;
+        for (Tour item: tours) {
+            avgRating = reviewService.calAvgRatingReviewForTour(item.getTourId());
+            tourViewForChatGPT = new TourViewForChatGPT();
+            tourViewForChatGPT.setTourId(item.getTourId());
+            tourViewForChatGPT.setCity(item.getCity());
+            tourViewForChatGPT.setDestination(item.getDestination());
+            tourViewForChatGPT.setCategoryName(item.getCategories().iterator().next().getCategoryName());
+            tourViewForChatGPT.setCategoryId(item.getCategories().iterator().next().getCategoryId());
+            tourViewForChatGPT.setWorking(item.getWorking());
+            tourViewForChatGPT.setDestinationDescription(item.getDestinationDescription());
+            tourViewForChatGPT.setPriceOnePerson(item.getPriceOnePerson());
+            tourViewForChatGPT.setAvgRating(avgRating);
+            tourViewForChatGPT.setImageMain(item.getImageMain());
+            tourViewForChatGPTList.add(tourViewForChatGPT);
+        }
+        return tourViewForChatGPTList;
+    }
+
+    @Override
     public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo, Integer pageSize) {
 
         Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
@@ -210,12 +234,12 @@ public class TourServiceImpl implements TourService {
         Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,paging);
 
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
-        List<TourByCategoryDto> tourByCategoryDtos = new ArrayList<>();
-        TourByCategoryDto tourByCategoryDto = null;
+        List<TourViewDto> tourByCategoryDtos = new ArrayList<>();
+        TourViewDto tourByCategoryDto = null;
         Double avgRating = 0.0;
         System.out.println("Tour List Size: " + tourListByCategoryName.getSize());
         for (Tour tour : tourListByCategoryName.getContent()) {
-            tourByCategoryDto = new TourByCategoryDto();
+            tourByCategoryDto = new TourViewDto();
             avgRating = reviewService.calAvgRatingReviewForTour(tour.getTourId());
             tourByCategoryDto.setTourId(tour.getTourId());
             tourByCategoryDto.setTitle(tour.getTitle());
@@ -231,6 +255,9 @@ public class TourServiceImpl implements TourService {
             tourByCategoryDto.setAvgRating(avgRating);
             tourByCategoryDto.setUserId(tour.getUserId());
             tourByCategoryDto.setTimeSlotLength(tour.getTimeSlotLength());
+            tourByCategoryDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
+            tourByCategoryDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
+            tourByCategoryDto.setIsDeleted(tour.getIsDeleted());
             tourByCategoryDtos.add(tourByCategoryDto);
         }
         System.out.println("Tour By Category Name Size: " + tourByCategoryDtos.size());

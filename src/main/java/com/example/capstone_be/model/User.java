@@ -48,6 +48,4 @@ public class User extends BaseEntity {
     @Column(name = "is_enabled")
     private boolean isEnabled = true;
 
-    @OneToMany(mappedBy = "user")
-    Set<Participant> participants;
 }

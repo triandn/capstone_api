@@ -1,19 +1,11 @@
 package com.example.capstone_be.controller;
 
-import com.example.capstone_be.model.Message;
-import com.example.capstone_be.service.MessageService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/message")
 @RequiredArgsConstructor
 public class MessageController {
-
-    private final MessageService messageService;
 
 }

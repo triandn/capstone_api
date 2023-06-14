@@ -19,23 +19,26 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     String FIND_TOUR_BY_CATEGORY_NAME = "SELECT * FROM tours AS t \n" +
             "INNER JOIN tour_category as tc  ON t.tour_id = tc.tour_id \n" +
             "INNER JOIN categories AS c ON c.category_id = tc.category_id \n" +
-            "WHERE c.category_name=:category_name";
+            "WHERE c.category_name=:category_name AND t.is_deleted=false";
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
     Page<Tour> findTourByCategoryName(@Param("category_name") String category_name, Pageable pageable);
 
-    @Query(value = "SELECT * FROM tours WHERE tours.user_id=:user_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM tours WHERE tours.user_id=:user_id AND tours.is_deleted=false",nativeQuery = true)
     List<Tour> getAllTourByUserId(UUID user_id);
 
-    @Query(value = "SELECT price_one_person FROM tours WHERE tours.tour_id=:tourId",nativeQuery = true)
+    @Query(value = "SELECT price_one_person FROM tours WHERE tours.tour_id=:tourId AND tours.is_deleted=false",nativeQuery = true)
     Float getPriceOnePersonByTourId(Long tourId);
 
-    @Query(value = "SELECT * FROM tours WHERE user_id=:user_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM tours WHERE user_id=:user_id AND tours.is_deleted=false",nativeQuery = true)
     Page<Tour> getTourByUserId(@Param("user_id") UUID user_id,Pageable paging);
+
+    @Query(value = "SELECT * FROM tours WHERE tours.is_deleted=false",nativeQuery = true)
+    Page<Tour> getAllTour(Pageable paging);
 
     @Modifying
     @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end,time_slot_length=:time_slot_length WHERE tour_id=:tour_id",nativeQuery = true)
     void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,int time_slot_length,Long tour_id);
 
-    @Query(value = "SELECT * FROM tours WHERE tours.tour_id=:tour_id",nativeQuery = true)
+    @Query(value = "SELECT * FROM tours WHERE tours.tour_id=:tour_id AND tours.is_deleted=false",nativeQuery = true)
     Tour getTourById(Long tour_id);
 }

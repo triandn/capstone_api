@@ -1,5 +1,0 @@
-ALTER TABLE users ADD COLUMN description TEXT;
-ALTER TABLE users ADD COLUMN address TEXT;
-ALTER TABLE users ADD COLUMN phone_number VARCHAR(255);
-ALTER TABLE users ADD COLUMN language VARCHAR(255);
-ALTER TABLE users ADD COLUMN url_image TEXT;

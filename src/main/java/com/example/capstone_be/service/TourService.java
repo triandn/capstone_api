@@ -24,6 +24,8 @@ public interface TourService {
 
     TourRespone getAll(Integer pageNo, Integer pageSize);
 
+    List<TourViewForChatGPT> getAllForChatGPT();
+
     TourResponseByCategoryName getTourByCategoryName(String categoryName, Integer pageNo, Integer pageSize);
 
     TourDetailDto getTourDetail(Long tourId);
