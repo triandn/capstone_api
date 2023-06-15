@@ -49,19 +49,19 @@ public class Payment extends BaseEntity{
     @Column(name = "time_over",nullable = false)
     private Date timeOver;
 
-    @Column(name = "time_id",nullable = false,insertable = false,updatable = false)
+    @Column(name = "time_id",nullable = false)
     private UUID timeId;
 
-    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false,updatable = false)
     @JsonIgnore
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "time_id")
+    @JoinColumn(name = "time_id", insertable = false,updatable = false)
     @JsonIgnore
     private TimeBookDetail timeBookDetail;
 }

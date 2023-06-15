@@ -35,6 +35,9 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query(value = "SELECT * FROM tours WHERE tours.is_deleted=false",nativeQuery = true)
     Page<Tour> getAllTour(Pageable paging);
 
+    @Query(value = "SELECT * FROM tours WHERE tours.is_deleted=false",nativeQuery = true)
+    List<Tour> getAllTourForChatGpt();
+
     @Modifying
     @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end,time_slot_length=:time_slot_length WHERE tour_id=:tour_id",nativeQuery = true)
     void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,int time_slot_length,Long tour_id);

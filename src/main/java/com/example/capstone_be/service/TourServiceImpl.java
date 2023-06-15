@@ -204,7 +204,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public List<TourViewForChatGPT> getAllForChatGPT() {
-        List<Tour> tours = tourRepository.findAll();
+        List<Tour> tours = tourRepository.getAllTourForChatGpt();
         TourViewForChatGPT tourViewForChatGPT = null;
         List<TourViewForChatGPT> tourViewForChatGPTList = new ArrayList<>();
         Double avgRating =0.0;

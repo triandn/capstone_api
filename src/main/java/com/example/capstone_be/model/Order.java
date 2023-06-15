@@ -1,12 +1,14 @@
 package com.example.capstone_be.model;
 
 import com.example.capstone_be.util.enums.OrderStatusEnum;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,12 +18,33 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity(name="orders")
 public class Order extends BaseEntity {
+
     @Id
     @Column(name = "order_id", nullable = false)
     private UUID orderId = UUID.randomUUID();
+
     @Column(name="order_date")
     private Date orderDate;
+
     @Column(name="status_order", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private OrderStatusEnum statusOrder;
+    private String statusOrder;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "time_id",nullable = false)
+    private UUID timeId;
+
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
+
+    @ManyToOne
+    @JoinColumn(name = "time_id",insertable = false,updatable = false)
+    @JsonIgnore
+    private TimeBookDetail timeBookDetail;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false,insertable = false,updatable = false)
+    private User user;
+
 }

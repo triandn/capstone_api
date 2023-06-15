@@ -4,16 +4,15 @@ package com.example.capstone_be.service;
 import com.example.capstone_be.dto.guest.GuestDto;
 import com.example.capstone_be.dto.payment.PaymentGuestItemDto;
 import com.example.capstone_be.exception.NotFoundException;
+import com.example.capstone_be.model.Order;
 import com.example.capstone_be.model.Payment;
 import com.example.capstone_be.model.TimeBookDetail;
-import com.example.capstone_be.repository.GuestRepository;
-import com.example.capstone_be.repository.PaymentRepository;
-import com.example.capstone_be.repository.TimeBookRepository;
-import com.example.capstone_be.repository.TourRepository;
+import com.example.capstone_be.repository.*;
 import com.example.capstone_be.util.common.Common;
 import com.example.capstone_be.util.common.CommonFunction;
 import com.example.capstone_be.util.common.ResponseDataAPI;
 import com.example.capstone_be.util.enums.GuestType;
+import com.example.capstone_be.util.enums.OrderStatusEnum;
 import com.example.capstone_be.util.enums.PaymentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +35,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final GuestRepository guestRepository;
     private final TourRepository tourRepository;
     private final GuestService guestService;
+    private final OrderService orderService;
+    private final OrderRepository orderRepository;
     @Override
     public ResponseDataAPI makePayment(UUID userId, String language, UUID timeId, List<GuestDto> guestDtos, Long tourId,Double priceTotal) throws UnsupportedEncodingException {
         TimeBookDetail timeBook = timeBookDetailService.findTimeBookById(timeId);
@@ -125,7 +126,15 @@ public class PaymentServiceImpl implements PaymentService {
         String vnp_SecureHash = CommonFunction.hmacSha512(Common.VNP_HASH_SECRET, hashData.toString());
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = Common.VNP_URL + "?" + queryUrl;
-
+        //Save Order
+        Order order = new Order();
+        order.setOrderDate(new Date());
+        order.setStatusOrder(OrderStatusEnum.WAITING.toString());
+        order.setTimeId(timeId);
+        order.setUserId(userId);
+        order.setPrice(BigDecimal.valueOf(priceTotal));
+        orderRepository.save(order);
+        //Save Payment
         Payment payment = new Payment();
         payment.setCreatedAt(Common.getCurrentDateTime().toLocalDateTime());
         payment.setVnpOrderInfo(vnp_OrderInfo);
@@ -135,7 +144,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setIpAddress(vnp_IpAddr);
         payment.setPaymentUrl(paymentUrl);
         payment.setStatus(PaymentStatus.WAITING);
-        payment.setTxnRef(vnp_TxnRef);
+        payment.setTxnRef(order.getOrderId().toString());
         payment.setTimeOver(calendar.getTime());
         payment.setUserId(userId);
         payment.setUser(userService.getUserByUserId(userId));

@@ -36,6 +36,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.sol4k</groupId>
+			<artifactId>sol4k</artifactId>
+			<version>0.3.3</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
@@ -150,10 +156,17 @@
 			<version>2.12.3</version>
 		</dependency>
 
+
 		<dependency>
 			<groupId>com.corundumstudio.socketio</groupId>
 			<artifactId>netty-socketio</artifactId>
 			<version>${netty-socketio.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mmorrell</groupId>
+			<artifactId>solanaj</artifactId>
+			<version>1.15.2</version>
 		</dependency>
 
 	</dependencies>
