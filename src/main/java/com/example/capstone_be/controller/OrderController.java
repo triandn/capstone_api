@@ -47,8 +47,9 @@ public class OrderController {
     }
 
     @PatchMapping("/order-update/{id}")
-    public Order updateOrder(@PathVariable UUID id, @RequestBody Map<String,Object> fields) {
-        return orderService.updateOrderByField(id,fields);
+    public ResponseEntity<?>  updateOrder(@PathVariable UUID id, @RequestBody Map<String,Object> fields) {
+        orderService.updateOrderByField(id,fields);
+        return new ResponseEntity<>("UPDATE SUCCESS", HttpStatus.OK);
     }
 
     @GetMapping("/authorize-order/{order_id_blockchain}/{public_key}")
