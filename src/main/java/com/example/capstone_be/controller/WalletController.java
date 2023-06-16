@@ -57,6 +57,7 @@ public class WalletController {
         return new ResponseEntity(walletDto, HttpStatus.OK);
     }
 
+
     @PatchMapping("/wallet-update/{id}")
     public ResponseEntity<?>  updateTour(@PathVariable String id, @RequestBody Map<String,Object> fields) {
         walletService.updateWalletByField(UUID.fromString(id),fields);

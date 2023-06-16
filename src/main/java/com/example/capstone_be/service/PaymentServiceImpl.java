@@ -82,13 +82,20 @@ public class PaymentServiceImpl implements PaymentService {
 
         // VNPAY PROPERTIES
 
+        Order order = new Order();
+        order.setOrderDate(new Date());
+        order.setStatusOrder(OrderStatusEnum.WAITING.toString());
+        order.setTimeId(timeId);
+        order.setUserId(userId);
+        order.setPrice(BigDecimal.valueOf(priceTotal));
+
         Map vnp_Params = new HashMap<>();
         vnp_Params.put("vnp_Version", vnp_Version);
         vnp_Params.put("vnp_Command", vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
         vnp_Params.put("vnp_Amount", String.valueOf(amount.longValue()));
         vnp_Params.put("vnp_CurrCode", "VND");
-        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_TxnRef", order.getOrderId());
         vnp_Params.put("vnp_OrderInfo", vnp_OrderInfo);
         vnp_Params.put("vnp_OrderType", orderType);
         vnp_Params.put("vnp_Locale", locate);
@@ -131,12 +138,6 @@ public class PaymentServiceImpl implements PaymentService {
         queryUrl += "&vnp_SecureHash=" + vnp_SecureHash;
         String paymentUrl = Common.VNP_URL + "?" + queryUrl;
         //Save Order
-        Order order = new Order();
-        order.setOrderDate(new Date());
-        order.setStatusOrder(OrderStatusEnum.WAITING.toString());
-        order.setTimeId(timeId);
-        order.setUserId(userId);
-        order.setPrice(BigDecimal.valueOf(priceTotal));
 
 
         orderRepository.save(order);
