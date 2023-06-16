@@ -19,4 +19,7 @@ public interface WalletRepository extends JpaRepository<Wallet, UUID> {
     @Modifying
     @Query(value = "UPDATE wallets SET total_money=:total_money WHERE wallet_id=:wallet_id",nativeQuery = true)
     void updateTotalMoney(UUID wallet_id, BigDecimal total_money);
+
+    @Query(value = "SELECT * FROM wallets WHERE user_id=:user_id",nativeQuery = true)
+    Wallet getWalletByUserId(UUID user_id);
 }

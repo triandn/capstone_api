@@ -73,17 +73,24 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order updateOrderByField(UUID id, Map<String, Object> fields) {
-        Optional<Order> existingOrder = orderRepository.findById(id);
-        if(existingOrder.isPresent()){
-            fields.forEach((key,value)->{
-                Field field = ReflectionUtils.findField(Order.class,key);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field,existingOrder.get(),value);
-            });
-            return orderRepository.save(existingOrder.get());
+    public void updateOrderByField(UUID id, Map<String, Object> fields) {
+        try
+        {
+            Optional<Order> existingOrder = orderRepository.findById(id);
+            if(existingOrder.isPresent()){
+                fields.forEach((key,value)->{
+                    Field field = ReflectionUtils.findField(Order.class,key);
+                    field.setAccessible(true);
+                    ReflectionUtils.setField(field,existingOrder.get(),value);
+                });
+                orderRepository.save(existingOrder.get());
+            }
         }
-        return null;
+        catch (Exception e)
+        {
+            System.out.println("Exception:" + e);
+        }
+
     }
 
     @Override

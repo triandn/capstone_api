@@ -1,0 +1,1 @@
+ALTER TABLE wallets ADD COLUMN bank_name VARCHAR(250);

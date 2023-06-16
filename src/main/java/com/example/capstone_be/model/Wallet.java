@@ -25,6 +25,9 @@ public class Wallet extends BaseEntity {
     @Column(name="total_money")
     private BigDecimal totalMoney;
 
+    @Column(name = "bank_name")
+    private String bankName;
+
     @Column(name = "user_id", nullable = false)
     private UUID userId;
 

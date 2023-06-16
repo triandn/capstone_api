@@ -110,6 +110,8 @@ public class WebSecurityConfiguration {
                     .antMatchers("/time-book/delete/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/time-book/update/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/wallet/create/").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/wallet/get-wallet/").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/wallet/wallet-update/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/order/**").hasAnyAuthority(USER,OWNER)
                     .antMatchers(HttpHeaders.ALLOW).permitAll()
                     .anyRequest().authenticated().and()

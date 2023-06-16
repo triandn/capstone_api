@@ -12,7 +12,7 @@ public interface OrderService {
 
     List<OrderDto> getAllOrder();
 
-    Order updateOrderByField(UUID id, Map<String, Object> fields);
+    void updateOrderByField(UUID id, Map<String, Object> fields);
 
     void authorizeOrder(String orderIdBlockchain,String publicKey);
 }

@@ -21,4 +21,7 @@ public class WalletDto implements Serializable {
     private String accountNumber;
 
     private BigDecimal totalMoney;
+
+    private String bankName;
+
 }
