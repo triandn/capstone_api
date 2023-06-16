@@ -21,6 +21,14 @@ public class OrderDto {
 
     private BigDecimal price;
 
+    private String tour_title;
+
+    private String city;
+
+    private String imageMain;
+
+    private Double priceOnePerson;
+
     private UUID timeId;
 
     private UUID userId;

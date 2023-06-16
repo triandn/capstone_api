@@ -1,6 +1,9 @@
 package com.example.capstone_be.controller;
 
 import com.example.capstone_be.dto.order.OrderDto;
+import com.example.capstone_be.dto.tour.UpdateTimeTourDto;
+import com.example.capstone_be.model.Order;
+import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.service.OrderService;
 import org.bitcoinj.core.Base58;
 import org.bouncycastle.asn1.sec.SECNamedCurves;
@@ -16,12 +19,10 @@ import org.sol4k.Keypair;
 import org.sol4k.instruction.TransferInstruction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -45,48 +46,14 @@ public class OrderController {
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
 
-    @GetMapping("/block-chain/")
-    public ResponseEntity<?> blockchainSOLANA(){
-//        var connection = new Connection("https://api.devnet.solana.com");
-//        var wallet = new PublicKey("CDkZeuWohvZd3EB5GFfjayHiwj9otqdYoUKkECjBSxXv");
-//        var balance = connection.getAccountInfo(wallet);
-//        System.out.println("Balance in Lamports: " + balance);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+    @PatchMapping("/order-update/{id}")
+    public Order updateOrder(@PathVariable UUID id, @RequestBody Map<String,Object> fields) {
+        return orderService.updateOrderByField(id,fields);
     }
-    @GetMapping("/block/")
-    public ResponseEntity<?> BLCTransaction() throws RpcException {
-//        var connection = new Connection("https://api.devnet.solana.com");
-//        var blockhash = connection.getLatestBlockhash();
-//        // fund this account in case it is empty
-//        var sender = Keypair.fromSecretKey(Base58.decode("4gEr3pvB7JKx34zXZ6HV5Q6ankt3g1mVW3DSjNzHauGXc5JsMTFDktp3quccTHGUkvFkjftJqGHGHMRJQTmzrHoX"));
-//        var receiver = new PublicKey("FsrdMjgeTSmrAwppaGahn8vB7BFCAY8qA7ym3AJtPFYJ");
-//        var instruction = new TransferInstruction(sender.getPublicKey(), receiver, 1000);
-//        var transaction = new Transaction(
-//                blockhash,
-//                instruction,
-//                sender.getPublicKey()
-//        );
-//        transaction.sign(sender);
-//        var signature = connection.sendTransaction(transaction);
-//        System.out.println("Transaction Signature: " + signature);
 
-        var sender = Keypair.fromSecretKey(Base58.decode("3bhef8h2bj2cXQpA9UV7etxpcT1pJxspQcSCSuPVUEop6ERLLhY7fea9stNqoS7E4UoKQXPbBoMuDELs5EYebSNm"));
-        Account signer = new Account(sender.getSecret());
-
-
-        PublicKey toPublicKey = new PublicKey("5CJk1xzPAb8PAVEpR7yoxiZ6ua7otaNYacupgqY2MJES");
-
-        // select cluster
-        RpcClient client = new RpcClient(Cluster.DEVNET);
-
-        // prepare transaction
-        Transaction transaction = new Transaction();
-        transaction.addInstruction(SystemProgram.transfer(signer.getPublicKey(), toPublicKey, 1000));
-
-        String signature = client.getApi().sendTransaction(transaction, signer);
-//        System.out.println("tx signature: " + signature);
-        System.out.println("tx signature: " + client.getApi().getProgramAccounts(PublicKey.valueOf("GXgcmDFGKQkkHanL6rijmjaTigVNDmQigavv3mK2MSUG")));
-
-        return new ResponseEntity<>("Success", HttpStatus.OK);
+    @GetMapping("/authorize-order/{order_id_blockchain}/{public_key}")
+    public ResponseEntity<?> authorizeOrder(@PathVariable String order_id_blockchain,@PathVariable String public_key) {
+        orderService.authorizeOrder(order_id_blockchain,public_key);
+        return new ResponseEntity<>("Authorize Success", HttpStatus.OK);
     }
 }

@@ -17,4 +17,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query(value = "SELECT * FROM orders WHERE order_id=:order_id",nativeQuery = true)
     Order getOrderByOrderId(UUID order_id);
+
+    @Query(value = "SELECT * FROM orders WHERE orders.order_id_block_chain=:order_id_block_chain AND orders.public_key=:public_key",nativeQuery = true)
+    Order getOrderByPublicKey(String order_id_block_chain,String public_key);
+
 }

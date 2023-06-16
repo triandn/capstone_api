@@ -32,6 +32,12 @@ public class Order extends BaseEntity {
     @Column(name = "price")
     private BigDecimal price;
 
+    @Column(name="order_id_block_chain")
+    private String orderIdBlockChain;
+
+    @Column(name="public_key")
+    private String publicKey;
+
     @Column(name = "time_id",nullable = false)
     private UUID timeId;
 

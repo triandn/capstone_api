@@ -20,6 +20,10 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "INNER JOIN tour_category as tc  ON t.tour_id = tc.tour_id \n" +
             "INNER JOIN categories AS c ON c.category_id = tc.category_id \n" +
             "WHERE c.category_name=:category_name AND t.is_deleted=false";
+    String FIND_TOUR_BY_ORDER_ID="SELECT * FROM tours AS t INNER JOIN daybooks AS d ON d.tour_id = t.tour_id \n" +
+            "INNER JOIN time_book_details tbdt ON tbdt.day_book_id = d.day_book_id \n" +
+            "INNER JOIN orders AS o ON o.time_id = tbdt.time_id \n" +
+            "WHERE o.order_id=:order_id";
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
     Page<Tour> findTourByCategoryName(@Param("category_name") String category_name, Pageable pageable);
 
@@ -37,6 +41,9 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Query(value = "SELECT * FROM tours WHERE tours.is_deleted=false",nativeQuery = true)
     List<Tour> getAllTourForChatGpt();
+
+    @Query(value = FIND_TOUR_BY_ORDER_ID,nativeQuery = true)
+    Tour getTourByOrderId(UUID order_id);
 
     @Modifying
     @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end,time_slot_length=:time_slot_length WHERE tour_id=:tour_id",nativeQuery = true)

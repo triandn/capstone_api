@@ -3,10 +3,12 @@ package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.guest.GuestDto;
 import com.example.capstone_be.dto.payment.PaymentGuestItemDto;
+import com.example.capstone_be.dto.payment.PaymentResultDto;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.Order;
 import com.example.capstone_be.model.Payment;
 import com.example.capstone_be.model.TimeBookDetail;
+import com.example.capstone_be.model.Wallet;
 import com.example.capstone_be.repository.*;
 import com.example.capstone_be.util.common.Common;
 import com.example.capstone_be.util.common.CommonFunction;
@@ -37,6 +39,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final GuestService guestService;
     private final OrderService orderService;
     private final OrderRepository orderRepository;
+    private final WalletRepository walletRepository;
+    private final WalletService walletService;
     @Override
     public ResponseDataAPI makePayment(UUID userId, String language, UUID timeId, List<GuestDto> guestDtos, Long tourId,Double priceTotal) throws UnsupportedEncodingException {
         TimeBookDetail timeBook = timeBookDetailService.findTimeBookById(timeId);
@@ -133,8 +137,12 @@ public class PaymentServiceImpl implements PaymentService {
         order.setTimeId(timeId);
         order.setUserId(userId);
         order.setPrice(BigDecimal.valueOf(priceTotal));
+
+
         orderRepository.save(order);
         //Save Payment
+        Wallet wallet = walletRepository.getWalletByOrderId(order.getOrderId());
+        wallet.setTotalMoney(wallet.getTotalMoney().subtract(BigDecimal.valueOf(priceTotal)));
         Payment payment = new Payment();
         payment.setCreatedAt(Common.getCurrentDateTime().toLocalDateTime());
         payment.setVnpOrderInfo(vnp_OrderInfo);
@@ -143,7 +151,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setLocate(locate);
         payment.setIpAddress(vnp_IpAddr);
         payment.setPaymentUrl(paymentUrl);
-        payment.setStatus(PaymentStatus.WAITING);
+        payment.setStatus(PaymentStatus.SUCCESS);
         payment.setTxnRef(order.getOrderId().toString());
         payment.setTimeOver(calendar.getTime());
         payment.setUserId(userId);
@@ -151,7 +159,12 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setTimeId(timeId);
         payment.setTimeBookDetail(timeBook);
         paymentRepository.save(payment);
-        return ResponseDataAPI.successWithoutMeta(payment);
+
+        PaymentResultDto paymentResultDto = new PaymentResultDto();
+        paymentResultDto.setPayment(payment);
+        paymentResultDto.setOrder(order);
+
+        return ResponseDataAPI.successWithoutMeta(paymentResultDto);
 
     }
 
