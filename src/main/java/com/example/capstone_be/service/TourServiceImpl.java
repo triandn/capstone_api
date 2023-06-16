@@ -312,12 +312,6 @@ public class TourServiceImpl implements TourService {
         catch (Exception e){
             System.out.println("Error" + e);
         }
-//        timeBookStart.setHour(tour.getTimeBookStart().getHour());
-//        timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());
-//
-//        timeBookEnd.setHour(tour.getTimeBookEnd().getHour());
-//        timeBookEnd.setMinutes(tour.getTimeBookEnd().getMinute());
-
 
         return tourDetailDto;
     }
@@ -370,26 +364,6 @@ public class TourServiceImpl implements TourService {
             tourViewByUserDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewByUserDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
             tourViewByUserDto.setIsDeleted(tour.getIsDeleted());
-//            List<ImageDetail> imageDetailList = imageRepository.getImageDetailByTourId(tour.getTourId());
-//            tourViewByUserDto.setImageDtoList(imageDetailList.stream().map(prize -> mapper.map(prize, ImageViewDto.class)).collect(Collectors.toList()));
-//
-//            //DAYBOOK PROCESS
-//            List<DayBook> dayBookList = dayBookRepository.getDayBookByTourId(tour.getTourId());
-//            List<DayBookViewDto> dayBookViewDtoList = new ArrayList<>();
-//
-//            for (DayBook dayBook: dayBookList) {
-//                DayBookViewDto dayBookViewDto = new DayBookViewDto();
-//                dayBookViewDto.setDate_name(dayBook.getDate_name());
-//                dayBookViewDto.setDayBookId(dayBook.getDayBookId());
-//                dayBookViewDto.setStatus(dayBook.getStatus());
-//                dayBookViewDto.setTourId(dayBook.getTourId());
-//                dayBookViewDto.setStatus(dayBook.getStatus());
-//                dayBookViewDto.setIs_deleted(dayBook.getIsDeleted());
-//                List<TimeBookViewDto> timeBookViewDtoList = timeBookDetailService.getAllTimeBookForDayByDayBookId(dayBook.getDayBookId());
-//                dayBookViewDto.setTimeBookViewDtoList(timeBookViewDtoList);
-//                dayBookViewDtoList.add(dayBookViewDto);
-//            }
-//            tourViewByUserDto.setDayBookList(dayBookViewDtoList);
             tourViewByUserDtoList.add(tourViewByUserDto);
         }
         tourResponseByOwner.setContent(tourViewByUserDtoList);
@@ -432,6 +406,44 @@ public class TourServiceImpl implements TourService {
                 timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
             }
         }
+    }
+
+    @Override
+    public TourRespone getTourViewPort(String northEastLat, String southWestLat, String northEastLng, String southWestLng,Integer pageNo, Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+        Page<Tour> tourList = tourRepository.getTourViewPort(northEastLat,southWestLat,northEastLng,southWestLng,paging);
+        final TourRespone tourRespone = new TourRespone();
+        List<TourViewDto> tourViewDtos = new ArrayList<>();
+        TourViewDto tourViewDto = null;
+        Double avgRating = 0.0;
+        for (Tour tour: tourList) {
+            tourViewDto = new TourViewDto();
+            avgRating = reviewService.calAvgRatingReviewForTour(tour.getTourId());
+            tourViewDto.setTourId(tour.getTourId());
+            tourViewDto.setTitle(tour.getTitle());
+            tourViewDto.setRating(tour.getRating());
+            tourViewDto.setCity(tour.getCity());
+            tourViewDto.setPriceOnePerson(tour.getPriceOnePerson());
+            tourViewDto.setWorking(tour.getWorking());
+            tourViewDto.setLatitude(tour.getLatitude());
+            tourViewDto.setLongitude(tour.getLongitude());
+            tourViewDto.setDestination(tour.getDestination());
+            tourViewDto.setDestinationDescription(tour.getDestinationDescription());
+            tourViewDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
+            tourViewDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName().toString());
+            tourViewDto.setAvgRating(avgRating);
+            tourViewDto.setUserId(tour.getUserId());
+            tourViewDto.setImageMain(tour.getImageMain());
+            tourViewDto.setTimeSlotLength(tour.getTimeSlotLength());
+            tourViewDto.setIsDeleted(tour.getIsDeleted());
+            tourViewDtos.add(tourViewDto);
+        }
+        tourRespone.setContent(tourViewDtos);
+        tourRespone.setPageNo(tourList.getNumber() + 1);
+        tourRespone.setPageSize(tourList.getSize());
+        tourRespone.setTotalElements(tourList.getTotalElements());
+        tourRespone.setTotalPages(tourList.getTotalPages());
+        return tourRespone;
     }
 
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {

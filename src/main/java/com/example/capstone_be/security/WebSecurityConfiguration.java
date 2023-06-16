@@ -79,6 +79,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/tour/tour-owner/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/tour/tour-update-time/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/tour/tour-chat-gpt/").permitAll()
+                    .antMatchers("/tour/search-view-port").permitAll()
                     .antMatchers("/categories/").permitAll()
                     .antMatchers("/categories/{id}").permitAll()
                     .antMatchers("/categories/create/").hasAnyAuthority(USER,OWNER)

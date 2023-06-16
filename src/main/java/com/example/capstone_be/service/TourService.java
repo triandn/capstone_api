@@ -37,4 +37,6 @@ public interface TourService {
     TourResponseByOwner getTourByUserId(UUID userId, Integer pageNo, Integer pageSize);
 
     void updateTimeTour(UpdateTimeTourDto updateTimeTourDto, Long tourId);
+
+    TourRespone getTourViewPort(String northEastLat,String southWestLat, String northEastLng, String southWestLng,Integer pageNo, Integer pageSize);
 }

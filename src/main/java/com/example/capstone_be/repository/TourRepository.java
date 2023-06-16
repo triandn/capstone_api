@@ -51,4 +51,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Query(value = "SELECT * FROM tours WHERE tours.tour_id=:tour_id AND tours.is_deleted=false",nativeQuery = true)
     Tour getTourById(Long tour_id);
+
+    @Query(value = "SELECT * FROM tours WHERE tours.latitude BETWEEN :northEastLat AND :southWestLat AND tours.longitude BETWEEN :northEastLng AND :southWestLng",nativeQuery = true)
+    Page<Tour> getTourViewPort(String northEastLat,String southWestLat, String northEastLng, String southWestLng,Pageable pageable);
 }

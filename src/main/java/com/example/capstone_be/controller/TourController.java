@@ -63,6 +63,17 @@ public class TourController {
         return tourViewDtos;
     }
 
+    @GetMapping("/search-view-port")
+    public TourRespone searchViewPort(@RequestParam(defaultValue = "1") Integer pageNo,
+                                  @RequestParam(defaultValue = "5") Integer pageSize,@RequestBody ViewPortSearchDto viewPortSearchDto) {
+        final TourRespone tourViewDtos = tourService.getTourViewPort(viewPortSearchDto.getNorthEastLat(),
+                                                    viewPortSearchDto.getSouthWestLat(),
+                                                    viewPortSearchDto.getNorthEastLng(),
+                                                    viewPortSearchDto.getSouthWestLng(),
+                                                    pageNo,pageSize);
+        return tourViewDtos;
+    }
+
     @GetMapping("/{categoryName}")
     public TourResponseByCategoryName getTourByCategoryName(@PathVariable String categoryName,
                                                                          @RequestParam(defaultValue = "1") Integer pageNo,
