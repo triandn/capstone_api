@@ -30,6 +30,9 @@ public class User extends BaseEntity {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "is_wallet")
+    private Boolean isWallet=false;
+
     @Column(name = "phone_number")
     private String phoneNumber;
 

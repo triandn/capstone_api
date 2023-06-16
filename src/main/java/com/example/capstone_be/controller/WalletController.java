@@ -41,6 +41,8 @@ public class WalletController {
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();
         User user = userRepository.getUserByUserEmail(email);
+        user.setIsWallet(true);
+        userRepository.save(user);
         walletService.createWallet(walletDto,user.getUserId());
         return new ResponseEntity<>("Create Success", HttpStatus.CREATED);
     }
