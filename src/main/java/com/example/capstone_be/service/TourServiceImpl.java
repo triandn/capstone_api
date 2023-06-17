@@ -224,6 +224,7 @@ public class TourServiceImpl implements TourService {
             tourViewForChatGPT.setPriceOnePerson(item.getPriceOnePerson());
             tourViewForChatGPT.setAvgRating(avgRating);
             tourViewForChatGPT.setImageMain(item.getImageMain());
+            tourViewForChatGPT.setTitle(item.getTitle());
             tourViewForChatGPTList.add(tourViewForChatGPT);
         }
         return tourViewForChatGPTList;
