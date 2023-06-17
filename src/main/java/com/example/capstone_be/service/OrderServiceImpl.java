@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
         for (Order item: orderList) {
             orderDto = new OrderDto();
             tour = tourRepository.getTourByOrderId(item.getOrderId());
-            orderDto.setOrderDate(item.getOrderDate());
+            orderDto.setOrderDate(item.getCreatedAt());
             orderDto.setStatusOrder(item.getStatusOrder());
             orderDto.setPrice(item.getPrice());
             orderDto.setOrderId(item.getOrderId());
@@ -80,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
         Tour tour = tourRepository.getTourById(tourId);
         for (Order item: orderList) {
             orderDto = new OrderDto();
-            orderDto.setOrderDate(item.getOrderDate());
+            orderDto.setOrderDate(item.getCreatedAt());
             orderDto.setStatusOrder(item.getStatusOrder());
             orderDto.setPrice(item.getPrice());
             orderDto.setOrderId(item.getOrderId());

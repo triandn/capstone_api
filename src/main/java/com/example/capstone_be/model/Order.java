@@ -6,9 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,7 +26,7 @@ public class Order extends BaseEntity {
     private UUID orderId = UUID.randomUUID();
 
     @Column(name="order_date")
-    private Date orderDate;
+    private Timestamp orderDate;
 
     @Column(name="status_order", nullable = false)
     private String statusOrder;

@@ -17,6 +17,7 @@ import com.example.capstone_be.util.enums.GuestType;
 import com.example.capstone_be.util.enums.OrderStatusEnum;
 import com.example.capstone_be.util.enums.PaymentStatus;
 import lombok.RequiredArgsConstructor;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -24,7 +25,9 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 @Service
@@ -83,7 +86,7 @@ public class PaymentServiceImpl implements PaymentService {
         // VNPAY PROPERTIES
 
         Order order = new Order();
-        order.setOrderDate(new Date());
+        order.setOrderDate(Timestamp.from(Instant.now()));
         order.setStatusOrder(OrderStatusEnum.WAITING.toString());
         order.setTimeId(timeId);
         order.setUserId(userId);
