@@ -14,6 +14,9 @@ import java.util.UUID;
 
 @Repository
 public interface DayBookRepository extends JpaRepository<DayBook, UUID> {
+    String FIND_DAY_BOOK_BY_TIME_ID="SELECT * FROM daybooks AS dbs INNER JOIN time_book_details AS tbdt ON tbdt.day_book_id = dbs.day_book_id\n" +
+            "WHERE tbdt.time_id=:time_id";
+
     @Query(value = "SELECT * FROM daybooks WHERE date_name BETWEEN :start AND :end AND tour_id=:tour_id",nativeQuery = true)
     Page<DayBook> getDayBookByTourIdPaging(@Param("tour_id") Long tour_id, @Param("start") Date tart,@Param("end") Date end, Pageable pageable);
 
@@ -22,4 +25,7 @@ public interface DayBookRepository extends JpaRepository<DayBook, UUID> {
 
     @Query(value = "SELECT * FROM daybooks WHERE daybooks.tour_id=:tour_id",nativeQuery = true)
     Page<DayBook> getDayBookByTourIdPageable(@Param("tour_id") Long tour_id,Pageable pageable);
+
+    @Query(value =FIND_DAY_BOOK_BY_TIME_ID,nativeQuery = true)
+    DayBook getDayBookByTimeId(@Param("time_id") UUID time_id);
 }

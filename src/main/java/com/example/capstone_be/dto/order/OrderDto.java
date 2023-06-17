@@ -1,5 +1,6 @@
 package com.example.capstone_be.dto.order;
 
+import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,13 +27,21 @@ public class OrderDto {
 
     private String tour_title;
 
+    private String orderIdBlockChain;
+
+    private String publicKey;
+
     private String city;
 
     private String imageMain;
 
     private Double priceOnePerson;
 
+    private Date date_name;
+
     private UUID timeId;
 
     private UUID userId;
+
+    private TimeBookViewDto timeBookViewDto;
 }

@@ -1,5 +1,6 @@
 package com.example.capstone_be.repository;
 
+import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.model.ImageDetail;
 import com.example.capstone_be.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +29,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query(value = FIND_ORDER_BY_TOUR_ID,nativeQuery = true)
     List<Order> getListOrderByTourId(@Param("tour_id")Long tour_id);
+
+
 
 }

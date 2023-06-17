@@ -1,12 +1,9 @@
 package com.example.capstone_be.service;
 
+import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.dto.order.OrderDto;
-import com.example.capstone_be.model.Order;
-import com.example.capstone_be.model.Tour;
-import com.example.capstone_be.model.Wallet;
-import com.example.capstone_be.repository.OrderRepository;
-import com.example.capstone_be.repository.TourRepository;
-import com.example.capstone_be.repository.WalletRepository;
+import com.example.capstone_be.model.*;
+import com.example.capstone_be.repository.*;
 import com.example.capstone_be.util.enums.OrderStatusEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -24,11 +21,16 @@ public class OrderServiceImpl implements OrderService {
 
     private final TourRepository tourRepository;
 
-    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, WalletRepository walletRepository, TourRepository tourRepository) {
+    private final DayBookRepository dayBookRepository;
+
+    private final TimeBookRepository timeBookRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, WalletRepository walletRepository, TourRepository tourRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository) {
         this.orderRepository = orderRepository;
         this.walletService = walletService;
         this.walletRepository = walletRepository;
         this.tourRepository = tourRepository;
+        this.dayBookRepository = dayBookRepository;
+        this.timeBookRepository = timeBookRepository;
     }
 
     @Transactional
@@ -38,8 +40,6 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.getOrderByOrderId(orderId);
         BigDecimal totalMoneyUpdate;
         if(status.equals(OrderStatusEnum.SUCCESS.toString())){
-//            totalMoneyUpdate = wallet.getTotalMoney().subtract(order.getPrice());
-//            walletRepository.updateTotalMoney(wallet.getWalletId(),totalMoneyUpdate);
             orderRepository.updateStatus(OrderStatusEnum.SUCCESS.toString(),orderId);
         } else if (status.equals(OrderStatusEnum.CANCEL.toString())) {
             totalMoneyUpdate = wallet.getTotalMoney().add(order.getPrice());
@@ -54,19 +54,34 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDto> orderDtoList = new ArrayList<>();
         List<Order> orderList = orderRepository.findAll();
         Tour tour = null;
+        DayBook dayBook = null;
+        TimeBookViewDto timeBookViewDto;
+        TimeBookDetail timeBookDetail = null;
         for (Order item: orderList) {
             orderDto = new OrderDto();
+            timeBookViewDto = new TimeBookViewDto();
             tour = tourRepository.getTourByOrderId(item.getOrderId());
+            dayBook = dayBookRepository.getDayBookByTimeId(item.getTimeId());
+            timeBookDetail = timeBookRepository.getTimeBookDetailById(item.getTimeId());
+            timeBookViewDto.setStart_time(timeBookDetail.getStart_time());
+            timeBookViewDto.setEnd_time(timeBookDetail.getEnd_time());
+            timeBookViewDto.setIsDeleted(timeBookDetail.getIsDeleted());
+            timeBookViewDto.setTimeId(item.getTimeId());
+
             orderDto.setOrderDate(item.getCreatedAt());
             orderDto.setStatusOrder(item.getStatusOrder());
             orderDto.setPrice(item.getPrice());
+            orderDto.setOrderIdBlockChain(item.getOrderIdBlockChain());
+            orderDto.setPublicKey(item.getPublicKey());
             orderDto.setOrderId(item.getOrderId());
             orderDto.setTimeId(item.getTimeId());
             orderDto.setUserId(item.getUserId());
             orderDto.setCity(tour.getCity());
+            orderDto.setDate_name(dayBook.getDate_name());
             orderDto.setImageMain(tour.getImageMain());
             orderDto.setTour_title(tour.getTitle());
             orderDto.setPriceOnePerson(tour.getPriceOnePerson());
+            orderDto.setTimeBookViewDto(timeBookViewDto);
             orderDtoList.add(orderDto);
         }
         return orderDtoList;
@@ -89,6 +104,8 @@ public class OrderServiceImpl implements OrderService {
             orderDto.setCity(tour.getCity());
             orderDto.setImageMain(tour.getImageMain());
             orderDto.setTour_title(tour.getTitle());
+            orderDto.setOrderIdBlockChain(item.getOrderIdBlockChain());
+            orderDto.setPublicKey(item.getPublicKey());
             orderDto.setPriceOnePerson(tour.getPriceOnePerson());
             orderDtoList.add(orderDto);
         }

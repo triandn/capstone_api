@@ -34,5 +34,7 @@ public interface TimeBookRepository extends JpaRepository<TimeBookDetail, UUID> 
     @Query(value = DELETE_VALUE, nativeQuery = true)
     void deleteListTimeByTourId(@Param("tour_id") Long tour_id);
 
+    @Query(value = "SELECT * FROM time_book_details WHERE time_id=:time_id",nativeQuery = true)
+    TimeBookDetail getTimeBookDetailById(UUID time_id);
 
 }

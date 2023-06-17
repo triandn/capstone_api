@@ -22,10 +22,8 @@ public class TimeBookDetailDto implements Serializable {
 
     private UUID timeId = UUID.randomUUID();
 
-//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime start_time;
 
-//    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern = "HH:mm:ss")
     private LocalTime end_time;
 
     private Boolean isPayment = false;
