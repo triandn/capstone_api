@@ -3,6 +3,7 @@ package com.example.capstone_be.service;
 import com.example.capstone_be.dto.daybook.*;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
+import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.*;
@@ -27,7 +28,6 @@ import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TourServiceImpl implements TourService {
@@ -42,11 +42,12 @@ public class TourServiceImpl implements TourService {
     private final UserRepository userRepository;
     private final DayBookRepository dayBookRepository;
     private final TimeBookRepository timeBookRepository;
-
+    private final OrderService orderService;
+    private final OrderRepository orderRepository;
     private Set<Category> categories;
     private Set<Category> cate;
 
-    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService, ImageService imageService, DayBookService dayBookService, TimeBookDetailService timeBookDetailService, UserRepository userRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository) {
+    public TourServiceImpl(ModelMapper mapper, TourRepository tourRepository, ImageRepository imageRepository, ReviewService reviewService, ImageService imageService, DayBookService dayBookService, TimeBookDetailService timeBookDetailService, UserRepository userRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository, OrderService orderService, OrderRepository orderRepository) {
         this.mapper = mapper;
         this.tourRepository = tourRepository;
         this.imageRepository = imageRepository;
@@ -57,6 +58,8 @@ public class TourServiceImpl implements TourService {
         this.userRepository = userRepository;
         this.dayBookRepository = dayBookRepository;
         this.timeBookRepository = timeBookRepository;
+        this.orderService = orderService;
+        this.orderRepository = orderRepository;
     }
 
     @Override
@@ -227,11 +230,16 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo, Integer pageSize) {
+    public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo, Integer pageSize,ViewPortSearchDto viewPortSearchDto) {
 
         Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
 
-        Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,paging);
+        Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,
+                viewPortSearchDto.getNorthEastLat(),
+                viewPortSearchDto.getSouthWestLat(),
+                viewPortSearchDto.getNorthEastLng(),
+                viewPortSearchDto.getSouthWestLng()
+                ,paging);
 
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
         List<TourViewDto> tourByCategoryDtos = new ArrayList<>();
@@ -347,9 +355,12 @@ public class TourServiceImpl implements TourService {
         Page<Tour> tourListByUserId = tourRepository.getTourByUserId(userId,paging);
         TourViewByUserDto tourViewByUserDto = null;
         List<TourViewByUserDto> tourViewByUserDtoList = new ArrayList<>();
+
         TourResponseByOwner tourResponseByOwner = new TourResponseByOwner();
         for (Tour tour: tourListByUserId) {
             tourViewByUserDto = new TourViewByUserDto();
+            List<OrderDto> orderDtoList = new ArrayList<>();
+            orderDtoList = orderService.getListOrderByTourId(tour.getTourId());
             tourViewByUserDto.setTourId(tour.getTourId());
             tourViewByUserDto.setTitle(tour.getTitle());
             tourViewByUserDto.setCity(tour.getCity());
@@ -364,6 +375,7 @@ public class TourServiceImpl implements TourService {
             tourViewByUserDto.setCategoryId(tour.getCategories().iterator().next().getCategoryId());
             tourViewByUserDto.setCategoryName(tour.getCategories().iterator().next().getCategoryName());
             tourViewByUserDto.setIsDeleted(tour.getIsDeleted());
+            tourViewByUserDto.setOrderDtoList(orderDtoList);
             tourViewByUserDtoList.add(tourViewByUserDto);
         }
         tourResponseByOwner.setContent(tourViewByUserDtoList);

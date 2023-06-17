@@ -47,7 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (timeBook.getIsPayment()) {
             throw new NotFoundException("PAYMENT NOT FOUND");
         }
-        String returnUrl = "https://experience-travel.vercel.app/";
+        String returnUrl = "https://experience-travel.vercel.app/trips";
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";

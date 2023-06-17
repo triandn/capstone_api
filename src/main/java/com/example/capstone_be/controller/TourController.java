@@ -59,39 +59,37 @@ public class TourController {
     @GetMapping("/all")
     public TourRespone getAllTour(@RequestParam(defaultValue = "1") Integer pageNo,
                                   @RequestParam(defaultValue = "5") Integer pageSize) {
-        final TourRespone tourViewDtos = tourService.getAll(pageNo,pageSize);
-        return tourViewDtos;
+        return tourService.getAll(pageNo,pageSize);
     }
 
     @GetMapping("/search-view-port")
     public TourRespone searchViewPort(@RequestParam(defaultValue = "1") Integer pageNo,
                                   @RequestParam(defaultValue = "5") Integer pageSize,@RequestBody ViewPortSearchDto viewPortSearchDto) {
-        final TourRespone tourViewDtos = tourService.getTourViewPort(viewPortSearchDto.getNorthEastLat(),
+        return tourService.getTourViewPort(viewPortSearchDto.getNorthEastLat(),
                                                     viewPortSearchDto.getSouthWestLat(),
                                                     viewPortSearchDto.getNorthEastLng(),
                                                     viewPortSearchDto.getSouthWestLng(),
                                                     pageNo,pageSize);
-        return tourViewDtos;
     }
 
     @GetMapping("/{categoryName}")
     public TourResponseByCategoryName getTourByCategoryName(@PathVariable String categoryName,
                                                                          @RequestParam(defaultValue = "1") Integer pageNo,
-                                                                         @RequestParam(defaultValue = "5") Integer pageSize) {
-        TourResponseByCategoryName tourResponseByCategoryName = tourService.getTourByCategoryName(categoryName,pageNo,pageSize);
-        return tourResponseByCategoryName;
+                                                                         @RequestParam(defaultValue = "5") Integer pageSize,
+                                                                         @RequestBody ViewPortSearchDto viewPortSearchDto) {
+        return tourService.getTourByCategoryName(categoryName,pageNo,pageSize,viewPortSearchDto);
     }
 
     @GetMapping("/tour-detail/{tourId}")
     public ResponseEntity<TourDetailDto> getTourDetailById(@PathVariable Long tourId) {
         TourDetailDto tourDetailDto = tourService.getTourDetail(tourId);
-        return new ResponseEntity(tourDetailDto, HttpStatus.OK);
+        return new ResponseEntity<>(tourDetailDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/tour-delete/{id}")
     public ResponseEntity<TourDto> deleteTour(@PathVariable Long id) {
         tourService.deleteByTourId(id);
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
     @PatchMapping("/tour-update/{id}")
     public Tour updateTour(@PathVariable Long id,@RequestBody Map<String,Object> fields) {
@@ -111,11 +109,11 @@ public class TourController {
         String email = claims.getSubject();
         User user = userRepository.getUserByUserEmail(email);
         TourResponseByOwner tourResponseByOwner = tourService.getTourByUserId(user.getUserId(),pageNo,pageSize);
-        return new ResponseEntity(tourResponseByOwner, HttpStatus.OK);
+        return new ResponseEntity<>(tourResponseByOwner, HttpStatus.OK);
     }
     @GetMapping("/tour-chat-gpt/")
-    public ResponseEntity<?> getTourByOwner() {
+    public ResponseEntity<?> getTourChatGpt() {
         List<TourViewForChatGPT> tourViewForChatGPTList = tourService.getAllForChatGPT();
-        return new ResponseEntity(tourViewForChatGPTList, HttpStatus.OK);
+        return new ResponseEntity<>(tourViewForChatGPTList, HttpStatus.OK);
     }
 }

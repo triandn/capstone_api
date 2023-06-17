@@ -57,4 +57,10 @@ public class OrderController {
         orderService.authorizeOrder(order_id_blockchain,public_key);
         return new ResponseEntity<>("Authorize Success", HttpStatus.OK);
     }
+
+    @GetMapping("/get-list-order/{tour_id}")
+    public ResponseEntity<?> getOrderListByTourId(@PathVariable String tour_id) {
+        final List<OrderDto> orderDtoList = orderService.getListOrderByTourId(Long.valueOf(tour_id));
+        return new ResponseEntity<>(orderDtoList, HttpStatus.OK);
+    }
 }

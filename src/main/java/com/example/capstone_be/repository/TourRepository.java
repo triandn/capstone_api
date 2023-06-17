@@ -19,13 +19,16 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     String FIND_TOUR_BY_CATEGORY_NAME = "SELECT * FROM tours AS t \n" +
             "INNER JOIN tour_category as tc  ON t.tour_id = tc.tour_id \n" +
             "INNER JOIN categories AS c ON c.category_id = tc.category_id \n" +
-            "WHERE c.category_name=:category_name AND t.is_deleted=false";
+            "WHERE c.category_name=:category_name AND t.is_deleted=false \n"+
+            "AND t.latitude BETWEEN :northEastLat AND :southWestLat AND t.longitude BETWEEN :northEastLng AND :southWestLng";
     String FIND_TOUR_BY_ORDER_ID="SELECT * FROM tours AS t INNER JOIN daybooks AS d ON d.tour_id = t.tour_id \n" +
             "INNER JOIN time_book_details tbdt ON tbdt.day_book_id = d.day_book_id \n" +
             "INNER JOIN orders AS o ON o.time_id = tbdt.time_id \n" +
             "WHERE o.order_id=:order_id";
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
-    Page<Tour> findTourByCategoryName(@Param("category_name") String category_name, Pageable pageable);
+    Page<Tour> findTourByCategoryName(@Param("category_name") String category_name,@Param("northEastLat")String northEastLat,
+            @Param("southWestLat")String southWestLat,
+            @Param("northEastLng")String northEastLng, @Param("southWestLng")String southWestLng, Pageable pageable);
 
     @Query(value = "SELECT * FROM tours WHERE tours.user_id=:user_id AND tours.is_deleted=false",nativeQuery = true)
     List<Tour> getAllTourByUserId(UUID user_id);

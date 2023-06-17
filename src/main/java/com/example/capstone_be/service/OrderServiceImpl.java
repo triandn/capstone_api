@@ -73,6 +73,29 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderDto> getListOrderByTourId(Long tourId) {
+        OrderDto orderDto = null;
+        List<OrderDto> orderDtoList = new ArrayList<>();
+        List<Order> orderList = orderRepository.getListOrderByTourId(tourId);
+        Tour tour = tourRepository.getTourById(tourId);
+        for (Order item: orderList) {
+            orderDto = new OrderDto();
+            orderDto.setOrderDate(item.getOrderDate());
+            orderDto.setStatusOrder(item.getStatusOrder());
+            orderDto.setPrice(item.getPrice());
+            orderDto.setOrderId(item.getOrderId());
+            orderDto.setTimeId(item.getTimeId());
+            orderDto.setUserId(item.getUserId());
+            orderDto.setCity(tour.getCity());
+            orderDto.setImageMain(tour.getImageMain());
+            orderDto.setTour_title(tour.getTitle());
+            orderDto.setPriceOnePerson(tour.getPriceOnePerson());
+            orderDtoList.add(orderDto);
+        }
+        return orderDtoList;
+    }
+
+    @Override
     public void updateOrderByField(UUID id, Map<String, Object> fields) {
         try
         {

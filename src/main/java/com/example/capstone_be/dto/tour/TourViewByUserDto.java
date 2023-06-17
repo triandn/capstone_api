@@ -5,6 +5,7 @@ import com.example.capstone_be.dto.daybook.TimeBookEnd;
 import com.example.capstone_be.dto.daybook.TimeBookStart;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
+import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.model.Category;
 import com.example.capstone_be.model.DayBook;
 import com.example.capstone_be.model.TimeBookDetail;
@@ -40,7 +41,5 @@ public class TourViewByUserDto {
     private Long categoryId;
     private String categoryName;
     private Boolean isDeleted;
-//    private List<ImageViewDto> imageDtoList;
-//    private List<DayBookViewDto> dayBookList;
-//    private List<TimeBookDetail> timeBookDetailList;
+    List<OrderDto> orderDtoList;
 }
