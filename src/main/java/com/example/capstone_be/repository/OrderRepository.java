@@ -30,6 +30,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query(value = FIND_ORDER_BY_TOUR_ID,nativeQuery = true)
     List<Order> getListOrderByTourId(@Param("tour_id")Long tour_id);
 
+    @Query(value = "SELECT * FROM orders WHERE EXTRACT(MONTH FROM :created_at)=:month",nativeQuery = true)
+    List<Order> getOrderByMonth(int month);
 
 
 }

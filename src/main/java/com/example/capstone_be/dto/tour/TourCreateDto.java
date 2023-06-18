@@ -44,10 +44,10 @@ public class TourCreateDto implements Serializable {
     private String working;
 
     @NotBlank(message = "Vui lòng nhập vĩ độ!")
-    private Double latitude;
+    private Float latitude;
 
     @NotBlank(message = "Vui lòng nhập kinh độ!")
-    private Double longitude;
+    private Float longitude;
 
     private String destination;
 

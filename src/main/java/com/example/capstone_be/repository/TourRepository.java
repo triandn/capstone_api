@@ -27,10 +27,10 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "WHERE o.order_id=:order_id";
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
     Page<Tour> findTourByCategoryName(@Param("category_name") String category_name,
-                                      @Param("northEastLat")Double northEastLat,
-                                      @Param("southWestLat")Double southWestLat,
-                                      @Param("northEastLng")Double northEastLng,
-                                      @Param("southWestLng")Double southWestLng, Pageable pageable);
+                                      @Param("northEastLat")Float northEastLat,
+                                      @Param("southWestLat")Float southWestLat,
+                                      @Param("northEastLng")Float northEastLng,
+                                      @Param("southWestLng")Float southWestLng, Pageable pageable);
 
     @Query(value = "SELECT * FROM tours WHERE tours.user_id=:user_id AND tours.is_deleted=false",nativeQuery = true)
     List<Tour> getAllTourByUserId(UUID user_id);

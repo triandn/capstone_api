@@ -241,10 +241,10 @@ public class TourServiceImpl implements TourService {
         Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
 
         Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,
-                Double.valueOf(northEastLat),
-                Double.valueOf(southWestLat),
-                Double.valueOf(northEastLng),
-                Double.valueOf(southWestLng),
+                Float.valueOf(northEastLat),
+                Float.valueOf(southWestLat),
+                Float.valueOf(northEastLng),
+                Float.valueOf(southWestLng),
                 paging);
 
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();

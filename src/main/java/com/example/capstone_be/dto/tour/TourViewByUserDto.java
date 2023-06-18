@@ -33,8 +33,8 @@ public class TourViewByUserDto {
     private Double priceOnePerson;
     private String imageMain;
     private String working;
-    private Double latitude;
-    private Double longitude;
+    private Float latitude;
+    private Float longitude;
     private String destination;
     private String destinationDescription;
     private int timeSlotLength;

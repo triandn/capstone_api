@@ -31,9 +31,9 @@ public class TourDetailDto implements Serializable {
 
     private String working;
 
-    private Double latitude;
+    private Float latitude;
 
-    private Double longitude;
+    private Float longitude;
 
     private String destination;
 
