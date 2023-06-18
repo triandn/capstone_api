@@ -44,4 +44,6 @@ public class OrderDto {
     private UUID userId;
 
     private TimeBookViewDto timeBookViewDto;
+
+    private Long tourId;
 }

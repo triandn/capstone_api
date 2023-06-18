@@ -68,6 +68,7 @@ public class OrderServiceImpl implements OrderService {
             timeBookViewDto.setIsDeleted(timeBookDetail.getIsDeleted());
             timeBookViewDto.setTimeId(item.getTimeId());
 
+            orderDto.setTourId(tour.getTourId());
             orderDto.setOrderDate(item.getCreatedAt());
             orderDto.setStatusOrder(item.getStatusOrder());
             orderDto.setPrice(item.getPrice());
