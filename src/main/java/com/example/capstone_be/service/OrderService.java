@@ -14,7 +14,7 @@ public interface OrderService {
 
     void updateOrderByField(UUID id, Map<String, Object> fields);
 
-    void authorizeOrder(String orderIdBlockchain,String publicKey);
+    String authorizeOrder(String orderIdBlockchain,String publicKey);
 
     List<OrderDto> getListOrderByTourId(Long tourId);
 }

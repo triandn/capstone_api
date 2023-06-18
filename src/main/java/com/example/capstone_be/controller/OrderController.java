@@ -54,8 +54,12 @@ public class OrderController {
 
     @GetMapping("/authorize-order/{order_id_blockchain}/{public_key}")
     public ResponseEntity<?> authorizeOrder(@PathVariable String order_id_blockchain,@PathVariable String public_key) {
-        orderService.authorizeOrder(order_id_blockchain,public_key);
-        return new ResponseEntity<>("Authorize Success", HttpStatus.OK);
+        String result = orderService.authorizeOrder(order_id_blockchain,public_key);
+        if(result.equals("SUCCESS"))
+        {
+            return new ResponseEntity<>("Authorize Success", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Authorize Fail", HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/get-list-order/{tour_id}")

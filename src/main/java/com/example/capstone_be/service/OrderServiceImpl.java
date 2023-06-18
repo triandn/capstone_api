@@ -133,11 +133,14 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Transactional
     @Override
-    public void authorizeOrder(String orderIdBlockchain, String publicKey) {
+    public String authorizeOrder(String orderIdBlockchain, String publicKey) {
         Order orderOptional = orderRepository.getOrderByPublicKey(orderIdBlockchain,publicKey);
         if(orderOptional.getPublicKey().equals(publicKey)){
             orderRepository.updateStatus(OrderStatusEnum.USED.toString(),orderOptional.getOrderId());
+            return "SUCCESS";
         }
+        return "FAIL";
     }
 }
