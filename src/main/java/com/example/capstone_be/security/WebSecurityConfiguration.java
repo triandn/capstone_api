@@ -72,7 +72,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/guest/**").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/payment/**").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/tour/create/").hasAnyAuthority(USER,OWNER)
-                    .antMatchers("/tour/{categoryName}").permitAll()
+                    .antMatchers("/tour/{categoryName}/{northEastLat}/{northEastLng}/{southWestLat}/{southWestLng}/").permitAll()
                     .antMatchers("/tour/tour-detail/{tourId}").permitAll()
                     .antMatchers("/tour/tour-delete/{id}").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/tour/tour-update/{id}").hasAnyAuthority(USER,ADMIN,OWNER)

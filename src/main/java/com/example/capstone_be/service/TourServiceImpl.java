@@ -231,16 +231,21 @@ public class TourServiceImpl implements TourService {
     }
 
     @Override
-    public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo, Integer pageSize,ViewPortSearchDto viewPortSearchDto) {
+    public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo,
+                                                            Integer pageSize,
+                                                            String northEastLat,
+                                                            String northEastLng,
+                                                            String southWestLat,
+                                                            String southWestLng) {
 
         Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
 
         Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,
-                viewPortSearchDto.getNorthEastLat(),
-                viewPortSearchDto.getSouthWestLat(),
-                viewPortSearchDto.getNorthEastLng(),
-                viewPortSearchDto.getSouthWestLng()
-                ,paging);
+                northEastLat,
+                southWestLat,
+                northEastLng,
+                southWestLng,
+                paging);
 
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
         List<TourViewDto> tourByCategoryDtos = new ArrayList<>();

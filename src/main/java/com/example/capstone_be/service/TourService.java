@@ -26,7 +26,17 @@ public interface TourService {
 
     List<TourViewForChatGPT> getAllForChatGPT();
 
-    TourResponseByCategoryName getTourByCategoryName(String categoryName, Integer pageNo, Integer pageSize,ViewPortSearchDto viewPortSearchDto);
+//    private String northEastLat;
+//    private String northEastLng;
+//    private String southWestLat;
+//    private String southWestLng;
+    TourResponseByCategoryName getTourByCategoryName(String categoryName,
+                                                     Integer pageNo,
+                                                     Integer pageSize,
+                                                     String northEastLat,
+                                                     String northEastLng,
+                                                     String southWestLat,
+                                                     String southWestLng);
 
     TourDetailDto getTourDetail(Long tourId);
 
@@ -38,5 +48,6 @@ public interface TourService {
 
     void updateTimeTour(UpdateTimeTourDto updateTimeTourDto, Long tourId);
 
-    TourRespone getTourViewPort(String northEastLat,String southWestLat, String northEastLng, String southWestLng,Integer pageNo, Integer pageSize);
+    TourRespone getTourViewPort(String northEastLat,String southWestLat, String northEastLng,
+                                String southWestLng,Integer pageNo, Integer pageSize);
 }

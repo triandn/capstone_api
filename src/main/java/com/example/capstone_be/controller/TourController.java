@@ -71,13 +71,15 @@ public class TourController {
                                                     viewPortSearchDto.getSouthWestLng(),
                                                     pageNo,pageSize);
     }
-
-    @GetMapping("/{categoryName}")
+    @GetMapping("/{categoryName}/{northEastLat}/{northEastLng}/{southWestLat}/{southWestLng}/")
     public TourResponseByCategoryName getTourByCategoryName(@PathVariable String categoryName,
-                                                                         @RequestParam(defaultValue = "1") Integer pageNo,
-                                                                         @RequestParam(defaultValue = "5") Integer pageSize,
-                                                                         @RequestBody ViewPortSearchDto viewPortSearchDto) {
-        return tourService.getTourByCategoryName(categoryName,pageNo,pageSize,viewPortSearchDto);
+                                                         @RequestParam(defaultValue = "1") Integer pageNo,
+                                                         @RequestParam(defaultValue = "5") Integer pageSize,
+                                                         @PathVariable String northEastLat,
+                                                         @PathVariable String northEastLng,
+                                                         @PathVariable String southWestLat,
+                                                         @PathVariable String southWestLng) {
+        return tourService.getTourByCategoryName(categoryName,pageNo,pageSize,northEastLat,northEastLng,southWestLat,southWestLng);
     }
 
     @GetMapping("/tour-detail/{tourId}")
