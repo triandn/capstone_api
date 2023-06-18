@@ -79,6 +79,10 @@ public class TourController {
                                                          @PathVariable String northEastLng,
                                                          @PathVariable String southWestLat,
                                                          @PathVariable String southWestLng) {
+//        Double northLat = Double.valueOf(northEastLat);
+//        Double northLng = Double.valueOf(northEastLng);
+//        Double southLat = Double.valueOf(southWestLat);
+//        Double southLng = Double.valueOf(southWestLng);
         return tourService.getTourByCategoryName(categoryName,pageNo,pageSize,northEastLat,northEastLng,southWestLat,southWestLng);
     }
 

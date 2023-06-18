@@ -241,17 +241,17 @@ public class TourServiceImpl implements TourService {
         Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
 
         Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,
-                northEastLat,
-                southWestLat,
-                northEastLng,
-                southWestLng,
+                Double.valueOf(northEastLat),
+                Double.valueOf(southWestLat),
+                Double.valueOf(northEastLng),
+                Double.valueOf(southWestLng),
                 paging);
 
         TourResponseByCategoryName tourResponseByCategoryName = new TourResponseByCategoryName();
         List<TourViewDto> tourByCategoryDtos = new ArrayList<>();
         TourViewDto tourByCategoryDto = null;
         Double avgRating = 0.0;
-        System.out.println("Tour List Size: " + tourListByCategoryName.getSize());
+        System.out.println("Tour List Size: " + tourListByCategoryName.getContent().size());
         for (Tour tour : tourListByCategoryName.getContent()) {
             tourByCategoryDto = new TourViewDto();
             avgRating = reviewService.calAvgRatingReviewForTour(tour.getTourId());

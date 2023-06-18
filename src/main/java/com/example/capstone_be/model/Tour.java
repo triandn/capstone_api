@@ -41,10 +41,10 @@ public class Tour extends BaseEntity{
     private String working;
 
     @Column(name = "latitude", nullable = false)
-    private String latitude;
+    private Double latitude;
 
     @Column(name = "longitude", nullable = false)
-    private String longitude;
+    private Double longitude;
 
     @Column(name = "time_slot_length")
     private int timeSlotLength;

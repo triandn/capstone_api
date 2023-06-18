@@ -13,5 +13,4 @@ public class StatisticDto implements Serializable {
     private int totalOrder;
     private Long tourId;
     private String tourTitle;
-
 }
