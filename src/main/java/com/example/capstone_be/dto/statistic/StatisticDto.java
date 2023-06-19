@@ -11,6 +11,5 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class StatisticDto implements Serializable {
     private int totalOrder;
-    private Long tourId;
-    private String tourTitle;
+    private String label;
 }

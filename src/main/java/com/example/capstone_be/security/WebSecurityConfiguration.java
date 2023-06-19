@@ -113,6 +113,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/wallet/get-wallet/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/wallet/wallet-update/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/order/**").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/statistic/**").hasAnyAuthority(USER,OWNER)
                     .antMatchers(HttpHeaders.ALLOW).permitAll()
                     .anyRequest().authenticated().and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
