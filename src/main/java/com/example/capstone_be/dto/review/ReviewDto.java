@@ -1,5 +1,6 @@
 package com.example.capstone_be.dto.review;
 
+import com.example.capstone_be.dto.user.UserViewDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,6 @@ public class ReviewDto implements Serializable {
     private Integer rating;
 
     private Long tourId;
+
+    private UserViewDto userViewDto;
 }

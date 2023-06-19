@@ -302,6 +302,7 @@ public class TourServiceImpl implements TourService {
         userViewDto.setUserName(user.getUserName());
         userViewDto.setUserEmail(user.getUserEmail());
         userViewDto.setUrlImage(user.getUrlImage());
+        userViewDto.setDescription(user.getDescription());
         userViewDto.setPhoneNumber(user.getPhoneNumber());
 
         for (ImageDetail image: imageDetails) {

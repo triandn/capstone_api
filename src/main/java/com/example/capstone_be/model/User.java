@@ -48,6 +48,9 @@ public class User extends BaseEntity {
     @Column(name = "role", nullable = false)
     private String role = RoleEnum.USER.toString();
 
+    @Column(name="account_authorize")
+    private String accountAuthorize;
+
     @Column(name = "is_enabled")
     private boolean isEnabled = true;
 

@@ -16,12 +16,16 @@ public class JwtResponse {
 
     private Boolean isWallet;
 
-    public JwtResponse(String token, String refreshToken, String username, String role,Boolean isWallet) {
+    private String accountAuthorize;
+
+    public JwtResponse(String token, String refreshToken, String username, String role,Boolean isWallet,
+                       String accountAuthorize) {
         this.token = token;
         this.refreshToken = refreshToken;
         this.username = username;
         this.role = role;
         this.isWallet = isWallet;
+        this.accountAuthorize = accountAuthorize;
     }
     public JwtResponse(String token) {
         this.token = token;
