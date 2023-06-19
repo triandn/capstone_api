@@ -4,6 +4,9 @@ import com.example.capstone_be.dto.daybook.TimeBookEnd;
 import com.example.capstone_be.dto.daybook.TimeBookStart;
 import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
+import com.example.capstone_be.dto.user.UserDto;
+import com.example.capstone_be.dto.user.UserViewDto;
+import com.example.capstone_be.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -53,5 +56,5 @@ public class TourDetailDto implements Serializable {
 
     private TimeBookEnd timeBookEnd;
 
-//    private List<>
+    private UserViewDto user;
 }

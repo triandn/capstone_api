@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface ReviewService {
     List<ReviewDto> getAllReview();
 
-    ReviewDto createReview(ReviewDto reviewDto);
+    ReviewDto createReview(ReviewDto reviewDto,UUID userId);
 
     void deleteReviewById(UUID id);
 

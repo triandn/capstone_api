@@ -5,6 +5,7 @@ import com.example.capstone_be.dto.image.ImageDto;
 import com.example.capstone_be.dto.image.ImageViewDto;
 import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.dto.tour.*;
+import com.example.capstone_be.dto.user.UserViewDto;
 import com.example.capstone_be.exception.NotFoundException;
 import com.example.capstone_be.model.*;
 import com.example.capstone_be.repository.*;
@@ -292,6 +293,17 @@ public class TourServiceImpl implements TourService {
         TimeBookStart timeBookStart = new TimeBookStart();
         TimeBookEnd timeBookEnd = new TimeBookEnd();
 
+        User user = userRepository.getUserByTourId(tourId);
+        UserViewDto userViewDto = new UserViewDto();
+        userViewDto.setUserId(user.getUserId());
+        userViewDto.setRole(user.getRole());
+        userViewDto.setAddress(user.getAddress());
+        userViewDto.setLanguage(user.getLanguage());
+        userViewDto.setUserName(user.getUserName());
+        userViewDto.setUserEmail(user.getUserEmail());
+        userViewDto.setUrlImage(user.getUrlImage());
+        userViewDto.setPhoneNumber(user.getPhoneNumber());
+
         for (ImageDetail image: imageDetails) {
             imageViewDtos.add(mapper.map(image,ImageViewDto.class));
         }
@@ -313,6 +325,7 @@ public class TourServiceImpl implements TourService {
         tourDetailDto.setUserId(tour.getUserId());
         tourDetailDto.setTimeSlotLength(tour.getTimeSlotLength());
         tourDetailDto.setIsDeleted(tour.getIsDeleted());
+        tourDetailDto.setUser(userViewDto);
         try{
             timeBookStart.setHour(tour.getTimeBookStart().getHour());
             timeBookStart.setMinutes(tour.getTimeBookStart().getMinute());

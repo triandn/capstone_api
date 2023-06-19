@@ -1,6 +1,8 @@
 package com.example.capstone_be.dto.order;
 
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
+import com.example.capstone_be.dto.user.UserViewDto;
+import com.example.capstone_be.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,4 +48,6 @@ public class OrderDto {
     private TimeBookViewDto timeBookViewDto;
 
     private Long tourId;
+
+    private UserViewDto user;
 }

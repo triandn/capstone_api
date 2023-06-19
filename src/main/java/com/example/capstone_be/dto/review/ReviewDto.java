@@ -20,7 +20,5 @@ public class ReviewDto implements Serializable {
 
     private Integer rating;
 
-    private UUID userId;
-
     private Long tourId;
 }

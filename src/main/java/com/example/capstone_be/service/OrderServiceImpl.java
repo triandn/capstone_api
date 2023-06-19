@@ -2,6 +2,7 @@ package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
 import com.example.capstone_be.dto.order.OrderDto;
+import com.example.capstone_be.dto.user.UserViewDto;
 import com.example.capstone_be.model.*;
 import com.example.capstone_be.repository.*;
 import com.example.capstone_be.util.enums.OrderStatusEnum;
@@ -24,13 +25,16 @@ public class OrderServiceImpl implements OrderService {
     private final DayBookRepository dayBookRepository;
 
     private final TimeBookRepository timeBookRepository;
-    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, WalletRepository walletRepository, TourRepository tourRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository) {
+
+    private final UserRepository userRepository;
+    public OrderServiceImpl(OrderRepository orderRepository, WalletService walletService, WalletRepository walletRepository, TourRepository tourRepository, DayBookRepository dayBookRepository, TimeBookRepository timeBookRepository, UserRepository userRepository) {
         this.orderRepository = orderRepository;
         this.walletService = walletService;
         this.walletRepository = walletRepository;
         this.tourRepository = tourRepository;
         this.dayBookRepository = dayBookRepository;
         this.timeBookRepository = timeBookRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
@@ -57,12 +61,25 @@ public class OrderServiceImpl implements OrderService {
         DayBook dayBook = null;
         TimeBookViewDto timeBookViewDto;
         TimeBookDetail timeBookDetail = null;
+        User user = null;
         for (Order item: orderList) {
             orderDto = new OrderDto();
             timeBookViewDto = new TimeBookViewDto();
+            user = userRepository.getUserByOrderId(item.getOrderId());
             tour = tourRepository.getTourByOrderId(item.getOrderId());
             dayBook = dayBookRepository.getDayBookByTimeId(item.getTimeId());
             timeBookDetail = timeBookRepository.getTimeBookDetailById(item.getTimeId());
+
+            UserViewDto userViewDto = new UserViewDto();
+            userViewDto.setUserId(user.getUserId());
+            userViewDto.setRole(user.getRole());
+            userViewDto.setAddress(user.getAddress());
+            userViewDto.setLanguage(user.getLanguage());
+            userViewDto.setUserName(user.getUserName());
+            userViewDto.setUserEmail(user.getUserEmail());
+            userViewDto.setUrlImage(user.getUrlImage());
+            userViewDto.setPhoneNumber(user.getPhoneNumber());
+
             timeBookViewDto.setStart_time(timeBookDetail.getStart_time());
             timeBookViewDto.setEnd_time(timeBookDetail.getEnd_time());
             timeBookViewDto.setIsDeleted(timeBookDetail.getIsDeleted());
@@ -83,6 +100,7 @@ public class OrderServiceImpl implements OrderService {
             orderDto.setTour_title(tour.getTitle());
             orderDto.setPriceOnePerson(tour.getPriceOnePerson());
             orderDto.setTimeBookViewDto(timeBookViewDto);
+            orderDto.setUser(userViewDto);
             orderDtoList.add(orderDto);
         }
         return orderDtoList;
