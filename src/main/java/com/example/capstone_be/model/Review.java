@@ -25,17 +25,17 @@ public class Review extends BaseEntity {
     @Column(name = "rating", nullable = false, columnDefinition = "INTEGER CHECK (rating > 0 AND rating <= 5)")
     private Integer rating;
 
-    @Column(name = "user_id", nullable = false,insertable = false,updatable = false)
+    @Column(name = "user_id", nullable = false)
     private UUID userId;
 
-    @Column(name = "tour_id", nullable = false,insertable = false,updatable = false)
+    @Column(name = "tour_id", nullable = false)
     private Long tourId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id", nullable = false)
+    @JoinColumn(name = "tour_id", nullable = false,insertable = false,updatable = false)
     private Tour tour;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false,insertable = false,updatable = false)
     private User user;
 }
