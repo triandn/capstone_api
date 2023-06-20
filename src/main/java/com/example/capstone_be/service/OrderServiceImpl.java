@@ -5,7 +5,12 @@ import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.dto.user.UserViewDto;
 import com.example.capstone_be.model.*;
 import com.example.capstone_be.repository.*;
+import com.example.capstone_be.response.OrderRespone;
+import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.util.enums.OrderStatusEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -132,6 +137,69 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderRespone getListOrderByOwner(UUID userId,Integer pageNo,Integer pageSize) {
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+        Page<Order> orderListOwner = orderRepository.getListOrderByOwner(userId,paging);
+
+        final OrderRespone orderRespone = new OrderRespone();
+        OrderDto orderDto = null;
+        List<OrderDto> orderDtoList = new ArrayList<>();
+        Tour tour = null;
+        DayBook dayBook = null;
+        TimeBookViewDto timeBookViewDto;
+        TimeBookDetail timeBookDetail = null;
+        User user = null;
+        for (Order item: orderListOwner) {
+            orderDto = new OrderDto();
+            timeBookViewDto = new TimeBookViewDto();
+            user = userRepository.getUserByOrderId(item.getOrderId());
+            tour = tourRepository.getTourByOrderId(item.getOrderId());
+            dayBook = dayBookRepository.getDayBookByTimeId(item.getTimeId());
+            timeBookDetail = timeBookRepository.getTimeBookDetailById(item.getTimeId());
+
+            UserViewDto userViewDto = new UserViewDto();
+            userViewDto.setUserId(user.getUserId());
+            userViewDto.setRole(user.getRole());
+            userViewDto.setAddress(user.getAddress());
+            userViewDto.setLanguage(user.getLanguage());
+            userViewDto.setUserName(user.getUserName());
+            userViewDto.setUserEmail(user.getUserEmail());
+            userViewDto.setUrlImage(user.getUrlImage());
+            userViewDto.setPhoneNumber(user.getPhoneNumber());
+
+            timeBookViewDto.setStart_time(timeBookDetail.getStart_time());
+            timeBookViewDto.setEnd_time(timeBookDetail.getEnd_time());
+            timeBookViewDto.setIsDeleted(timeBookDetail.getIsDeleted());
+            timeBookViewDto.setTimeId(item.getTimeId());
+
+            orderDto.setTourId(tour.getTourId());
+            orderDto.setOrderDate(item.getCreatedAt());
+            orderDto.setStatusOrder(item.getStatusOrder());
+            orderDto.setPrice(item.getPrice());
+            orderDto.setOrderIdBlockChain(item.getOrderIdBlockChain());
+            orderDto.setPublicKey(item.getPublicKey());
+            orderDto.setOrderId(item.getOrderId());
+            orderDto.setTimeId(item.getTimeId());
+            orderDto.setUserId(item.getUserId());
+            orderDto.setCity(tour.getCity());
+            orderDto.setDate_name(dayBook.getDate_name());
+            orderDto.setImageMain(tour.getImageMain());
+            orderDto.setTour_title(tour.getTitle());
+            orderDto.setPriceOnePerson(tour.getPriceOnePerson());
+            orderDto.setTimeBookViewDto(timeBookViewDto);
+            orderDto.setUser(userViewDto);
+            orderDtoList.add(orderDto);
+        }
+
+        orderRespone.setContent(orderDtoList);
+        orderRespone.setPageNo(orderListOwner.getNumber() + 1);
+        orderRespone.setPageSize(orderListOwner.getSize());
+        orderRespone.setTotalElements(orderListOwner.getTotalElements());
+        orderRespone.setTotalPages(orderListOwner.getTotalPages());
+        return orderRespone;
+    }
+
+    @Override
     public void updateOrderByField(UUID id, Map<String, Object> fields) {
         try
         {
@@ -162,4 +230,5 @@ public class OrderServiceImpl implements OrderService {
         }
         return "FAIL";
     }
+
 }
