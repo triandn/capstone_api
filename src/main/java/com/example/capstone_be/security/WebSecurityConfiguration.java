@@ -72,6 +72,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/guest/**").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/payment/**").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/tour/create/").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/tour/create-tour/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/tour/all").permitAll()
                     .antMatchers("/tour/{categoryName}/{northEastLat}/{northEastLng}/{southWestLat}/{southWestLng}/").permitAll()
                     .antMatchers("/tour/tour-detail/{tourId}").permitAll()

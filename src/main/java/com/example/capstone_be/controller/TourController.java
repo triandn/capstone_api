@@ -47,7 +47,18 @@ public class TourController {
     }
 
     @PostMapping(path = "/create/")
-    public ResponseEntity<?> createTour(@Valid @RequestBody TourCreateDto tourDto, HttpServletRequest request) {
+    public ResponseEntity<?> createTour(@RequestBody TourCreateDto tourDto, HttpServletRequest request) {
+        String bearerToken = CommonFunction.getBearToken(request);
+        Claims claims = CommonFunction.getClaims(bearerToken);
+        String email = claims.getSubject();
+        User user = userRepository.getUserByUserEmail(email);
+        System.out.println("User Id: " + user.getUserId());
+        tourService.createTour(tourDto,user.getUserId());
+        return new ResponseEntity<>(tourDto, HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/create-tour/")
+    public ResponseEntity<?> createTourNew(@RequestBody TourCreateDto tourDto, HttpServletRequest request) {
         String bearerToken = CommonFunction.getBearToken(request);
         Claims claims = CommonFunction.getClaims(bearerToken);
         String email = claims.getSubject();

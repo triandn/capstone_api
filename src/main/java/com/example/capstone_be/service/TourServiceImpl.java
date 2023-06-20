@@ -105,8 +105,8 @@ public class TourServiceImpl implements TourService {
         tourSave.setDestination(tourDto.getDestination());
         tourSave.setDestinationDescription(tourDto.getDestinationDescription());
         tourSave.setRating(tourDto.getRating());
-        tourSave.setLatitude(tourDto.getLatitude());
-        tourSave.setLongitude(tourDto.getLongitude());
+        tourSave.setLatitude(Float.valueOf(tourDto.getLatitude()));
+        tourSave.setLongitude(Float.valueOf(tourDto.getLongitude()));
         tourSave.setTitle(tourDto.getTitle());
         tourSave.setWorking(tourDto.getWorking());
         tourSave.setImageMain(tourDto.getImageMain());
