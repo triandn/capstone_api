@@ -10,5 +10,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatGPTDto implements Serializable {
-    private String response;
+    private String message;
 }
