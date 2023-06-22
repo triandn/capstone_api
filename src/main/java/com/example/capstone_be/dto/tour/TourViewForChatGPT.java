@@ -22,13 +22,8 @@ public class TourViewForChatGPT implements Serializable {
 
     private String working;
 
-    private String destination;
-
     private String destinationDescription;
-
-    private Long categoryId;
 
     private String categoryName;
 
-    private Double avgRating;
 }

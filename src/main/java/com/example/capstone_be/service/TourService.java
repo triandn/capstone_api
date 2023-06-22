@@ -24,7 +24,6 @@ public interface TourService {
 
     TourRespone getAll(Integer pageNo, Integer pageSize);
 
-    List<TourViewForChatGPT> getAllForChatGPT();
 
 //    private String northEastLat;
 //    private String northEastLng;

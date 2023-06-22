@@ -198,6 +198,7 @@ public class TourServiceImpl implements TourService {
             tourViewDto.setIsDeleted(tour.getIsDeleted());
             tourViewDtos.add(tourViewDto);
         }
+
         tourRespone.setContent(tourViewDtos);
         tourRespone.setPageNo(tourList.getNumber() + 1);
         tourRespone.setPageSize(tourList.getSize());
@@ -206,30 +207,6 @@ public class TourServiceImpl implements TourService {
         return tourRespone;
     }
 
-    @Override
-    public List<TourViewForChatGPT> getAllForChatGPT() {
-        List<Tour> tours = tourRepository.getAllTourForChatGpt();
-        TourViewForChatGPT tourViewForChatGPT = null;
-        List<TourViewForChatGPT> tourViewForChatGPTList = new ArrayList<>();
-        Double avgRating =0.0;
-        for (Tour item: tours) {
-            avgRating = reviewService.calAvgRatingReviewForTour(item.getTourId());
-            tourViewForChatGPT = new TourViewForChatGPT();
-            tourViewForChatGPT.setTourId(item.getTourId());
-            tourViewForChatGPT.setCity(item.getCity());
-            tourViewForChatGPT.setDestination(item.getDestination());
-            tourViewForChatGPT.setCategoryName(item.getCategories().iterator().next().getCategoryName());
-            tourViewForChatGPT.setCategoryId(item.getCategories().iterator().next().getCategoryId());
-            tourViewForChatGPT.setWorking(item.getWorking());
-            tourViewForChatGPT.setDestinationDescription(item.getDestinationDescription());
-            tourViewForChatGPT.setPriceOnePerson(item.getPriceOnePerson());
-            tourViewForChatGPT.setAvgRating(avgRating);
-            tourViewForChatGPT.setImageMain(item.getImageMain());
-            tourViewForChatGPT.setTitle(item.getTitle());
-            tourViewForChatGPTList.add(tourViewForChatGPT);
-        }
-        return tourViewForChatGPTList;
-    }
 
     @Override
     public TourResponseByCategoryName getTourByCategoryName(String categoryName,Integer pageNo,

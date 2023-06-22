@@ -25,6 +25,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
             "INNER JOIN time_book_details tbdt ON tbdt.day_book_id = d.day_book_id \n" +
             "INNER JOIN orders AS o ON o.time_id = tbdt.time_id \n" +
             "WHERE o.order_id=:order_id";
+
     @Query(value = FIND_TOUR_BY_CATEGORY_NAME,nativeQuery = true)
     Page<Tour> findTourByCategoryName(@Param("category_name") String category_name,
                                       @Param("northEastLat")Float northEastLat,
@@ -50,6 +51,9 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query(value = FIND_TOUR_BY_ORDER_ID,nativeQuery = true)
     Tour getTourByOrderId(UUID order_id);
 
+//    @Query(value = ,nativeQuery = true)
+//    List<Tour> findTourGPT(@Param("query")String query);
+
     @Modifying
     @Query(value = "UPDATE tours SET time_book_start=:time_book_start,time_book_end=:time_book_end,time_slot_length=:time_slot_length WHERE tour_id=:tour_id",nativeQuery = true)
     void updateStartTimeAndEndTime(LocalTime time_book_start,LocalTime time_book_end,int time_slot_length,Long tour_id);
@@ -59,4 +63,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Query(value = "SELECT * FROM tours WHERE tours.latitude BETWEEN :northEastLat AND :southWestLat AND tours.longitude BETWEEN :northEastLng AND :southWestLng",nativeQuery = true)
     Page<Tour> getTourViewPort(String northEastLat,String southWestLat, String northEastLng, String southWestLng,Pageable pageable);
+
+
 }

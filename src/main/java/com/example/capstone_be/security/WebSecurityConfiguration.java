@@ -80,7 +80,6 @@ public class WebSecurityConfiguration {
                     .antMatchers("/tour/tour-update/{id}").hasAnyAuthority(USER,ADMIN,OWNER)
                     .antMatchers("/tour/tour-owner/").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/tour/tour-update-time/{id}").hasAnyAuthority(USER,OWNER)
-                    .antMatchers("/tour/tour-chat-gpt/").permitAll()
                     .antMatchers("/categories/").permitAll()
                     .antMatchers("/categories/{id}").permitAll()
                     .antMatchers("/categories/create/").hasAnyAuthority(USER,OWNER)
@@ -115,6 +114,7 @@ public class WebSecurityConfiguration {
                     .antMatchers("/wallet/wallet-update/{id}").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/order/**").hasAnyAuthority(USER,OWNER)
                     .antMatchers("/statistic/**").hasAnyAuthority(USER,OWNER)
+                    .antMatchers("/gpt/**").permitAll()
                     .antMatchers(HttpHeaders.ALLOW).permitAll()
                     .anyRequest().authenticated().and()
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
