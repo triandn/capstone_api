@@ -23,7 +23,6 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -47,8 +46,6 @@
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
-
-
 
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -159,18 +156,6 @@
 			<version>2.12.3</version>
 		</dependency>
 
-
-		<dependency>
-			<groupId>com.corundumstudio.socketio</groupId>
-			<artifactId>netty-socketio</artifactId>
-			<version>${netty-socketio.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.mmorrell</groupId>
-			<artifactId>solanaj</artifactId>
-			<version>1.15.2</version>
-		</dependency>
 
 	</dependencies>
 
