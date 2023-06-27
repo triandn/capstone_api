@@ -11,6 +11,7 @@ import com.example.capstone_be.util.enums.OrderStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
@@ -138,7 +139,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderRespone getListOrderByOwner(UUID userId,Integer pageNo,Integer pageSize) {
-        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize, Sort.by("created_at").descending());
         Page<Order> orderListOwner = orderRepository.getListOrderByOwner(userId,paging);
 
         final OrderRespone orderRespone = new OrderRespone();
