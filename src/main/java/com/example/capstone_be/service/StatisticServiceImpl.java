@@ -1,17 +1,23 @@
 package com.example.capstone_be.service;
 
+import com.example.capstone_be.dto.statistic.DateStatistic;
 import com.example.capstone_be.dto.statistic.StatisticDto;
+import com.example.capstone_be.dto.statistic.StatisticVenueDto;
 import com.example.capstone_be.model.Order;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.OrderRepository;
 import com.example.capstone_be.repository.TourRepository;
 import com.example.capstone_be.util.enums.LabelEnum;
+import org.joda.time.DateTime;
+import org.joda.time.LocalTime;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
 
 @Service
 public class StatisticServiceImpl implements StatisticService{
@@ -110,4 +116,30 @@ public class StatisticServiceImpl implements StatisticService{
         return  statisticDtos;
     }
 
+    @Override
+    public List<StatisticVenueDto> makeStatisVenueByOneDay(UUID user_id, DateStatistic dateStatistic) {
+        DateTime startDay = DateTime.parse(dateStatistic.getStart());
+        DateTime endDay = DateTime.parse(dateStatistic.getEnd());
+        List<DateTime> dateTimes = getDateRange(startDay,endDay);
+        StatisticVenueDto statisticDto = null;
+        List<StatisticVenueDto> statisticVenueDtos = new ArrayList<>();
+        for (DateTime item: dateTimes) {
+            System.out.println("Day: " + item.toString());
+            statisticDto = new StatisticVenueDto();
+            Double venue = orderRepository.calVenueOneDay(item.getDayOfMonth(),user_id);
+            statisticDto.setLabel(item.toString().substring(0,10));
+            statisticDto.setValue(venue);
+            statisticVenueDtos.add(statisticDto);
+        }
+        return statisticVenueDtos;
+    }
+    public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {
+        List<DateTime> ret = new ArrayList<DateTime>();
+        DateTime tmp = startDay;
+        while(tmp.isBefore(endDay) || tmp.equals(endDay)) {
+            ret.add(tmp);
+            tmp = tmp.plusDays(1);
+        }
+        return ret;
+    }
 }
