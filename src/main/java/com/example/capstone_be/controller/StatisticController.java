@@ -3,6 +3,7 @@ package com.example.capstone_be.controller;
 
 import com.example.capstone_be.dto.statistic.DateStatistic;
 import com.example.capstone_be.dto.statistic.StatisticDto;
+import com.example.capstone_be.dto.statistic.StatisticResponse;
 import com.example.capstone_be.dto.statistic.StatisticVenueDto;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.service.StatisticService;
@@ -39,15 +40,18 @@ public class StatisticController {
         return new ResponseEntity<>(statisticDtoList, HttpStatus.OK);
     }
 
-    @PostMapping("/venue/day")
-    public ResponseEntity<?> makeStatisticVenueDay(HttpServletRequest request, @RequestBody DateStatistic dateStatistic) {
+    @PostMapping("/venue/day/{type}")
+    public ResponseEntity<?> makeStatisticVenueDay(HttpServletRequest request,
+                                                   @RequestBody DateStatistic dateStatistic,
+                                                    @PathVariable String type) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             bearerToken = bearerToken.substring(7);
         }
         User user = userService.getUserByUserId(bearerToken);
         UUID userId = user.getUserId();
-        List<StatisticVenueDto> statisticVenueDtos =  statisticService.makeStatisVenueByOneDay(userId,dateStatistic);
-        return new ResponseEntity<>(statisticVenueDtos, HttpStatus.OK);
+//        StatisticResponse statisticResponse =  statisticService.makeStatisVenueByOneDay(userId,dateStatistic);
+        StatisticResponse statisticResponse = statisticService.statisticRespone(userId,dateStatistic,type);
+        return new ResponseEntity<>(statisticResponse, HttpStatus.OK);
     }
 }

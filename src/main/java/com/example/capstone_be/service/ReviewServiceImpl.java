@@ -41,14 +41,11 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public ReviewDto createReview(ReviewDto reviewDto,UUID userId) {
-//        reviewRepository.save(mapper.map(reviewDto,Review.class));
-//        return reviewDto;
         Review review = new Review();
         review.setRating(reviewDto.getRating());
         review.setTourId(reviewDto.getTourId());
         review.setComment(reviewDto.getComment());
         review.setUserId(userId);
-
         reviewRepository.save(review);
         return reviewDto;
     }
@@ -84,7 +81,6 @@ public class ReviewServiceImpl implements ReviewService{
 
     @Override
     public Double calAvgRatingReviewForTour(Long tourId) {
-
         List<Review> reviewList = reviewRepository.getAllReviewByTourId(tourId);
         List<Integer> ratingList = new ArrayList<>();
         for (Review review: reviewList) {

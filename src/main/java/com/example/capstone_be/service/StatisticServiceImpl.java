@@ -1,8 +1,6 @@
 package com.example.capstone_be.service;
 
-import com.example.capstone_be.dto.statistic.DateStatistic;
-import com.example.capstone_be.dto.statistic.StatisticDto;
-import com.example.capstone_be.dto.statistic.StatisticVenueDto;
+import com.example.capstone_be.dto.statistic.*;
 import com.example.capstone_be.model.Order;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.repository.OrderRepository;
@@ -121,18 +119,76 @@ public class StatisticServiceImpl implements StatisticService{
         DateTime startDay = DateTime.parse(dateStatistic.getStart());
         DateTime endDay = DateTime.parse(dateStatistic.getEnd());
         List<DateTime> dateTimes = getDateRange(startDay,endDay);
-        StatisticVenueDto statisticDto = null;
+        StatisticVenueDto statisticVenueDto = null;
+        StatisticOrderTotal statisticOrderTotal = null;
         List<StatisticVenueDto> statisticVenueDtos = new ArrayList<>();
+//        List<StatisticOrderTotal> statisticOrderTotals = new ArrayList<>();
+//        StatisticResponse statisticResponse = new StatisticResponse();
         for (DateTime item: dateTimes) {
             System.out.println("Day: " + item.toString());
-            statisticDto = new StatisticVenueDto();
-            Double venue = orderRepository.calVenueOneDay(item.getDayOfMonth(),user_id);
-            statisticDto.setLabel(item.toString().substring(0,10));
-            statisticDto.setValue(venue);
-            statisticVenueDtos.add(statisticDto);
+            statisticVenueDto = new StatisticVenueDto();
+            Double venue = orderRepository.calVenueOneDay(item.getDayOfMonth(),
+                    item.getMonthOfYear(),
+                    item.getYear(),user_id);
+            statisticVenueDto.setLabel(item.toString().substring(0,10));
+            statisticVenueDto.setValue(venue);
+            statisticVenueDtos.add(statisticVenueDto);
         }
         return statisticVenueDtos;
+//        for (DateTime item: dateTimes) {
+//            System.out.println("Day: " + item.toString());
+//            statisticDto = new StatisticVenueDto();
+//            statisticOrderTotal = new StatisticOrderTotal();
+//            Double venue = orderRepository.calVenueOneDay(item.getDayOfMonth(),
+//                                                          item.getMonthOfYear(),
+//                                                          item.getYear(),user_id);
+//            int totalOrder = orderRepository.calQuantityOrder(item.getDayOfMonth(),
+//                                                              item.getMonthOfYear(),
+//                                                              item.getYear(),user_id);
+//            statisticOrderTotal.setLabel(item.toString().substring(0,10));
+//            statisticOrderTotal.setValue(totalOrder);
+//            statisticDto.setLabel(item.toString().substring(0,10));
+//            statisticDto.setValue(venue);
+//            statisticOrderTotals.add(statisticOrderTotal);
+//            statisticVenueDtos.add(statisticDto);
+//        }
+//        statisticResponse.setStatisticVenueDto(statisticVenueDtos);
+//        statisticResponse.setStatisticOrderTotal(statisticOrderTotals);
     }
+
+    @Override
+    public List<StatisticOrderTotal> makeStatisticOrderTotal(UUID user_id, DateStatistic dateStatistic) {
+        DateTime startDay = DateTime.parse(dateStatistic.getStart());
+        DateTime endDay = DateTime.parse(dateStatistic.getEnd());
+        List<DateTime> dateTimes = getDateRange(startDay,endDay);
+        StatisticOrderTotal statisticOrderTotal = null;
+        List<StatisticOrderTotal> statisticOrderTotals = new ArrayList<>();
+        for (DateTime item: dateTimes) {
+            System.out.println("Day: " + item.toString());
+            statisticOrderTotal = new StatisticOrderTotal();
+            int totalOrder = orderRepository.calQuantityOrder(item.getDayOfMonth(),
+                                                              item.getMonthOfYear(),
+                                                              item.getYear(),user_id);
+            statisticOrderTotal.setLabel(item.toString().substring(0,10));
+            statisticOrderTotal.setValue(totalOrder);
+            statisticOrderTotals.add(statisticOrderTotal);
+        }
+        return statisticOrderTotals;
+    }
+
+    @Override
+    public StatisticResponse statisticRespone(UUID userId, DateStatistic dateStatistic, String type) {
+        StatisticResponse statisticResponse = new StatisticResponse();
+        if(type.equals("VENUE")){
+            List<StatisticVenueDto> statisticVenueDtos = makeStatisVenueByOneDay(userId,dateStatistic);
+            statisticResponse.setStatisticResponse(statisticVenueDtos);
+        } else if (type.equals("ORDER")) {
+            List<StatisticOrderTotal> statisticOrderTotals = makeStatisticOrderTotal(userId,dateStatistic);
+            statisticResponse.setStatisticResponse(statisticOrderTotals);
+        }
+        return statisticResponse;
+    }
+
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {
         List<DateTime> ret = new ArrayList<DateTime>();
         DateTime tmp = startDay;

@@ -50,6 +50,15 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
 
     @Query(value = "SELECT SUM(price) AS total_revenue\n" +
             "FROM orders\n" +
-            "WHERE EXTRACT(DAY FROM order_date) =:day_value AND status_order = 'SUCCESS' AND user_id=:user_id",nativeQuery = true)
-    Double calVenueOneDay(int day_value, UUID user_id);
+            "WHERE EXTRACT(DAY FROM order_date) =:day_value " +
+            "AND EXTRACT(MONTH FROM order_date) =:month_value\n" +
+            "AND EXTRACT(YEAR FROM order_date) =:year_value AND status_order = 'SUCCESS' AND user_id=:user_id",nativeQuery = true)
+    Double calVenueOneDay(int day_value,int month_value,int year_value, UUID user_id);
+
+    @Query(value = "SELECT COUNT(*) AS order_count\n" +
+            "FROM orders\n" +
+            "WHERE EXTRACT(DAY FROM order_date) =:day_value " +
+            "AND EXTRACT(MONTH FROM order_date) =:month_value\n" +
+            "AND EXTRACT(YEAR FROM order_date) =:year_value AND status_order = 'SUCCESS' AND user_id=:user_id",nativeQuery = true)
+    int calQuantityOrder(int day_value,int month_value,int year_value,UUID user_id);
 }
