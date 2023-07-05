@@ -128,7 +128,7 @@ public class TourServiceImpl implements TourService {
             imageDto.setLink(item.getLink());
             imageDtos.add(imageDto);
         }
-//        tourRepository.save(mapper.map(tourDtoCreate, Tour.class));
+//  tourRepository.save(mapper.map(tourDtoCreate, Tour.class));
         tourRepository.save(tourSave);
         imageService.createImageDetailForTour(imageDtos);
 // DATE PROCESS
@@ -454,6 +454,46 @@ public class TourServiceImpl implements TourService {
         tourRespone.setTotalPages(tourList.getTotalPages());
         return tourRespone;
     }
+    @Override
+    public void createDate(DateTime startDay, DateTime endDay,Long tourId) {
+        Tour tour = tourRepository.getTourById(tourId);
+        List<DateTime> dateTimes = getDateRange(startDay,endDay);
+        List<DateBookCreateDto> dateBookCreateDtos = new ArrayList<>();
+        DateBookCreateDto dateBookCreateDto = null;
+        for (DateTime item: dateTimes) {
+            dateBookCreateDto = new DateBookCreateDto();
+            dateBookCreateDto.setDate_name(item.toDate());
+            dateBookCreateDto.setTourId(tourId);
+            dateBookCreateDtos.add(dateBookCreateDto);
+        }
+// TIME PROCESS
+        int start_hour = tour.getTimeBookStart().getHour();
+        int start_minute = tour.getTimeBookStart().getMinute();
+        int end_hour = tour.getTimeBookEnd().getHour();
+        int end_minute = tour.getTimeBookEnd().getMinute();
+
+        List<LocalTime> localTimes = DivideFrame(start_hour,start_minute,end_hour,end_minute,
+                                                tour.getTimeSlotLength());
+        System.out.println("THOI GIAN CHIA: " + localTimes.size());
+        List<TimeBookDetailDto> timeBookDetailDtoList = null;
+        TimeBookDetailDto timeBookDetailDto = null;
+        for (DateBookCreateDto item: dateBookCreateDtos) {
+            dayBookService.createDayBooking(item);
+            timeBookDetailDtoList = new ArrayList<>();
+            System.out.println("DayBook Id:"+item.getDayBookId());
+            for (int index = 0; index <= localTimes.size(); index++){
+                if(index + 1 >= localTimes.size()){
+                    break;
+                }
+                timeBookDetailDto = new TimeBookDetailDto();
+                timeBookDetailDto.setDay_book_id(item.getDayBookId());
+                timeBookDetailDto.setStart_time(localTimes.get(index));
+                timeBookDetailDto.setEnd_time(localTimes.get(index + 1));
+                timeBookDetailDtoList.add(timeBookDetailDto);
+                timeBookDetailService.createTimeBookDetail(timeBookDetailDto);
+            }
+        }
+    }
 
     public static List<DateTime> getDateRange(DateTime startDay, DateTime endDay) {
         List<DateTime> ret = new ArrayList<DateTime>();
@@ -465,12 +505,41 @@ public class TourServiceImpl implements TourService {
         return ret;
     }
 
-    public  static List<LocalTime> DivideFrameTime(TimeBookStart timeBookStart, TimeBookEnd timeBookEnd, int timeSlotLength){
+    public  static List<LocalTime> DivideFrameTime(TimeBookStart timeBookStart, TimeBookEnd timeBookEnd,
+                                                   int timeSlotLength){
         LocalTime startTime = LocalTime.of(timeBookStart.getHour(),timeBookEnd.getMinutes()); // Thời gian bắt đầu
         LocalTime endTime = LocalTime.of(timeBookEnd.getHour(), timeBookEnd.getMinutes()); // Thời gian kết thúc
         Duration interval = Duration.ofMinutes(timeSlotLength); // Khoảng thời gian chia
+        System.out.println("INTERVAL: " + interval);
         List<LocalTime> localTimes = new ArrayList<>();
         LocalTime currentTime = startTime;
+        while (currentTime.isBefore(endTime)) {
+            System.out.println(currentTime);
+            localTimes.add(currentTime);
+            currentTime = currentTime.plus(interval);
+        }
+        localTimes.add(endTime);
+        for (LocalTime item: localTimes) {
+            System.out.println("CHIA THOI GIAN THEO DOAN: "+ item);
+        }
+        return localTimes;
+    }
+
+    public static List<LocalTime> DivideFrame(int start_h,
+                                              int start_m,
+                                              int end_h,
+                                              int end_m,
+                                              int timeSlotLength){
+
+        LocalTime startTime = LocalTime.of(start_h,end_m);    // Thời gian bắt đầu
+        LocalTime endTime = LocalTime.of(end_h,end_m);          // Thời gian kết thúc
+        Duration interval = Duration.ofMinutes(timeSlotLength); // Khoảng thời gian chia
+        System.out.println("INTERVAL: " + interval);
+        List<LocalTime> localTimes = new  ArrayList<>();
+        LocalTime currentTime = startTime;
+        if(startTime.isBefore(endTime)){
+            System.out.println("TRUOC");
+        }
         while (currentTime.isBefore(endTime)) {
             System.out.println(currentTime);
             localTimes.add(currentTime);

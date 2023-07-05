@@ -1,6 +1,7 @@
 package com.example.capstone_be.controller;
 
 
+import com.example.capstone_be.dto.daybook.DayTimeCeateDto;
 import com.example.capstone_be.dto.tour.*;
 import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.model.User;
@@ -15,6 +16,7 @@ import com.example.capstone_be.util.common.CommonFunction;
 import com.example.capstone_be.util.common.ErrorResponse;
 import io.jsonwebtoken.Claims;
 import jdk.dynalink.linker.LinkerServices;
+import org.joda.time.DateTime;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,10 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 import static com.example.capstone_be.util.ValidUtils.getMessageBindingResult;
 
@@ -127,5 +127,14 @@ public class TourController {
         User user = userRepository.getUserByUserEmail(email);
         TourResponseByOwner tourResponseByOwner = tourService.getTourByUserId(user.getUserId(),pageNo,pageSize);
         return new ResponseEntity<>(tourResponseByOwner, HttpStatus.OK);
+    }
+
+    @PostMapping(path = "/create-day-time/{tour_id}")
+    public ResponseEntity<?> createTourNew(@RequestBody DayTimeCeateDto dayTimeCeateDto, HttpServletRequest request,
+                                           @PathVariable Long tour_id) {
+        DateTime startDay = DateTime.parse(dayTimeCeateDto.getStartDay());
+        DateTime endDay = DateTime.parse(dayTimeCeateDto.getEndDay());
+        tourService.createDate(startDay,endDay,tour_id);
+        return  new ResponseEntity<>("Update Success",HttpStatus.OK);
     }
 }

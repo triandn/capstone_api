@@ -63,6 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
         String locate = language;
 
         BigDecimal amount = BigDecimal.valueOf(priceTotal);
+        System.out.println("amount: "+ amount);
         Map<String,Integer> map = new HashMap<>();
         for (GuestDto item: guestDtos) {
             map.put(String.valueOf(item.getGuestType()),item.getQuantity());
@@ -151,7 +152,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setCreatedAt(Common.getCurrentDateTime().toLocalDateTime());
         payment.setVnpOrderInfo(vnp_OrderInfo);
         payment.setOrderType(orderType);
-        payment.setAmount(amount.divide(new BigDecimal("100")));
+        payment.setAmount(amount);
         payment.setLocate(locate);
         payment.setIpAddress(vnp_IpAddr);
         payment.setPaymentUrl(paymentUrl);

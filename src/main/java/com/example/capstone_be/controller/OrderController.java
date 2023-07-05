@@ -1,5 +1,6 @@
 package com.example.capstone_be.controller;
 
+import com.example.capstone_be.dto.order.OrderDetailDto;
 import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.model.User;
 import com.example.capstone_be.repository.UserRepository;
@@ -72,5 +73,15 @@ public class OrderController {
     public ResponseEntity<?> getOrderListByTourId(@PathVariable String tour_id) {
         final List<OrderDto> orderDtoList = orderService.getListOrderByTourId(Long.valueOf(tour_id));
         return new ResponseEntity<>(orderDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/get-order-detail/{order_id}")
+    public ResponseEntity<?> getOrderListByTourId(@PathVariable UUID order_id,HttpServletRequest request) {
+        String bearerToken = CommonFunction.getBearToken(request);
+        Claims claims = CommonFunction.getClaims(bearerToken);
+        String email = claims.getSubject();
+        User user = userRepository.getUserByUserEmail(email);
+        OrderDetailDto orderDetailDto = orderService.getOrderDetail(order_id,user.getUserId());
+        return new ResponseEntity<>(orderDetailDto, HttpStatus.OK);
     }
 }

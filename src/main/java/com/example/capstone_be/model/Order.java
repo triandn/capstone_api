@@ -20,7 +20,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity(name="orders")
 public class Order extends BaseEntity {
-
     @Id
     @Column(name = "order_id", nullable = false)
     private UUID orderId = UUID.randomUUID();
@@ -54,5 +53,4 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false,insertable = false,updatable = false)
     private User user;
-
 }

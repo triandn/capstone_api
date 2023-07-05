@@ -29,6 +29,11 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             "INNER JOIN tours AS t ON t.tour_id = dbt.tour_id\n" +
             "INNER JOIN users AS u ON u.user_id = t.user_id\n" +
             "WHERE u.role='OWNER' AND u.user_id=:user_id";
+    String FIND_ORDER_BY_OWNER_DETAIL = "SELECT * FROM orders AS o INNER JOIN time_book_details AS tbdt ON tbdt.time_id = o.time_id \n" +
+            "INNER JOIN daybooks AS dbt ON dbt.day_book_id = tbdt.day_book_id\n" +
+            "INNER JOIN tours AS t ON t.tour_id = dbt.tour_id\n" +
+            "INNER JOIN users AS u ON u.user_id = t.user_id\n" +
+            "WHERE u.role='OWNER' AND u.user_id=:user_id AND o.order_id=:order_id";
     @Modifying
     @Query(value = "UPDATE orders SET status_order=:status_order WHERE order_id=:order_id",nativeQuery = true)
     void updateStatus(String status_order,UUID order_id);
@@ -61,4 +66,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
             "AND EXTRACT(MONTH FROM order_date) =:month_value\n" +
             "AND EXTRACT(YEAR FROM order_date) =:year_value AND status_order = 'SUCCESS' AND user_id=:user_id",nativeQuery = true)
     int calQuantityOrder(int day_value,int month_value,int year_value,UUID user_id);
+
+    @Query(value = FIND_ORDER_BY_OWNER_DETAIL,nativeQuery = true)
+    Order getOrderDetail(@Param("user_id") UUID user_id,@Param("order_id") UUID order_id);
 }

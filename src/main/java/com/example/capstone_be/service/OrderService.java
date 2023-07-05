@@ -1,5 +1,6 @@
 package com.example.capstone_be.service;
 
+import com.example.capstone_be.dto.order.OrderDetailDto;
 import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.model.Order;
 import com.example.capstone_be.response.OrderRespone;
@@ -20,4 +21,7 @@ public interface OrderService {
     List<OrderDto> getListOrderByTourId(Long tourId);
 
     OrderRespone getListOrderByOwner(UUID userId, Integer pageNo, Integer pageSize);
+
+
+    OrderDetailDto getOrderDetail(UUID order_id,UUID user_id);
 }

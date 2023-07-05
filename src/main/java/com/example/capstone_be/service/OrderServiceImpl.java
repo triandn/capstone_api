@@ -1,6 +1,7 @@
 package com.example.capstone_be.service;
 
 import com.example.capstone_be.dto.daybook.TimeBookViewDto;
+import com.example.capstone_be.dto.order.OrderDetailDto;
 import com.example.capstone_be.dto.order.OrderDto;
 import com.example.capstone_be.dto.user.UserViewDto;
 import com.example.capstone_be.model.*;
@@ -198,6 +199,24 @@ public class OrderServiceImpl implements OrderService {
         orderRespone.setTotalElements(orderListOwner.getTotalElements());
         orderRespone.setTotalPages(orderListOwner.getTotalPages());
         return orderRespone;
+    }
+
+    @Override
+    public OrderDetailDto getOrderDetail(UUID order_id,UUID user_id) {
+        Order order = orderRepository.getOrderDetail(user_id,order_id);
+        Tour tour = tourRepository.getTourByOrderId(order_id);
+        OrderDetailDto orderDetailDto = new OrderDetailDto();
+        orderDetailDto.setOrderId(order_id);
+        orderDetailDto.setOrderDate(order.getCreatedAt());
+        orderDetailDto.setStatusOrder(order.getStatusOrder());
+        orderDetailDto.setOrderIdBlockChain(order.getOrderIdBlockChain());
+        orderDetailDto.setPublicKey(order.getPublicKey());
+        orderDetailDto.setPrice(order.getPrice());
+        orderDetailDto.setCity(tour.getCity());
+        orderDetailDto.setImageMain(tour.getImageMain());
+        orderDetailDto.setTour_title(tour.getTitle());
+        orderDetailDto.setPriceOnePerson(tour.getPriceOnePerson());
+        return orderDetailDto;
     }
 
     @Override

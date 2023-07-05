@@ -8,6 +8,7 @@ import com.example.capstone_be.model.Tour;
 import com.example.capstone_be.response.TourRespone;
 import com.example.capstone_be.response.TourResponseByCategoryName;
 import com.example.capstone_be.response.TourResponseByOwner;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,11 +25,6 @@ public interface TourService {
 
     TourRespone getAll(Integer pageNo, Integer pageSize);
 
-
-//    private String northEastLat;
-//    private String northEastLng;
-//    private String southWestLat;
-//    private String southWestLng;
     TourResponseByCategoryName getTourByCategoryName(String categoryName,
                                                      Integer pageNo,
                                                      Integer pageSize,
@@ -49,4 +45,7 @@ public interface TourService {
 
     TourRespone getTourViewPort(String northEastLat,String southWestLat, String northEastLng,
                                 String southWestLng,Integer pageNo, Integer pageSize);
+
+    void createDate(DateTime startDay, DateTime endDay,Long tourId);
+
 }
