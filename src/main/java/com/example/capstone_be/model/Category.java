@@ -33,4 +33,8 @@ public class Category extends BaseEntity{
 
     @ManyToMany(mappedBy = "categories",fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private Set<Tour> tours;
+
+    public Category(int i, String s, String image) {
+        super();
+    }
 }

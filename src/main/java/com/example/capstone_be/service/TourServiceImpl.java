@@ -19,6 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -170,7 +171,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourRespone getAll(Integer pageNo, Integer pageSize) {
-        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize, Sort.by("created_at").descending());
         Page<Tour> tourList = tourRepository.getAllTour(paging);
         final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
@@ -216,7 +217,7 @@ public class TourServiceImpl implements TourService {
                                                             String southWestLat,
                                                             String southWestLng) {
 
-        Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize,Sort.by("created_at").descending()); // paging
 
         Page<Tour> tourListByCategoryName = tourRepository.findTourByCategoryName(categoryName,
                 Float.valueOf(northEastLat),
@@ -348,7 +349,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourResponseByOwner getTourByUserId(UUID userId,Integer pageNo, Integer pageSize) {
-        Pageable paging = PageRequest.of(pageNo - 1, pageSize); // paging
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize,Sort.by("created_at").descending()); // paging
         Page<Tour> tourListByUserId = tourRepository.getTourByUserId(userId,paging);
         TourViewByUserDto tourViewByUserDto = null;
         List<TourViewByUserDto> tourViewByUserDtoList = new ArrayList<>();
@@ -419,7 +420,7 @@ public class TourServiceImpl implements TourService {
 
     @Override
     public TourRespone getTourViewPort(String northEastLat, String southWestLat, String northEastLng, String southWestLng,Integer pageNo, Integer pageSize) {
-        Pageable paging = PageRequest.of(pageNo - 1, pageSize);
+        Pageable paging = PageRequest.of(pageNo - 1, pageSize,Sort.by("created_at").descending());
         Page<Tour> tourList = tourRepository.getTourViewPort(northEastLat,southWestLat,northEastLng,southWestLng,paging);
         final TourRespone tourRespone = new TourRespone();
         List<TourViewDto> tourViewDtos = new ArrayList<>();
