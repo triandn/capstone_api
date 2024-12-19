@@ -28,10 +28,10 @@ public class CategoryController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id,final BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            String msg = getMessageBindingResult(bindingResult);
-            return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
-        }
+//        if(bindingResult.hasErrors()) {
+//            String msg = getMessageBindingResult(bindingResult);
+//            return new ResponseEntity(msg, HttpStatus.BAD_REQUEST);
+//        }
         CategoryDto categoryDto = categoryService.findCategoryById(id);
         return new ResponseEntity(categoryDto, HttpStatus.OK);
     }
